@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbChannelReportMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbChannelReport" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="access_price" property="accessPrice" jdbcType="VARCHAR" />
+    <result column="put_price" property="putPrice" jdbcType="VARCHAR" />
+    <result column="click_num" property="clickNum" jdbcType="BIGINT" />
+    <result column="effect_num" property="effectNum" jdbcType="BIGINT" />
+    <result column="income" property="income" jdbcType="DOUBLE" />
+    <result column="conversin_rate" property="conversinRate" jdbcType="VARCHAR" />
+    <result column="costs" property="costs" jdbcType="DOUBLE" />
+    <result column="gross_profit" property="grossProfit" jdbcType="DOUBLE" />
+    <result column="gross_margin" property="grossMargin" jdbcType="VARCHAR" />
+    <result column="statistics_time" property="statisticsTime" jdbcType="DATE" />
+    <result column="statistics_hour" property="statisticsHour" jdbcType="SMALLINT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, product_name, customer_name, channel_name, access_price, put_price, click_num, 
+    effect_num, income, conversin_rate, costs, gross_profit, gross_margin, statistics_time, statistics_hour
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb__channel_report
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="getTotalNum" resultType="java.lang.Integer" parameterType="common.codrim.common.SelectResultByCodition">
+		select
+		count(*)
+		from tb__channel_report
+		where customer_name=#{customerName} and product_name=#{productName} and channel_name=#{channelName} and statistics_time BETWEEN #{startTime} and #{endTime}
+	</select> 
+	<select id="selectTbChannelReportByPages" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+		select
+		<include refid="Base_Column_List" />
+		from tb__channel_report
+		where customer_name=#{customerName} and product_name=#{productName} and channel_name=#{channelName} and statistics_time BETWEEN #{startTime} and #{endTime} 
+        limit #{startPage},#{size}
+	</select>
+		<select id="selectTbChannelReportByTime" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+		select
+		<include refid="Base_Column_List" />
+		from tb__channel_report
+		where  product_name=#{productName} and channel_name=#{channelName} and statistics_time = #{startTime} 
+	</select>
+	<select id="selectSumTotal" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+	  select sum(income) as income,sum(costs) as costs,sum(gross_profit) as grossProfit
+	  from tb__channel_report
+	  where product_name=#{productName} and channel_name=#{channelName} and statistics_time BETWEEN #{startTime} and #{endTime} 
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb__channel_report
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbChannelReport" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb__channel_report (product_name, customer_name, channel_name, 
+      access_price, put_price, click_num, 
+      effect_num, income, conversin_rate, 
+       costs, gross_profit, gross_margin, 
+      statistics_time, statistics_hour)
+    values (#{productName,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, 
+      #{accessPrice,jdbcType=VARCHAR}, #{putPrice,jdbcType=VARCHAR}, #{clickNum,jdbcType=BIGINT}, 
+      #{effectNum,jdbcType=BIGINT}, #{income,jdbcType=DOUBLE}, #{conversinRate,jdbcType=VARCHAR}, 
+       #{costs,jdbcType=DOUBLE}, #{grossProfit,jdbcType=DOUBLE}, 
+      #{grossMargin,jdbcType=VARCHAR}, 
+      #{statisticsTime,jdbcType=DATE},#{statisticsHour,jdbcType=SMALLINT})
+  </insert>
+ <insert id="insertByBatch" parameterType="java.util.List" >
+	  insert into tb__channel_report  
+	  (product_name, customer_name, channel_name, 
+      access_price, put_price, click_num, 
+      effect_num, income, conversin_rate, 
+      costs, gross_profit, gross_margin, 
+      statistics_time, statistics_hour)
+		values
+	<foreach collection="list" item="item" index="index" 	separator=",">
+          (#{item.productName}, #{item.customerName}, #{item.channelName}, 
+      #{item.accessPrice}, #{item.putPrice}, #{item.clickNum}, 
+      #{item.effectNum}, #{item.income}, #{item.conversinRate}, 
+      #{item.costs}, #{item.grossProfit}, 
+      #{item.grossMargin}, 
+      #{item.statisticsTime},#{item.statisticsHour})
+		</foreach>
+	</insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbChannelReport" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb__channel_report
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      product_name,
+      customer_name,
+      channel_name,
+      access_price,
+      put_price,
+      click_num,
+      effect_num,
+      income,
+      conversin_rate,
+      costs,
+      gross_profit, 
+      gross_margin, 
+      statistics_time,
+      statistics_hour,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{productName,jdbcType=VARCHAR},
+      #{customerName,jdbcType=VARCHAR},
+      #{channelName,jdbcType=VARCHAR},
+      #{accessPrice,jdbcType=VARCHAR},
+      #{putPrice,jdbcType=VARCHAR},
+      #{clickNum,jdbcType=BIGINT},
+      #{effectNum,jdbcType=BIGINT},
+      #{income,jdbcType=DOUBLE},
+      #{conversinRate,jdbcType=VARCHAR},
+      #{costs,jdbcType=DOUBLE},
+      #{grossProfit,jdbcType=DOUBLE}, 
+      #{grossMargin,jdbcType=VARCHAR}, 
+      #{statisticsTime,jdbcType=DATE},
+      #{statisticsHour,jdbcType=SMALLINT},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbChannelReport" >
+    update tb__channel_report
+    <set >
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="accessPrice != null" >
+        access_price = #{accessPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="putPrice != null" >
+        put_price = #{putPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="clickNum != null" >
+        click_num = #{clickNum,jdbcType=BIGINT},
+      </if>
+      <if test="effectNum != null" >
+        effect_num = #{effectNum,jdbcType=BIGINT},
+      </if>
+      <if test="income != null" >
+        income = #{income,jdbcType=DOUBLE},
+      </if>
+      <if test="conversinRate != null" >
+        conversin_rate = #{conversinRate,jdbcType=VARCHAR},
+      </if>
+       <if test="costs != null" >
+        costs = #{costs,jdbcType=DOUBLE},
+      </if>
+      <if test="grossProfit != null" >
+        gross_profit = #{grossProfit,jdbcType=DOUBLE},
+      </if>
+      <if test="grossMargin != null" >
+        gross_margin = #{grossMargin,jdbcType=VARCHAR},
+      </if>
+      <if test="statisticsTime != null" >
+        statistics_time = #{statisticsTime,jdbcType=DATE},
+      </if>
+        <if test="statisticsHour != null" >
+        statistics_time = #{statisticsHour,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbChannelReport" >
+    update tb__channel_report
+    set product_name = #{productName,jdbcType=VARCHAR},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      access_price = #{accessPrice,jdbcType=VARCHAR},
+      put_price = #{putPrice,jdbcType=VARCHAR},
+      click_num = #{clickNum,jdbcType=BIGINT},
+      effect_num = #{effectNum,jdbcType=BIGINT},
+      income = #{income,jdbcType=DOUBLE},
+      conversin_rate = #{conversinRate,jdbcType=VARCHAR},
+      costs = #{costs,jdbcType=DOUBLE},
+      gross_profit = #{grossProfit,jdbcType=DOUBLE},
+      gross_margin = #{grossMargin,jdbcType=VARCHAR},
+      statistics_time = #{statisticsTime,jdbcType=DATE},
+      statistics_hour = #{statisticsHour,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

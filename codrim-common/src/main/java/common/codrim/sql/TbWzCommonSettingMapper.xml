@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzCommonSettingMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzCommonSetting" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="exchange_rate" property="exchangeRate" jdbcType="BIGINT" />
+    <result column="group_codrim_percent" property="groupCodrimPercent" jdbcType="INTEGER" />
+    <result column="user_codrim_percent" property="userCodrimPercent" jdbcType="INTEGER" />
+    <result column="sign_in_reward" property="signInReward" jdbcType="DOUBLE" />
+    <result column="see_price_cost" property="seePriceCost" jdbcType="DOUBLE" />
+    <result column="user_invitees_reward" property="userInviteesReward" jdbcType="DOUBLE" />
+    <result column="user_inviter_reward" property="userInviterReward" jdbcType="DOUBLE" />
+    <result column="group_invitees_reward" property="groupInviteesReward" jdbcType="DOUBLE" />
+    <result column="group_inviter_reward" property="groupInviterReward" jdbcType="DOUBLE" />
+    <result column="cj_cost" property="cjCost" jdbcType="DOUBLE" />
+    <result column="cj_interval" property="cjInterval" jdbcType="INTEGER" />
+    <result column="cj_prize1" property="cjPrize1" jdbcType="DOUBLE" />
+    <result column="cj_prize1_prob" property="cjPrize1Prob" jdbcType="DOUBLE" />
+    <result column="cj_prize2" property="cjPrize2" jdbcType="DOUBLE" />
+    <result column="cj_prize2_prob" property="cjPrize2Prob" jdbcType="DOUBLE" />
+    <result column="cj_prize3" property="cjPrize3" jdbcType="DOUBLE" />
+    <result column="cj_prize3_prob" property="cjPrize3Prob" jdbcType="DOUBLE" />
+    <result column="cj_prize4" property="cjPrize4" jdbcType="DOUBLE" />
+    <result column="cj_prize4_prob" property="cjPrize4Prob" jdbcType="DOUBLE" />
+    <result column="cj_prize5" property="cjPrize5" jdbcType="DOUBLE" />
+    <result column="cj_prize5_prob" property="cjPrize5Prob" jdbcType="DOUBLE" />
+    <result column="cj_none_prob" property="cjNoneProb" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, exchange_rate, group_codrim_percent, user_codrim_percent, sign_in_reward, see_price_cost, 
+    user_invitees_reward, user_inviter_reward, group_invitees_reward, group_inviter_reward, 
+    cj_cost, cj_interval, cj_prize1, cj_prize1_prob, cj_prize2, cj_prize2_prob, cj_prize3, 
+    cj_prize3_prob, cj_prize4, cj_prize4_prob, cj_prize5, cj_prize5_prob, cj_none_prob
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_common_setting
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_common_setting
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzCommonSetting" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_common_setting (exchange_rate, group_codrim_percent, 
+      user_codrim_percent, sign_in_reward, see_price_cost, 
+      user_invitees_reward, user_inviter_reward, group_invitees_reward, 
+      group_inviter_reward, cj_cost, cj_interval, 
+      cj_prize1, cj_prize1_prob, cj_prize2, 
+      cj_prize2_prob, cj_prize3, cj_prize3_prob, 
+      cj_prize4, cj_prize4_prob, cj_prize5, 
+      cj_prize5_prob, cj_none_prob)
+    values (#{exchangeRate,jdbcType=BIGINT}, #{groupCodrimPercent,jdbcType=INTEGER}, 
+      #{userCodrimPercent,jdbcType=INTEGER}, #{signInReward,jdbcType=DOUBLE}, #{seePriceCost,jdbcType=DOUBLE}, 
+      #{userInviteesReward,jdbcType=DOUBLE}, #{userInviterReward,jdbcType=DOUBLE}, #{groupInviteesReward,jdbcType=DOUBLE}, 
+      #{groupInviterReward,jdbcType=DOUBLE}, #{cjCost,jdbcType=DOUBLE}, #{cjInterval,jdbcType=INTEGER}, 
+      #{cjPrize1,jdbcType=DOUBLE}, #{cjPrize1Prob,jdbcType=DOUBLE}, #{cjPrize2,jdbcType=DOUBLE}, 
+      #{cjPrize2Prob,jdbcType=DOUBLE}, #{cjPrize3,jdbcType=DOUBLE}, #{cjPrize3Prob,jdbcType=DOUBLE}, 
+      #{cjPrize4,jdbcType=DOUBLE}, #{cjPrize4Prob,jdbcType=DOUBLE}, #{cjPrize5,jdbcType=DOUBLE}, 
+      #{cjPrize5Prob,jdbcType=DOUBLE}, #{cjNoneProb,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzCommonSetting" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_common_setting
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      exchange_rate,
+      group_codrim_percent,
+      user_codrim_percent,
+      sign_in_reward,
+      see_price_cost,
+      user_invitees_reward,
+      user_inviter_reward,
+      group_invitees_reward,
+      group_inviter_reward,
+      cj_cost,
+      cj_interval,
+      cj_prize1,
+      cj_prize1_prob,
+      cj_prize2,
+      cj_prize2_prob,
+      cj_prize3,
+      cj_prize3_prob,
+      cj_prize4,
+      cj_prize4_prob,
+      cj_prize5,
+      cj_prize5_prob,
+      cj_none_prob,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{exchangeRate,jdbcType=BIGINT},
+      #{groupCodrimPercent,jdbcType=INTEGER},
+      #{userCodrimPercent,jdbcType=INTEGER},
+      #{signInReward,jdbcType=DOUBLE},
+      #{seePriceCost,jdbcType=DOUBLE},
+      #{userInviteesReward,jdbcType=DOUBLE},
+      #{userInviterReward,jdbcType=DOUBLE},
+      #{groupInviteesReward,jdbcType=DOUBLE},
+      #{groupInviterReward,jdbcType=DOUBLE},
+      #{cjCost,jdbcType=DOUBLE},
+      #{cjInterval,jdbcType=INTEGER},
+      #{cjPrize1,jdbcType=DOUBLE},
+      #{cjPrize1Prob,jdbcType=DOUBLE},
+      #{cjPrize2,jdbcType=DOUBLE},
+      #{cjPrize2Prob,jdbcType=DOUBLE},
+      #{cjPrize3,jdbcType=DOUBLE},
+      #{cjPrize3Prob,jdbcType=DOUBLE},
+      #{cjPrize4,jdbcType=DOUBLE},
+      #{cjPrize4Prob,jdbcType=DOUBLE},
+      #{cjPrize5,jdbcType=DOUBLE},
+      #{cjPrize5Prob,jdbcType=DOUBLE},
+      #{cjNoneProb,jdbcType=DOUBLE},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzCommonSetting" >
+    update tb_wz_common_setting
+    <set >
+      <if test="exchangeRate != null" >
+        exchange_rate = #{exchangeRate,jdbcType=BIGINT},
+      </if>
+      <if test="groupCodrimPercent != null" >
+        group_codrim_percent = #{groupCodrimPercent,jdbcType=INTEGER},
+      </if>
+      <if test="userCodrimPercent != null" >
+        user_codrim_percent = #{userCodrimPercent,jdbcType=INTEGER},
+      </if>
+      <if test="signInReward != null" >
+        sign_in_reward = #{signInReward,jdbcType=DOUBLE},
+      </if>
+      <if test="seePriceCost != null" >
+        see_price_cost = #{seePriceCost,jdbcType=DOUBLE},
+      </if>
+      <if test="userInviteesReward != null" >
+        user_invitees_reward = #{userInviteesReward,jdbcType=DOUBLE},
+      </if>
+      <if test="userInviterReward != null" >
+        user_inviter_reward = #{userInviterReward,jdbcType=DOUBLE},
+      </if>
+      <if test="groupInviteesReward != null" >
+        group_invitees_reward = #{groupInviteesReward,jdbcType=DOUBLE},
+      </if>
+      <if test="groupInviterReward != null" >
+        group_inviter_reward = #{groupInviterReward,jdbcType=DOUBLE},
+      </if>
+      <if test="cjCost != null" >
+        cj_cost = #{cjCost,jdbcType=DOUBLE},
+      </if>
+      <if test="cjInterval != null" >
+        cj_interval = #{cjInterval,jdbcType=INTEGER},
+      </if>
+      <if test="cjPrize1 != null" >
+        cj_prize1 = #{cjPrize1,jdbcType=DOUBLE},
+      </if>
+      <if test="cjPrize1Prob != null" >
+        cj_prize1_prob = #{cjPrize1Prob,jdbcType=DOUBLE},
+      </if>
+      <if test="cjPrize2 != null" >
+        cj_prize2 = #{cjPrize2,jdbcType=DOUBLE},
+      </if>
+      <if test="cjPrize2Prob != null" >
+        cj_prize2_prob = #{cjPrize2Prob,jdbcType=DOUBLE},
+      </if>
+      <if test="cjPrize3 != null" >
+        cj_prize3 = #{cjPrize3,jdbcType=DOUBLE},
+      </if>
+      <if test="cjPrize3Prob != null" >
+        cj_prize3_prob = #{cjPrize3Prob,jdbcType=DOUBLE},
+      </if>
+      <if test="cjPrize4 != null" >
+        cj_prize4 = #{cjPrize4,jdbcType=DOUBLE},
+      </if>
+      <if test="cjPrize4Prob != null" >
+        cj_prize4_prob = #{cjPrize4Prob,jdbcType=DOUBLE},
+      </if>
+      <if test="cjPrize5 != null" >
+        cj_prize5 = #{cjPrize5,jdbcType=DOUBLE},
+      </if>
+      <if test="cjPrize5Prob != null" >
+        cj_prize5_prob = #{cjPrize5Prob,jdbcType=DOUBLE},
+      </if>
+      <if test="cjNoneProb != null" >
+        cj_none_prob = #{cjNoneProb,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzCommonSetting" >
+    update tb_wz_common_setting
+    set exchange_rate = #{exchangeRate,jdbcType=BIGINT},
+      group_codrim_percent = #{groupCodrimPercent,jdbcType=INTEGER},
+      user_codrim_percent = #{userCodrimPercent,jdbcType=INTEGER},
+      sign_in_reward = #{signInReward,jdbcType=DOUBLE},
+      see_price_cost = #{seePriceCost,jdbcType=DOUBLE},
+      user_invitees_reward = #{userInviteesReward,jdbcType=DOUBLE},
+      user_inviter_reward = #{userInviterReward,jdbcType=DOUBLE},
+      group_invitees_reward = #{groupInviteesReward,jdbcType=DOUBLE},
+      group_inviter_reward = #{groupInviterReward,jdbcType=DOUBLE},
+      cj_cost = #{cjCost,jdbcType=DOUBLE},
+      cj_interval = #{cjInterval,jdbcType=INTEGER},
+      cj_prize1 = #{cjPrize1,jdbcType=DOUBLE},
+      cj_prize1_prob = #{cjPrize1Prob,jdbcType=DOUBLE},
+      cj_prize2 = #{cjPrize2,jdbcType=DOUBLE},
+      cj_prize2_prob = #{cjPrize2Prob,jdbcType=DOUBLE},
+      cj_prize3 = #{cjPrize3,jdbcType=DOUBLE},
+      cj_prize3_prob = #{cjPrize3Prob,jdbcType=DOUBLE},
+      cj_prize4 = #{cjPrize4,jdbcType=DOUBLE},
+      cj_prize4_prob = #{cjPrize4Prob,jdbcType=DOUBLE},
+      cj_prize5 = #{cjPrize5,jdbcType=DOUBLE},
+      cj_prize5_prob = #{cjPrize5Prob,jdbcType=DOUBLE},
+      cj_none_prob = #{cjNoneProb,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

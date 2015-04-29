@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzPointsLogMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzPointsLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="points_type" property="pointsType" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="income_gold" property="incomeGold" jdbcType="BIGINT" />
+    <result column="income_date" property="incomeDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, points_type, `name`, income_gold, income_date
+  </sql>
+    <select id="getNowDayInvites" resultType="java.lang.Integer"  >
+    select count(1)
+    from tb_wz_points_log
+    where user_id = #{userId} and DATE(income_date)=#{date}
+  </select>
+    <select id="getPointsLogList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_points_log
+    where user_id = #{userId} limit #{startPage},#{size}
+    order by income_date desc
+  </select>
+    <select id="getPointsLogTotalAmount" resultType="java.lang.Integer">
+    select count(1)
+    from tb_wz_points_log
+    where user_id = #{userId} 
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_points_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectInvaiteesByInviterLog" resultMap="BaseResultMap" parameterType="common.codrim.pojo.TbWzPointsLog">
+  	select 
+  		l.id, l.user_id, l.points_type, 
+  		u.username as name, 
+  		l.income_gold, l.income_date
+	from tb_wz_points_log l
+	join tb_wz_user u on l.user_id = u.user_id
+	where l.name = #{name,jdbcType=VARCHAR}
+	and l.points_type = 7
+	and l.income_date = #{incomeDate, jdbcType=TIMESTAMP}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_points_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzPointsLog" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_points_log (user_id, points_type, `name`, 
+      income_gold, income_date)
+    values (#{userId,jdbcType=BIGINT}, #{pointsType,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{incomeGold,jdbcType=BIGINT}, #{incomeDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzPointsLog" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_points_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      user_id,
+      points_type,
+      `name`,
+      income_gold,
+      income_date,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{userId,jdbcType=BIGINT},
+      #{pointsType,jdbcType=INTEGER},
+      #{name,jdbcType=VARCHAR},
+      #{incomeGold,jdbcType=BIGINT},
+      #{incomeDate,jdbcType=TIMESTAMP},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzPointsLog" >
+    update tb_wz_points_log
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="pointsType != null" >
+        points_type = #{pointsType,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="incomeGold != null" >
+        income_gold = #{incomeGold,jdbcType=BIGINT},
+      </if>
+      <if test="incomeDate != null" >
+        income_date = #{incomeDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzPointsLog" >
+    update tb_wz_points_log
+    set user_id = #{userId,jdbcType=BIGINT},
+      points_type = #{pointsType,jdbcType=INTEGER},
+      `name` = #{name,jdbcType=VARCHAR},
+      income_gold = #{incomeGold,jdbcType=BIGINT},
+      income_date = #{incomeDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

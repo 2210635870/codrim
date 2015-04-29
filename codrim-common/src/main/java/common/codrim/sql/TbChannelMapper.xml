@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbChannelMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbChannel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="person_in_charge" property="personInCharge" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+    <result column="channel_number" property="channelNumber" jdbcType="VARCHAR" />
+    <result column="channel_email" property="channelEmail" jdbcType="VARCHAR" />
+    <result column="channel_password" property="channelPassword" jdbcType="VARCHAR" />
+    <result column="channel_contact_name" property="channelContactName" jdbcType="VARCHAR" />
+    <result column="channel_contact_phone" property="channelContactPhone" jdbcType="VARCHAR" />
+    <result column="channel_contact_position" property="channelContactPosition" jdbcType="VARCHAR" />
+    <result column="channel_contact_wx" property="channelContactWx" jdbcType="VARCHAR" />
+    <result column="channel_contact_email" property="channelContactEmail" jdbcType="VARCHAR" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="company_city" property="companyCity" jdbcType="VARCHAR" />
+    <result column="company_address" property="companyAddress" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="company_country" property="companyCountry" jdbcType="VARCHAR" />
+    <result column="company_phone" property="companyPhone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, channel_name, person_in_charge, channel_type, channel_number, channel_email, 
+    channel_password, channel_contact_name, channel_contact_phone, channel_contact_position, 
+    channel_contact_wx, channel_contact_email, company_name, company_city, company_address, 
+    remark, company_country, company_phone
+  </sql>
+  
+  	<select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select *
+	    from tb_channel
+	    where channel_name = #{channelName,jdbcType=VARCHAR}
+	  </select>
+	  <select id="selectByCompanyName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select *
+	    from tb_channel
+	    where company_name = #{companyName,jdbcType=VARCHAR}
+	  </select>
+	        <select id="channelLogin" resultMap="BaseResultMap"  >
+	    select *
+	    from tb_channel
+	    where channel_email = #{email} and channel_password=#{password}
+	  </select>
+	        <select id="selectByChannelNum" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select *
+	    from tb_channel
+	    where channel_number = #{channelNumber,jdbcType=VARCHAR}
+	  </select>
+	    <select id="selectAll" resultMap="BaseResultMap"  >
+	    select  * from tb_channel
+	  </select>
+	     <select id="getTotalNum" resultType="java.lang.Integer"  >
+	    select  count(*) from tb_channel
+	  </select>
+	   <select id="selectChannelsByPage" resultMap="BaseResultMap">
+	    select  <include refid="Base_Column_List" />  from tb_channel 
+	    limit #{startPage},#{size}    
+	  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_channel
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_channel
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbChannel" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_channel (channel_name, person_in_charge, channel_type, 
+      channel_number, channel_email, channel_password, 
+      channel_contact_name, channel_contact_phone, 
+      channel_contact_position, channel_contact_wx, 
+      channel_contact_email, company_name, company_city, 
+      company_address, remark, company_country, 
+      company_phone)
+    values (#{channelName,jdbcType=VARCHAR}, #{personInCharge,jdbcType=VARCHAR}, #{channelType,jdbcType=VARCHAR}, 
+      #{channelNumber,jdbcType=VARCHAR}, #{channelEmail,jdbcType=VARCHAR}, #{channelPassword,jdbcType=VARCHAR}, 
+      #{channelContactName,jdbcType=VARCHAR}, #{channelContactPhone,jdbcType=VARCHAR}, 
+      #{channelContactPosition,jdbcType=VARCHAR}, #{channelContactWx,jdbcType=VARCHAR}, 
+      #{channelContactEmail,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, #{companyCity,jdbcType=VARCHAR}, 
+      #{companyAddress,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{companyCountry,jdbcType=VARCHAR}, 
+      #{companyPhone,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbChannel" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_channel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      channel_name,
+      person_in_charge,
+      channel_type,
+      channel_number,
+      channel_email,
+      channel_password,
+      channel_contact_name,
+      channel_contact_phone,
+      channel_contact_position,
+      channel_contact_wx,
+      channel_contact_email,
+      company_name,
+      company_city,
+      company_address,
+      remark,
+      company_country,
+      company_phone,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{channelName,jdbcType=VARCHAR},
+      #{personInCharge,jdbcType=VARCHAR},
+      #{channelType,jdbcType=VARCHAR},
+      #{channelNumber,jdbcType=VARCHAR},
+      #{channelEmail,jdbcType=VARCHAR},
+      #{channelPassword,jdbcType=VARCHAR},
+      #{channelContactName,jdbcType=VARCHAR},
+      #{channelContactPhone,jdbcType=VARCHAR},
+      #{channelContactPosition,jdbcType=VARCHAR},
+      #{channelContactWx,jdbcType=VARCHAR},
+      #{channelContactEmail,jdbcType=VARCHAR},
+      #{companyName,jdbcType=VARCHAR},
+      #{companyCity,jdbcType=VARCHAR},
+      #{companyAddress,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR},
+      #{companyCountry,jdbcType=VARCHAR},
+      #{companyPhone,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbChannel" >
+    update tb_channel
+    <set >
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="personInCharge != null" >
+        person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        channel_type = #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="channelNumber != null" >
+        channel_number = #{channelNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="channelEmail != null" >
+        channel_email = #{channelEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="channelPassword != null" >
+        channel_password = #{channelPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="channelContactName != null" >
+        channel_contact_name = #{channelContactName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelContactPhone != null" >
+        channel_contact_phone = #{channelContactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="channelContactPosition != null" >
+        channel_contact_position = #{channelContactPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="channelContactWx != null" >
+        channel_contact_wx = #{channelContactWx,jdbcType=VARCHAR},
+      </if>
+      <if test="channelContactEmail != null" >
+        channel_contact_email = #{channelContactEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCity != null" >
+        company_city = #{companyCity,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddress != null" >
+        company_address = #{companyAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCountry != null" >
+        company_country = #{companyCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="companyPhone != null" >
+        company_phone = #{companyPhone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbChannel" >
+    update tb_channel
+    set channel_name = #{channelName,jdbcType=VARCHAR},
+      person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      channel_type = #{channelType,jdbcType=VARCHAR},
+      channel_number = #{channelNumber,jdbcType=VARCHAR},
+      channel_email = #{channelEmail,jdbcType=VARCHAR},
+      channel_password = #{channelPassword,jdbcType=VARCHAR},
+      channel_contact_name = #{channelContactName,jdbcType=VARCHAR},
+      channel_contact_phone = #{channelContactPhone,jdbcType=VARCHAR},
+      channel_contact_position = #{channelContactPosition,jdbcType=VARCHAR},
+      channel_contact_wx = #{channelContactWx,jdbcType=VARCHAR},
+      channel_contact_email = #{channelContactEmail,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      company_city = #{companyCity,jdbcType=VARCHAR},
+      company_address = #{companyAddress,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      company_country = #{companyCountry,jdbcType=VARCHAR},
+      company_phone = #{companyPhone,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

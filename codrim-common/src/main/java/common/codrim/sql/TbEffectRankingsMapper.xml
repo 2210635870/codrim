@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbEffectRankingsMapper">
+	<resultMap id="BaseResultMap" type="common.codrim.pojo.TbEffectRankings">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="product_name" property="productName" jdbcType="VARCHAR" />
+		<result column="appid" property="appid" jdbcType="VARCHAR" />
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+		<result column="action_time" property="actionTime" jdbcType="TIMESTAMP" />
+		<result column="deviceplate" property="deviceplate" jdbcType="VARCHAR" />
+		<result column="idfa" property="idfa" jdbcType="VARCHAR" />
+		<result column="mac" property="mac" jdbcType="VARCHAR" />
+		<result column="imei" property="imei" jdbcType="VARCHAR" />
+		<result column="udid" property="udid" jdbcType="VARCHAR" />
+		<result column="rankings_action" property="rankingsAction" jdbcType="SMALLINT" />
+		<result column="register_use" property="registerUse" jdbcType="SMALLINT" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+   <resultMap id="TempResultMap" type="common.codrim.common.SelectEffectRankings" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+		<result column="product_name" property="productName" jdbcType="VARCHAR" />
+		<result column="appid" property="appid" jdbcType="VARCHAR" />
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+		<result column="action_time" property="actionTime" jdbcType="TIMESTAMP" />
+		<result column="deviceplate" property="deviceplate" jdbcType="VARCHAR" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="idfa" property="idfa" jdbcType="VARCHAR" />
+		<result column="mac" property="mac" jdbcType="VARCHAR" />
+		<result column="imei" property="imei" jdbcType="VARCHAR" />
+		<result column="udid" property="udid" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="rankings_action" property="effect" jdbcType="SMALLINT" />
+		<result column="rankings_action" property="activate" jdbcType="SMALLINT" />
+		<result column="rankings_action" property="register" jdbcType="SMALLINT" />
+		<result column="rankings_action" property="consumeOne" jdbcType="SMALLINT" />
+		<result column="rankings_action" property="consumeMore" jdbcType="SMALLINT" />
+		<result column="rankings_action" property="recharge" jdbcType="SMALLINT" />
+		<result column="rankings_action" property="credit" jdbcType="SMALLINT" />
+		<result column="rankings_action" property="baddept" jdbcType="SMALLINT" />
+		<result column="rankings_action" property="clickNum" jdbcType="SMALLINT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="RankingsReportResultMap" type="common.codrim.pojo.TbRankingsReport" >
+    <result column="rankings_action" property="effectNum" jdbcType="BIGINT" />
+    <result column="rankings_action" property="activate" jdbcType="INTEGER" />
+    <result column="rankings_action" property="register" jdbcType="INTEGER" />
+    <result column="rankings_action" property="recharge" jdbcType="INTEGER" />
+    <result column="rankings_action" property="credit" jdbcType="INTEGER" />
+    <result column="rankings_action" property="baddept" jdbcType="INTEGER" />
+    <result column="rankings_action" property="clickNum" jdbcType="INTEGER" />
+  </resultMap>
+    <resultMap id="rankingsReportWithDeduplicationResultMap" type="common.codrim.common.RankingsReportWithDeduplicationBean" >
+    <result column="effectNum" property="effectNum" />
+    <result column="activate" property="activate" />
+    <result column="register" property="register" />
+    <result column="recharge" property="recharge"/>
+    <result column="credit" property="credit"  />
+    <result column="baddept" property="baddept"/>
+    <result column="clickNum" property="clickNum" />
+  </resultMap>
+    <resultMap id="consumeNumResultMap" type="common.codrim.common.ConsumeNum">
+    <result column="imei" property="imei" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+  
+	<sql id="Base_Column_List">
+		id, telephone,product_name, appid, channel_name, action_time, deviceplate,
+		idfa, mac,imei, udid,rankings_action,register_use, remark
+	</sql>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from tb_effect_rankings
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	 <select id="getTotalNum" resultType="java.lang.Integer" parameterType="common.codrim.common.SelectResultByCodition">
+		<if test="deviceplate=='ios'">
+		 select count(*) from 
+		(select idfa from tb_effect_rankings
+		where deviceplate=#{deviceplate} and product_name=#{productName} and channel_name=#{channelName}
+	  and action_time BETWEEN #{startTime} and #{endTime}
+	    group by idfa) as n 
+		</if>
+		
+		<if test="deviceplate=='android'">
+		 select count(*) from 
+		(select imei from tb_effect_rankings
+		where deviceplate=#{deviceplate} and product_name=#{productName} and channel_name=#{channelName}
+	    and action_time BETWEEN #{startTime} and #{endTime}
+	    group by imei) as n 
+		</if>
+	</select> 
+	<select id="selectTbEffectRankingsByPages" resultMap="TempResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+	  <if test="deviceplate=='ios'">
+	  select id,product_name,appid,channel_name,action_time,deviceplate,telephone,idfa,mac,imei,udid,remark,CONCAT(country,province,city) as address,
+	  MAX(CASE WHEN rankings_action=1 THEN '1' END) AS effect,
+      MAX(CASE WHEN rankings_action=2 THEN '1' END) AS activate,
+	  MAX(CASE WHEN rankings_action=3 THEN '1' END) AS register,
+	  COUNT(CASE WHEN rankings_action=4 THEN '1' END) AS consumeMore,
+	  MAX(CASE WHEN rankings_action=5 THEN '1' END) AS credit,
+	  MAX(CASE WHEN rankings_action=6 THEN '1' END) AS recharge,
+	  MAX(CASE WHEN rankings_action=7 THEN '1' END) AS baddept,
+	  MAX(CASE WHEN rankings_action=8 THEN '1' END) AS clickNum
+	  from tb_effect_rankings 
+	  where deviceplate=#{deviceplate} and product_name=#{productName} and channel_name=#{channelName}
+	  and action_time BETWEEN #{startTime} and #{endTime}
+	  group by idfa,telephone limit #{startPage},#{size}
+	 </if>
+	 
+	 <if test="deviceplate=='android'">
+	  select id,product_name,appid,channel_name,action_time,deviceplate,telephone,idfa,mac,imei,udid,remark,
+	  MAX(CASE WHEN rankings_action=1 THEN '1' END) AS effect,
+      MAX(CASE WHEN rankings_action=2 THEN '1' END) AS activate,
+	  MAX(CASE WHEN rankings_action=3 THEN '1' END) AS register,
+	  COUNT(CASE WHEN rankings_action=4 THEN '1' END) AS consumeMore,
+	  MAX(CASE WHEN rankings_action=5 THEN '1' END) AS credit,
+	  MAX(CASE WHEN rankings_action=6 THEN '1' END) AS recharge,
+	  MAX(CASE WHEN rankings_action=7 THEN '1' END) AS baddept,
+	  MAX(CASE WHEN rankings_action=8 THEN '1' END) AS clickNum
+	  from tb_effect_rankings 
+	  where deviceplate=#{deviceplate} and product_name=#{productName} and channel_name=#{channelName}
+	  and action_time BETWEEN #{startTime} and #{endTime} 
+	  group by imei,telephone limit #{startPage},#{size}
+	 </if>
+    </select>
+    
+    <select id="selectEffectRankingsWithDate" resultType="java.util.Date">
+	SELECT DATE(action_time)  FROM `tb_effect_rankings` GROUP BY DATE(action_time)
+    </select>
+ 
+     <select id="selectRankingsReportData" resultMap="RankingsReportResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+	  SELECT 	
+	  COUNT(CASE WHEN rankings_action=#{effect} THEN 'success' END) AS effectNum,
+	  COUNT(CASE WHEN rankings_action=#{activate} THEN 'success' END) AS activate,
+	  COUNT(CASE WHEN rankings_action=#{register} THEN 'success' END) AS register,
+	  COUNT(CASE WHEN rankings_action=#{becharge} THEN 'success' END) AS recharge,
+	  COUNT(CASE WHEN rankings_action=#{credit} THEN 'success' END) AS credit,
+	  COUNT(CASE WHEN rankings_action=#{baddept} THEN 'success' END) AS baddept,
+	  COUNT(CASE WHEN rankings_action=#{clickNum} THEN 'success' END) AS clickNum
+	  from tb_effect_rankings where channel_name=#{channelName}
+	  <if test="deviceplate!=null">
+	  and  deviceplate=#{deviceplate} 
+	  </if>
+      and product_name=#{productName} and DATE(action_time) = #{startTime} 
+    </select>
+    
+     <select id="selectRankingsReportDataWithDeduplication" resultMap="rankingsReportWithDeduplicationResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+	 SELECT 	
+	  COUNT(CASE WHEN temp.rankings_action=#{effect} THEN '1' END) AS effectNum,
+	  COUNT(CASE WHEN temp.rankings_action=#{activate} THEN '2' END) AS activate,
+	  COUNT(CASE WHEN temp.rankings_action=#{register} THEN '3' END) AS register,
+	  COUNT(CASE WHEN temp.rankings_action=#{becharge} THEN '5' END) AS recharge,
+	  COUNT(CASE WHEN temp.rankings_action=#{credit} THEN '6' END) AS credit,
+	  COUNT(CASE WHEN temp.rankings_action=#{baddept} THEN '7' END) AS baddept,
+	  COUNT(CASE WHEN temp.rankings_action=#{clickNum} THEN '8' END) AS clickNum
+	  from (
+	  SELECT id , rankings_action FROM tb_effect_rankings WHERE channel_name=#{channelName}
+	 <if test="deviceplate!=null">
+	  and  deviceplate=#{deviceplate} 
+	  </if>
+	  and product_name=#{productName} and DATE(action_time) = #{startTime} 
+	  <if test="markType == 'imei' ">
+	   GROUP BY imei,rankings_action
+	    </if>
+	     <if test="markType == 'idfa' ">
+	   GROUP BY idfa,rankings_action
+	    </if>
+	  ) as temp
+    </select>
+
+    
+    
+     <select id="getConsumeNum" resultMap="consumeNumResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+  SELECT imei, COUNT(CASE WHEN rankings_action=4 THEN 'dd' END) AS num
+	  FROM tb_effect_rankings where deviceplate=#{deviceplate} and channel_name=#{channelName}
+      and product_name=#{productName} and DATE(action_time) = #{startTime} 
+	  <if test="isDeduplication == 'yes' ">
+	  GROUP BY  imei
+	  </if>
+	   <if test="isDeduplication == 'no' ">
+	  GROUP BY  imei , telephone 
+	  </if>
+	  HAVING num>0
+     </select>
+     <select id="getEffectRankings"  resultMap="BaseResultMap" parameterType="common.codrim.pojo.TbEffectRankings">
+		select 
+		<include refid="Base_Column_List" />
+	    from tb_effect_rankings where product_name=#{productName}  
+      AND channel_name=#{channelName}  
+       AND rankings_action=#{rankingsAction} 
+            <if test="idfa !=null">
+	     and idfa=#{idfa}  
+	    </if>
+	     <if test="actionTime !=null">
+	    AND action_time=#{actionTime}
+	     </if>
+         <if test="imei !=null">
+	     and imei=#{imei}  
+	    </if>
+	        <if test="telephone !=null">
+	      AND telephone=#{telephone}
+	    </if>
+      
+    </select>
+        <select id="updateEffectByIdfa"   parameterType="common.codrim.pojo.TbEffectRankings">
+update tb_effect_rankings set telephone=#{telephone} where product_name=#{productName}  
+      AND channel_name=#{channelName}    AND rankings_action=#{rankingsAction} and idfa=#{idfa}
+    </select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from tb_effect_rankings
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="common.codrim.pojo.TbEffectRankings"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into tb_effect_rankings (telephone,product_name, appid, channel_name,
+	    action_time, deviceplate,
+		idfa, mac, imei, udid,rankings_action,register_use,ip,country,province,city,remark)
+		values (#{telephone,jdbcType=VARCHAR},#{productName,jdbcType=VARCHAR}, #{appid,jdbcType=VARCHAR},
+		#{channelName,jdbcType=VARCHAR},
+	    #{actionTime,jdbcType=TIMESTAMP}, #{deviceplate,jdbcType=VARCHAR},
+		#{idfa,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR},
+		#{imei,jdbcType=VARCHAR}, #{udid,jdbcType=VARCHAR},
+		#{rankingsAction,jdbcType=SMALLINT},
+		#{registerUse,jdbcType=SMALLINT},
+		 #{ip,jdbcType=VARCHAR},
+		  #{country,jdbcType=VARCHAR},
+		   #{province,jdbcType=VARCHAR},
+		    #{city,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="common.codrim.pojo.TbEffectRankings"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into tb_effect_rankings
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		    telephone,
+			product_name,
+			appid,
+			channel_name,
+			action_time,
+			deviceplate,
+			idfa,
+			mac,
+			imei,
+			udid,
+			rankings_action,
+			register_use,
+			ip,country,province,city,
+			remark,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+		#{telephone,jdbcType=VARCHAR},
+			#{productName,jdbcType=VARCHAR},
+			#{appid,jdbcType=VARCHAR},
+			#{channelName,jdbcType=VARCHAR},
+			#{actionTime,jdbcType=TIMESTAMP},
+			#{deviceplate,jdbcType=VARCHAR},
+			#{idfa,jdbcType=VARCHAR},
+			#{mac,jdbcType=VARCHAR},
+			#{imei,jdbcType=VARCHAR},
+			#{udid,jdbcType=VARCHAR},
+			#{rankingsAction,jdbcType=SMALLINT},
+			#{registerUse,jdbcType=SMALLINT},
+			 #{ip,jdbcType=VARCHAR},
+		  #{country,jdbcType=VARCHAR},
+		   #{province,jdbcType=VARCHAR},
+		    #{city,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbEffectRankings">
+		update tb_effect_rankings
+		<set>
+			<if test="telephone != null">
+				telephone = #{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="productName != null">
+				product_name = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="appid != null">
+				appid = #{appid,jdbcType=VARCHAR},
+			</if>
+			<if test="channelName != null">
+				channel_name = #{channelName,jdbcType=VARCHAR},
+			</if>
+			<if test="actionTime != null">
+				action_time = #{actionTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deviceplate != null">
+				deviceplate = #{deviceplate,jdbcType=VARCHAR},
+			</if>
+			<if test="idfa != null">
+				idfa = #{idfa,jdbcType=VARCHAR},
+			</if>
+			<if test="mac != null">
+				mac = #{mac,jdbcType=VARCHAR},
+			</if>
+			<if test="imei != null">
+				imei = #{imei,jdbcType=VARCHAR},
+			</if>
+			<if test="udid != null">
+				udid = #{udid,jdbcType=VARCHAR},
+			</if>
+			<if test="rankingsAction != null">
+				rankings_action = #{rankingsAction,jdbcType=SMALLINT},
+			</if>
+				<if test="registerUse != null">
+				register_use = #{registerUse,jdbcType=SMALLINT},
+			</if>
+				<if test="ip != null">
+				ip = #{ip,jdbcType=VARCHAR},
+			</if>
+				<if test="country != null">
+				country = #{country,jdbcType=VARCHAR},
+			</if>
+				<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+				<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbEffectRankings">
+		update tb_effect_rankings
+		set telephone=#{telephone,jdbcType=VARCHAR},
+		product_name = #{productName,jdbcType=VARCHAR},
+		appid = #{appid,jdbcType=VARCHAR},
+		channel_name = #{channelName,jdbcType=VARCHAR},
+		action_time = #{actionTime,jdbcType=TIMESTAMP},
+		deviceplate = #{deviceplate,jdbcType=VARCHAR},
+		idfa = #{idfa,jdbcType=VARCHAR},
+		mac = #{mac,jdbcType=VARCHAR},
+		imei = #{imei,jdbcType=VARCHAR},
+		udid = #{udid,jdbcType=VARCHAR},
+		rankings_action = #{rankingsAction,jdbcType=SMALLINT},
+		register_use = #{registerUse,jdbcType=SMALLINT},
+			ip = #{ip,jdbcType=VARCHAR},
+			country = #{country,jdbcType=VARCHAR},
+			province = #{province,jdbcType=VARCHAR},
+			city = #{city,jdbcType=VARCHAR},
+		remark = #{remark,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

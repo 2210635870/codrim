@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbAdvertChannelEnquiryMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbAdvertChannelEnquiry" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="advertId" property="advertid" jdbcType="BIGINT" />
+    <result column="channelId" property="channelid" jdbcType="BIGINT" />
+    <result column="person_in_charge" property="personInCharge" jdbcType="VARCHAR" />
+    <result column="isAccept" property="isaccept" jdbcType="SMALLINT" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="add_name" property="remark" jdbcType="VARCHAR" />
+    <result column="add_time" property="remark" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+    <resultMap id="channelEnquiryBean" type="common.codrim.common.ChannelEnquiryBean" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="advertId" property="advertid" jdbcType="BIGINT" />
+    <result column="channelName" property="channelName" jdbcType="VARCHAR" />
+    <result column="personInCharge" property="personInCharge" jdbcType="VARCHAR" />
+    <result column="isAccept" property="isaccept" jdbcType="SMALLINT" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="addName" property="addName" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, advertId, channelId, person_in_charge, isAccept, price, remark,add_name,add_time
+  </sql>
+    <insert id="insertByBatch" parameterType="java.util.List"  >
+    insert into tb_advert_channel_enquiry (advertId, channelId, person_in_charge, 
+      isAccept, price, remark,add_name,add_time
+      )
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+    (#{item.advertid}, #{item.channelid}, #{item.personInCharge}, 
+      #{item.isaccept}, #{item.price}, #{item.remark},#{item.addName},#{item.addTime}
+      )
+      	</foreach>
+  </insert>
+  
+  <select id="getChannelEnquirysByAdvertId" resultMap="channelEnquiryBean" parameterType="java.lang.Long" >
+    select adv.id as id,adv.advertId as advertId,cha.channel_name as channelName,
+    adv.person_in_charge as personInCharge,adv.isAccept as isAccept,adv.price as price,
+    adv.remark as remark,adv.add_name as addName,adv.add_time as addTime
+    from tb_advert_channel_enquiry as adv inner join tb_channel as cha on adv.channelId=cha.id
+    where adv.advertId = #{advertId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_advert_channel_enquiry
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_advert_channel_enquiry
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbAdvertChannelEnquiry" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_advert_channel_enquiry (advertId, channelId, person_in_charge, 
+      isAccept, price, remark,add_name,add_time
+      )
+    values (#{advertid,jdbcType=BIGINT}, #{channelid,jdbcType=BIGINT}, #{personInCharge,jdbcType=VARCHAR}, 
+      #{isaccept,jdbcType=SMALLINT}, #{price,jdbcType=DOUBLE}, #{remark,jdbcType=VARCHAR}, #{addName,jdbcType=VARCHAR},#{addTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbAdvertChannelEnquiry" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_advert_channel_enquiry
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      advertId,
+      channelId,
+      person_in_charge,
+      isAccept,
+      price,
+      remark,
+      add_name,add_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{advertid,jdbcType=BIGINT},
+      #{channelid,jdbcType=BIGINT},
+      #{personInCharge,jdbcType=VARCHAR},
+      #{isaccept,jdbcType=SMALLINT},
+      #{price,jdbcType=DOUBLE},
+      #{remark,jdbcType=VARCHAR},
+      #{addName,jdbcType=VARCHAR},
+       #{addTime,jdbcType=TIMESTAMP},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbAdvertChannelEnquiry" >
+    update tb_advert_channel_enquiry
+    <set >
+      <if test="advertid != null" >
+        advertId = #{advertid,jdbcType=BIGINT},
+      </if>
+      <if test="channelid != null" >
+        channelId = #{channelid,jdbcType=BIGINT},
+      </if>
+      <if test="personInCharge != null" >
+        person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="isaccept != null" >
+        isAccept = #{isaccept,jdbcType=SMALLINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+         <if test="addName != null" >
+              add_name= #{addName,jdbcType=VARCHAR},
+      </if>
+         <if test="addTime != null" >
+        add_time =  #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbAdvertChannelEnquiry" >
+    update tb_advert_channel_enquiry
+    set advertId = #{advertid,jdbcType=BIGINT},
+      channelId = #{channelid,jdbcType=BIGINT},
+      person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      isAccept = #{isaccept,jdbcType=SMALLINT},
+      price = #{price,jdbcType=DOUBLE},
+      remark = #{remark,jdbcType=VARCHAR},
+          add_name= #{addName,jdbcType=VARCHAR},
+            add_time =  #{addTime,jdbcType=TIMESTAMP},
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

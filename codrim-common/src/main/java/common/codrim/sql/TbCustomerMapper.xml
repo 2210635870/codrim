@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbCustomerMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbCustomer" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="customer_type" property="customerType" jdbcType="VARCHAR" />
+    <result column="person_in_charge" property="personInCharge" jdbcType="VARCHAR" />
+    <result column="contact_name" property="contactName" jdbcType="VARCHAR" />
+    <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
+    <result column="contact_position" property="contactPosition" jdbcType="VARCHAR" />
+    <result column="contact_email" property="contactEmail" jdbcType="VARCHAR" />
+    <result column="contact_wx" property="contactWx" jdbcType="VARCHAR" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="company_phone" property="companyPhone" jdbcType="VARCHAR" />
+    <result column="company_country" property="companyCountry" jdbcType="VARCHAR" />
+    <result column="company_city" property="companyCity" jdbcType="VARCHAR" />
+    <result column="company_address" property="companyAddress" jdbcType="VARCHAR" />
+    <result column="website" property="website" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, customer_name, customer_type, person_in_charge, contact_name, contact_phone, 
+    contact_position, contact_email, contact_wx, company_name, company_phone, company_country, 
+    company_city, company_address, website, remark
+  </sql>
+  
+  	<select id="selectByCompanyName"  resultMap="BaseResultMap" >
+	    select <include refid="Base_Column_List" />
+	    from tb_customer
+	    where company_name = #{companyName}
+	  </select>
+	    <select id="selectAll" resultMap="BaseResultMap"  >
+	    select * from tb_customer
+	  </select>
+	     <select id="getTotalNum" resultType="java.lang.Integer"  >
+	    select count(*) from tb_customer
+	  </select>
+	  <select id="selectCustomersByPage" resultMap="BaseResultMap">
+	    select  <include refid="Base_Column_List" />  from tb_customer 
+	    limit #{startPage},#{size}	    
+	  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_customer
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_customer
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbCustomer" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_customer (customer_name, customer_type, person_in_charge, 
+      contact_name, contact_phone, contact_position, 
+      contact_email, contact_wx, company_name, 
+      company_phone, company_country, company_city, 
+      company_address, website, remark
+      )
+    values (#{customerName,jdbcType=VARCHAR}, #{customerType,jdbcType=VARCHAR}, #{personInCharge,jdbcType=VARCHAR}, 
+      #{contactName,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{contactPosition,jdbcType=VARCHAR}, 
+      #{contactEmail,jdbcType=VARCHAR}, #{contactWx,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
+      #{companyPhone,jdbcType=VARCHAR}, #{companyCountry,jdbcType=VARCHAR}, #{companyCity,jdbcType=VARCHAR}, 
+      #{companyAddress,jdbcType=VARCHAR}, #{website,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbCustomer" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_customer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      customer_name,
+      customer_type,
+      person_in_charge,
+      contact_name,
+      contact_phone,
+      contact_position,
+      contact_email,
+      contact_wx,
+      company_name,
+      company_phone,
+      company_country,
+      company_city,
+      company_address,
+      website,
+      remark,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{customerName,jdbcType=VARCHAR},
+      #{customerType,jdbcType=VARCHAR},
+      #{personInCharge,jdbcType=VARCHAR},
+      #{contactName,jdbcType=VARCHAR},
+      #{contactPhone,jdbcType=VARCHAR},
+      #{contactPosition,jdbcType=VARCHAR},
+      #{contactEmail,jdbcType=VARCHAR},
+      #{contactWx,jdbcType=VARCHAR},
+      #{companyName,jdbcType=VARCHAR},
+      #{companyPhone,jdbcType=VARCHAR},
+      #{companyCountry,jdbcType=VARCHAR},
+      #{companyCity,jdbcType=VARCHAR},
+      #{companyAddress,jdbcType=VARCHAR},
+      #{website,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbCustomer" >
+    update tb_customer
+    <set >
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerType != null" >
+        customer_type = #{customerType,jdbcType=VARCHAR},
+      </if>
+      <if test="personInCharge != null" >
+        person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null" >
+        contact_name = #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPhone != null" >
+        contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPosition != null" >
+        contact_position = #{contactPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="contactEmail != null" >
+        contact_email = #{contactEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="contactWx != null" >
+        contact_wx = #{contactWx,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyPhone != null" >
+        company_phone = #{companyPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCountry != null" >
+        company_country = #{companyCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCity != null" >
+        company_city = #{companyCity,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddress != null" >
+        company_address = #{companyAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        website = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbCustomer" >
+    update tb_customer
+    set customer_name = #{customerName,jdbcType=VARCHAR},
+      customer_type = #{customerType,jdbcType=VARCHAR},
+      person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      contact_name = #{contactName,jdbcType=VARCHAR},
+      contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      contact_position = #{contactPosition,jdbcType=VARCHAR},
+      contact_email = #{contactEmail,jdbcType=VARCHAR},
+      contact_wx = #{contactWx,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      company_phone = #{companyPhone,jdbcType=VARCHAR},
+      company_country = #{companyCountry,jdbcType=VARCHAR},
+      company_city = #{companyCity,jdbcType=VARCHAR},
+      company_address = #{companyAddress,jdbcType=VARCHAR},
+      website = #{website,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

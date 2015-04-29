@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>www.codrim.net</groupId>
+    <artifactId>codrim-root</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>www.codrim.net</groupId>
+  <artifactId>qianbengbeng.codrim.net</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>qianbengbeng.codrim.net Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+  	<dependency>
+		<groupId>www.codrim.net</groupId>
+		<artifactId>codrim-common</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+	  <groupId>sms</groupId>
+	  <artifactId>sms</artifactId>
+	  <version>1.0</version>
+	</dependency>
+    <dependency>
+        <groupId>net.glxn.qrgen</groupId>
+        <artifactId>javase</artifactId>
+        <version>2.0</version>
+    </dependency>
+    <dependency>
+	    <groupId>org.apache.commons</groupId>
+	    <artifactId>commons-math3</artifactId>
+	    <version>3.2</version>
+	</dependency>
+<dependency>
+  <groupId>com.getui</groupId>
+  <artifactId>com.getui.base</artifactId>
+  <version>1.0.0</version>
+</dependency>
+<dependency>
+  <groupId>com.getui</groupId>
+  <artifactId>com.getui.http</artifactId>
+  <version>1.0.0</version>
+</dependency>
+<dependency>
+  <groupId>com.getui</groupId>
+  <artifactId>com.getui.template</artifactId>
+  <version>1.0.0</version>
+</dependency>
+<dependency>
+  <groupId>com.google</groupId>
+  <artifactId>com.google.protobuf</artifactId>
+  <version>1.0.0</version>
+</dependency>
+  </dependencies>
+  <build>
+    <finalName>qianbengbeng.codrim.net</finalName>
+  </build>
+</project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "mybatis-3-config.dtd">
+
+<configuration>
+	<!-- - - - - - - 懒加载和缓存 - - - - - - - - - - -->
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="aggressiveLazyLoading" value="false" />
+	</settings>
+	<!-- - - - - - - -映射文件路径- - - - - - -->
+	<mappers>
+		<mapper resource="common/codrim/sql/TbWzTaskRecordMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzTaskMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzBindingMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzUserMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzGroupMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzExchangeRecordMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzTaskStepMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzCommonSettingMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzGroupTaskRatioMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzGroupInviteCodeMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzGroupApplicationMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzAppUpgradeMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzImageUrlSettingMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzGameH5Mapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzCoinCashSettingMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzPointsLogMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzTaskNumLimitMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzThirdDeviceUidMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzNewsMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzWallpaperMapper.xml"/>
+        <mapper resource="common/codrim/sql/TbWzMsgPushSettingMapper.xml"/>          
+	</mappers>
+</configuration>

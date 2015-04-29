@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbAdvertMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbAdvert" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="advert_name" property="advertName" jdbcType="SMALLINT" />
+    <result column="deviceplate" property="deviceplate" jdbcType="VARCHAR" />
+    <result column="settlement_way" property="settlementWay" jdbcType="SMALLINT" />
+    <result column="effect_type" property="effectType" jdbcType="SMALLINT" />
+    <result column="effect_type_back" property="effectTypeBack" jdbcType="SMALLINT" />
+    <result column="is_back" property="isBack" jdbcType="SMALLINT" />
+    <result column="access_price" property="accessPrice" jdbcType="DOUBLE" />
+    <result column="ways_of_cooperation" property="waysOfCooperation" jdbcType="SMALLINT" />
+    <result column="require" property="require" jdbcType="VARCHAR" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="operate_evaluate_name" property="operateEvaluateName" jdbcType="VARCHAR" />
+    <result column="operate_evaluate_time" property="operateEvaluateTime" jdbcType="TIMESTAMP" />
+    <result column="operate_evaluate_result" property="operateEvaluateResult" jdbcType="SMALLINT" />
+    <result column="operate_evaluate_price" property="operateEvaluatePrice" jdbcType="DOUBLE" />
+    <result column="operate_evaluate_remark_channel" property="operateEvaluateRemarkChannel" jdbcType="VARCHAR" />
+    <result column="operate_evaluate_remark_business" property="operateEvaluateRemarkBusiness" jdbcType="VARCHAR" />
+    <result column="final_evaluate_name" property="finalEvaluateName" jdbcType="VARCHAR" />
+    <result column="final_evaluate_result" property="finalEvaluateResult" jdbcType="SMALLINT" />
+    <result column="final_evaluate_remark" property="finalEvaluateRemark" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="running_status" property="runningStatus" jdbcType="SMALLINT" />
+        <result column="evaluate_status" property="evaluateStatus" jdbcType="SMALLINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product_id, advert_name, deviceplate, settlement_way, effect_type, effect_type_back, 
+    is_back,running_status, access_price, ways_of_cooperation, `require`, create_name,evaluate_status, operate_evaluate_name, 
+    operate_evaluate_time, operate_evaluate_result, operate_evaluate_price, operate_evaluate_remark_channel, 
+    operate_evaluate_remark_business, final_evaluate_name, final_evaluate_result, final_evaluate_remark, 
+    add_time
+  </sql>
+    <select id="getAdvertsByproductId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_advert
+    where product_id = #{productId,jdbcType=BIGINT}
+  </select>
+  
+  
+    <select id="selectCountAdvertsByProductIdAndStatus" resultType="java.lang.Integer"  parameterType="common.codrim.common.SelectResultByCodition">
+    select count(1)
+    from tb_advert
+    where product_id = #{productId} 
+    <if test="type !=null ">
+	and	evaluate_status=#{type} 
+		</if>
+  </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_advert
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_advert
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbAdvert" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_advert (product_id, advert_name, deviceplate, 
+      settlement_way, effect_type, effect_type_back, 
+      is_back,running_status, access_price, ways_of_cooperation, 
+      `require`, create_name,evaluate_status, operate_evaluate_name, 
+      operate_evaluate_time, operate_evaluate_result, 
+      operate_evaluate_price, operate_evaluate_remark_channel, 
+      operate_evaluate_remark_business, final_evaluate_name, 
+      final_evaluate_result, final_evaluate_remark, 
+      add_time)
+    values (#{productId,jdbcType=BIGINT}, #{advertName,jdbcType=SMALLINT}, #{deviceplate,jdbcType=VARCHAR}, 
+      #{settlementWay,jdbcType=SMALLINT}, #{effectType,jdbcType=SMALLINT}, #{effectTypeBack,jdbcType=SMALLINT}, 
+      #{isBack,jdbcType=SMALLINT}, #{runningStatus,jdbcType=SMALLINT},#{accessPrice,jdbcType=DOUBLE}, #{waysOfCooperation,jdbcType=SMALLINT}, 
+      #{require,jdbcType=VARCHAR}, #{createName,jdbcType=VARCHAR},#{evaluateStatus,jdbcType=SMALLINT}, #{operateEvaluateName,jdbcType=VARCHAR}, 
+      #{operateEvaluateTime,jdbcType=TIMESTAMP}, #{operateEvaluateResult,jdbcType=SMALLINT}, 
+      #{operateEvaluatePrice,jdbcType=DOUBLE}, #{operateEvaluateRemarkChannel,jdbcType=VARCHAR}, 
+      #{operateEvaluateRemarkBusiness,jdbcType=VARCHAR}, #{finalEvaluateName,jdbcType=VARCHAR}, 
+      #{finalEvaluateResult,jdbcType=SMALLINT}, #{finalEvaluateRemark,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbAdvert" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_advert
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      product_id,
+      advert_name,
+      deviceplate,
+      settlement_way,
+      effect_type,
+      effect_type_back,
+      is_back,
+      running_status,
+      access_price,
+      ways_of_cooperation,
+      `require`,
+      create_name,
+      evaluate_status,
+      operate_evaluate_name,
+      operate_evaluate_time,
+      operate_evaluate_result,
+      operate_evaluate_price,
+      operate_evaluate_remark_channel,
+      operate_evaluate_remark_business,
+      final_evaluate_name,
+      final_evaluate_result,
+      final_evaluate_remark,
+      add_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{productId,jdbcType=BIGINT},
+       #{advertName,jdbcType=SMALLINT},
+      #{deviceplate,jdbcType=VARCHAR},
+      #{settlementWay,jdbcType=SMALLINT},
+      #{effectType,jdbcType=SMALLINT},
+      #{effectTypeBack,jdbcType=SMALLINT},
+      #{isBack,jdbcType=SMALLINT},
+      #{runningStatus,jdbcType=SMALLINT},
+      #{accessPrice,jdbcType=DOUBLE},
+      #{waysOfCooperation,jdbcType=SMALLINT},
+      #{require,jdbcType=VARCHAR},
+      #{createName,jdbcType=VARCHAR},
+      #{evaluateStatus,jdbcType=SMALLINT},
+      #{operateEvaluateName,jdbcType=VARCHAR},
+      #{operateEvaluateTime,jdbcType=TIMESTAMP},
+      #{operateEvaluateResult,jdbcType=SMALLINT},
+      #{operateEvaluatePrice,jdbcType=DOUBLE},
+      #{operateEvaluateRemarkChannel,jdbcType=VARCHAR},
+      #{operateEvaluateRemarkBusiness,jdbcType=VARCHAR},
+      #{finalEvaluateName,jdbcType=VARCHAR},
+      #{finalEvaluateResult,jdbcType=SMALLINT},
+      #{finalEvaluateRemark,jdbcType=VARCHAR},
+      #{addTime,jdbcType=TIMESTAMP},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbAdvert" >
+    update tb_advert
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="advertName != null" >
+        advert_name =  #{advertName,jdbcType=SMALLINT},
+      </if>
+      <if test="deviceplate != null" >
+        deviceplate = #{deviceplate,jdbcType=VARCHAR},
+      </if>
+      <if test="settlementWay != null" >
+        settlement_way = #{settlementWay,jdbcType=SMALLINT},
+      </if>
+      <if test="effectType != null" >
+        effect_type = #{effectType,jdbcType=SMALLINT},
+      </if>
+      <if test="effectTypeBack != null" >
+        effect_type_back = #{effectTypeBack,jdbcType=SMALLINT},
+      </if>
+      <if test="isBack != null" >
+        is_back = #{isBack,jdbcType=SMALLINT},
+      </if>
+           <if test="runningStatus != null" >
+        running_status =   #{runningStatus,jdbcType=SMALLINT},
+      </if>
+    
+      <if test="accessPrice != null" >
+        access_price = #{accessPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="waysOfCooperation != null" >
+        ways_of_cooperation = #{waysOfCooperation,jdbcType=SMALLINT},
+      </if>
+      <if test="require != null" >
+        `require` = #{require,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        create_name = #{createName,jdbcType=VARCHAR},
+      </if>
+        <if test="evaluateStatus != null" >
+        evaluate_status =   #{evaluateStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="operateEvaluateName != null" >
+        operate_evaluate_name = #{operateEvaluateName,jdbcType=VARCHAR},
+      </if>
+      <if test="operateEvaluateTime != null" >
+        operate_evaluate_time = #{operateEvaluateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateEvaluateResult != null" >
+        operate_evaluate_result = #{operateEvaluateResult,jdbcType=SMALLINT},
+      </if>
+      <if test="operateEvaluatePrice != null" >
+        operate_evaluate_price = #{operateEvaluatePrice,jdbcType=DOUBLE},
+      </if>
+      <if test="operateEvaluateRemarkChannel != null" >
+        operate_evaluate_remark_channel = #{operateEvaluateRemarkChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="operateEvaluateRemarkBusiness != null" >
+        operate_evaluate_remark_business = #{operateEvaluateRemarkBusiness,jdbcType=VARCHAR},
+      </if>
+      <if test="finalEvaluateName != null" >
+        final_evaluate_name = #{finalEvaluateName,jdbcType=VARCHAR},
+      </if>
+      <if test="finalEvaluateResult != null" >
+        final_evaluate_result = #{finalEvaluateResult,jdbcType=SMALLINT},
+      </if>
+      <if test="finalEvaluateRemark != null" >
+        final_evaluate_remark = #{finalEvaluateRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbAdvert" >
+    update tb_advert
+    set product_id = #{productId,jdbcType=BIGINT},
+      advert_name = #{advertName,jdbcType=BIGINT},
+      deviceplate = #{deviceplate,jdbcType=VARCHAR},
+      settlement_way = #{settlementWay,jdbcType=SMALLINT},
+      effect_type = #{effectType,jdbcType=SMALLINT},
+      effect_type_back = #{effectTypeBack,jdbcType=SMALLINT},
+      is_back = #{isBack,jdbcType=SMALLINT},
+       running_status =   #{runningStatus,jdbcType=SMALLINT},
+      access_price = #{accessPrice,jdbcType=DOUBLE},
+      ways_of_cooperation = #{waysOfCooperation,jdbcType=SMALLINT},
+      `require` = #{require,jdbcType=VARCHAR},
+      create_name = #{createName,jdbcType=VARCHAR},
+              evaluate_status =   #{evaluateStatus,jdbcType=SMALLINT},
+      operate_evaluate_name = #{operateEvaluateName,jdbcType=VARCHAR},
+      operate_evaluate_time = #{operateEvaluateTime,jdbcType=TIMESTAMP},
+      operate_evaluate_result = #{operateEvaluateResult,jdbcType=SMALLINT},
+      operate_evaluate_price = #{operateEvaluatePrice,jdbcType=DOUBLE},
+      operate_evaluate_remark_channel = #{operateEvaluateRemarkChannel,jdbcType=VARCHAR},
+      operate_evaluate_remark_business = #{operateEvaluateRemarkBusiness,jdbcType=VARCHAR},
+      final_evaluate_name = #{finalEvaluateName,jdbcType=VARCHAR},
+      final_evaluate_result = #{finalEvaluateResult,jdbcType=SMALLINT},
+      final_evaluate_remark = #{finalEvaluateRemark,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

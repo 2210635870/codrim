@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="common.codrim.dao.TbCodrimLinkParamMapper">
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbCodrimLinkParam">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="param_zh_name" jdbcType="VARCHAR" property="paramZhName" />
+    <result column="param_en_name" jdbcType="VARCHAR" property="paramEnName" />
+    <result column="param_type" jdbcType="SMALLINT" property="paramType" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+  </resultMap>
+    <sql id="Base_Column_List">
+    id, param_zh_name, param_en_name, param_type, add_time
+  </sql>
+    <select id="selectAll" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_codrim_link_param
+  </select>
+  
+  <select id="validCodrimLinkParamZhName" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_codrim_link_param
+    where  param_zh_name = #{name}
+  </select>
+    <select id="validCodrimLinkParamEnName" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_codrim_link_param
+    where  param_en_name = #{name}
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_codrim_link_param
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_codrim_link_param
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyProperty="id" parameterType="common.codrim.pojo.TbCodrimLinkParam" useGeneratedKeys="true">
+    insert into tb_codrim_link_param (param_zh_name, param_en_name, param_type, 
+      add_time)
+    values (#{paramZhName,jdbcType=VARCHAR}, #{paramEnName,jdbcType=VARCHAR}, #{paramType,jdbcType=SMALLINT}, 
+      #{addTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyProperty="id" parameterType="common.codrim.pojo.TbCodrimLinkParam" useGeneratedKeys="true">
+    insert into tb_codrim_link_param
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      param_zh_name,
+      param_en_name,
+      param_type,
+      add_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{paramZhName,jdbcType=VARCHAR},
+      #{paramEnName,jdbcType=VARCHAR},
+      #{paramType,jdbcType=SMALLINT},
+      #{addTime,jdbcType=TIMESTAMP},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbCodrimLinkParam">
+    update tb_codrim_link_param
+    <set>
+      <if test="paramZhName != null">
+        param_zh_name = #{paramZhName,jdbcType=VARCHAR},
+      </if>
+      <if test="paramEnName != null">
+        param_en_name = #{paramEnName,jdbcType=VARCHAR},
+      </if>
+      <if test="paramType != null">
+        param_type = #{paramType,jdbcType=SMALLINT},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbCodrimLinkParam">
+    update tb_codrim_link_param
+    set param_zh_name = #{paramZhName,jdbcType=VARCHAR},
+      param_en_name = #{paramEnName,jdbcType=VARCHAR},
+      param_type = #{paramType,jdbcType=SMALLINT},
+      add_time = #{addTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+</mapper>

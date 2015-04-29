@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzGroupApplicationMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzGroupApplication" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="join_reason" property="joinReason" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="invite_by" property="inviteBy" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="DATE" />
+  </resultMap>
+  <resultMap id="GroupApplicationResultMap" type="common.codrim.wz.sql.result.GroupApplicationInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="join_reason" property="joinReason" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="invite_by" property="inviteBy" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="DATE" />
+    <result column="applicantName" property="applicantName" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="phoneNumber" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="balance" property="balance" jdbcType="BIGINT" />
+    <result column="stepEffect" property="stepEffect" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, group_id, join_reason, `status`, invite_by, create_date
+  </sql>
+  
+ 	<select id="count" resultType="java.lang.Integer" >
+		select count(1) 
+		from tb_wz_group_application
+		<where>
+			<if test="param.groupId != null">
+				group_id = #{param.groupId}
+			</if>
+			<if test="param.status != null">
+				and status = #{param.status}
+			</if>
+			<if test="param.userId != null">
+				and user_id = #{param.userId}
+			</if>
+			<if test="param.isInvited == 1">
+				and invite_by is not null
+			</if>
+		</where>
+	</select>
+	
+	<select id="page" resultMap="GroupApplicationResultMap" >
+		select id, ga.user_id, ga.group_id, join_reason, ga.`status`, ga.invite_by, ga.create_date, u.username as applicantName, u.icon as icon
+		from tb_wz_group_application ga
+		left join tb_wz_user u on u.user_id=ga.user_id
+		<where>
+			<if test="param.groupId != null">
+				ga.group_id = #{param.groupId}
+			</if>
+			<if test="param.status != null">
+				and ga.status = #{param.status}
+			</if>
+		</where>
+		order by id desc
+		limit #{startPage},#{size}
+	</select>
+	
+	<select id="getApplicationDetail" resultMap="GroupApplicationResultMap" >
+		select id, ga.user_id, ga.group_id, join_reason, ga.`status`, ga.invite_by, ga.create_date, 
+			u.username as applicantName, u.icon as icon, u.phone_number as phoneNumber, u.balance, u.step_effect as stepEffect
+		from tb_wz_group_application ga
+		left join tb_wz_user u on u.user_id=ga.user_id
+		where ga.id = #{id}
+	</select>
+	
+	<delete id="deletePendingAppByUser" >
+	    delete from tb_wz_group_application
+	    where user_id = #{userId} and status='1'
+	</delete>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_group_application
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_group_application
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzGroupApplication" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_group_application (user_id, group_id, join_reason, 
+      `status`, invite_by, create_date
+      )
+    values (#{userId,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{joinReason,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{inviteBy,jdbcType=BIGINT}, #{createDate,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzGroupApplication" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_group_application
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      user_id,
+      group_id,
+      join_reason,
+      `status`,
+      invite_by,
+      create_date,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{userId,jdbcType=BIGINT},
+      #{groupId,jdbcType=BIGINT},
+      #{joinReason,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER},
+      #{inviteBy,jdbcType=BIGINT},
+      #{createDate,jdbcType=DATE},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzGroupApplication" >
+    update tb_wz_group_application
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="joinReason != null" >
+        join_reason = #{joinReason,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="inviteBy != null" >
+        invite_by = #{inviteBy,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzGroupApplication" >
+    update tb_wz_group_application
+    set user_id = #{userId,jdbcType=BIGINT},
+      group_id = #{groupId,jdbcType=BIGINT},
+      join_reason = #{joinReason,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      invite_by = #{inviteBy,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=DATE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

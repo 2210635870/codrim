@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzMsgPushSettingMapper">
+	<resultMap id="BaseresultMap" type="common.codrim.pojo.TbWzMsgPushSetting" >
+   		<id column="id" property="id" jdbcType="BIGINT" />
+  		<result column="name" property="name" jdbcType="VARCHAR" />
+    	<result column="value" property="value" jdbcType="VARCHAR" />
+	</resultMap>
+  
+	<sql id="Base_Column_List" >
+    	id, name, value
+	</sql>
+  
+	<select id="selectByPrimaryKey" resultMap="BaseresultMap" parameterType="java.lang.Long" >
+		select 
+   		<include refid="Base_Column_List" />
+		from tb_wz_msg_push_setting
+		where id = #{id,jdbcType=BIGINT}
+  	</select>
+  
+	<select id="selectList" resultMap="BaseresultMap"  >
+		select * from tb_wz_msg_push_setting
+		<where>
+			<if test="id != null">
+				id = #{id, #jdbcType=BIGINT}
+			</if>
+			<if test="name != null">
+				and name = #{name, jdbcType=VARCHAR}
+			</if>
+			<if test="value != null">
+				and value = #{value, jdbcType=VARCHAR} 
+			</if>
+		</where>
+		<if test="start != null and size != null">
+ 			limit #{start},#{size}
+ 		</if>
+	</select>
+	
+	<select id="getTotalNum" resultType="java.lang.Integer"  >
+   	 	select  count(*) from tb_wz_msg_push_setting
+   	 	<where>
+			<if test="id != null">
+				id = #{id, #jdbcType=BIGINT}
+			</if>
+			<if test="name != null">
+				and name = #{name, jdbcType=VARCHAR}
+			</if>
+			<if test="value != null">
+				and value = #{value, jdbcType=VARCHAR} 
+			</if>
+		</where>
+  	</select>
+  
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    	delete from tb_wz_msg_push_setting
+    	where id = #{id,jdbcType=BIGINT}
+	</delete>
+	
+	<insert id="insert" parameterType="common.codrim.pojo.TbWzMsgPushSetting" useGeneratedKeys="true" keyProperty="id" >
+		insert into tb_wz_msg_push_setting (id, name, value)
+   		values 
+   		(#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR})
+    	<selectKey resultType="long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzMsgPushSetting" >
+		update tb_wz_msg_push_setting
+		set name = #{name,jdbcType=VARCHAR},
+      		value = #{value,jdbcType=VARCHAR}
+    	where id = #{id,jdbcType=BIGINT}
+	</update>
+	
+	<update id="updateValueByName" parameterType="java.util.List">
+		<foreach collection="list" item="item" separator=";">
+			update tb_wz_msg_push_setting
+			<set>
+				value=#{item.value,jdbcType=VARCHAR},
+			</set>
+			<where>
+				name=#{item.name,jdbcType=VARCHAR}
+			</where>
+		</foreach>
+	</update>
+</mapper>

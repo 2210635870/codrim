@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzGroupInviteCodeMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzGroupInviteCode" >
+    <id column="code" property="code" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    code, `status`, group_id, contact, qq, phone, email
+  </sql>
+  
+     <select id="count" resultType="java.lang.Integer" >
+		select count(1) from tb_wz_group_invite_code
+		<where>
+			<if test="param.status != null">
+				status = #{param.status}
+			</if>
+			<if test="param.code != null">
+				and code = #{param.code}
+			</if>
+		</where>
+	</select>
+	
+	<select id="page" resultMap="BaseResultMap" >
+		select <include refid="Base_Column_List" />
+		from tb_wz_group_invite_code 
+		<where>
+			<if test="param.status != null">
+				status = #{param.status}
+			</if>
+			<if test="param.code != null">
+				and code = #{param.code}
+			</if>
+		</where>
+		order by code desc
+		limit #{startPage},#{size}
+	</select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_group_invite_code
+    where code = #{code,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_group_invite_code
+    where code = #{code,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzGroupInviteCode" useGeneratedKeys="true" keyProperty="code" >
+    insert into tb_wz_group_invite_code (`status`, group_id, contact, 
+      qq, phone, email)
+    values (#{status,jdbcType=INTEGER}, #{groupId,jdbcType=BIGINT}, #{contact,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzGroupInviteCode" useGeneratedKeys="true" keyProperty="code" >
+    insert into tb_wz_group_invite_code
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      `status`,
+      group_id,
+      contact,
+      qq,
+      phone,
+      email,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{status,jdbcType=INTEGER},
+      #{groupId,jdbcType=BIGINT},
+      #{contact,jdbcType=VARCHAR},
+      #{qq,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzGroupInviteCode" >
+    update tb_wz_group_invite_code
+    <set >
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="contact != null" >
+        contact = #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where code = #{code,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzGroupInviteCode" >
+    update tb_wz_group_invite_code
+    set `status` = #{status,jdbcType=INTEGER},
+      group_id = #{groupId,jdbcType=BIGINT},
+      contact = #{contact,jdbcType=VARCHAR},
+      qq = #{qq,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR}
+    where code = #{code,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="common.codrim.dao.TbProductMapper">
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbProduct">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="product_iden" jdbcType="VARCHAR" property="productIden" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="product_type" jdbcType="VARCHAR" property="productType" />
+    <result column="create_describe" jdbcType="VARCHAR" property="createDescribe" />
+    <result column="create_name" jdbcType="VARCHAR" property="createName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="android_packet_size" jdbcType="VARCHAR" property="androidPacketSize" />
+    <result column="android_packet_url" jdbcType="VARCHAR" property="androidPacketUrl" />
+    <result column="ios_packet_size" jdbcType="VARCHAR" property="iosPacketSize" />
+    <result column="ios_packet_url" jdbcType="VARCHAR" property="iosPacketUrl" />
+    <result column="is_back" jdbcType="SMALLINT" property="isBack" />
+  </resultMap>
+   <resultMap id="viewProductToCount" type="common.codrim.common.ViewProductToCountBean">
+    <id column="id"  property="id" />
+    <result column="productName"  property="productName" />
+    <result column="productIden"  property="productIden" />
+    <result column="customerName"  property="customerName" />
+    <result column="productType"  property="productType" />
+    <result column="createName"  property="createName" />
+    <result column="advertNum" property="advertNum" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, product_name, product_iden, customer_name, product_type, create_describe, create_name, 
+    create_time, android_packet_size, android_packet_url, ios_packet_size, ios_packet_url,is_back
+  </sql>
+    <select id="getProductNameByCustomerName" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_product
+    where customer_name = #{customerName,jdbcType=VARCHAR} order by create_time desc
+  </select>
+  
+ 
+  
+    <select id="selectViewProductToCount"  resultMap="viewProductToCount"  parameterType="common.codrim.common.SelectResultByCodition">
+ SELECT b.id as id ,b.product_name as productName ,b.product_type as productType,b.product_iden as productIden,b.customer_name as customerName,b.create_name as createName ,
+ COUNT(s.`id`) as advertNum
+ FROM tb_advert AS s right JOIN 
+(SELECT a.id as id,a.product_name as product_name,a.product_iden as product_iden,
+a.customer_name as customer_name,a.create_name as create_name,c.product_type as product_type ,a.`create_time` AS createTime  FROM tb_product as a inner join tb_product_type as c 
+ on a.product_type=c.id
+ WHERE a.customer_name=#{customerName}
+<if test="productName != '全部'">
+       and a.product_name=#{productName} 
+      </if>
+)
+ AS b ON s.product_id=b.id GROUP BY b.id ORDER BY b.createTime DESC
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_product
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_product
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyProperty="id" parameterType="common.codrim.pojo.TbProduct" useGeneratedKeys="true">
+    insert into tb_product (product_name, product_iden, customer_name, 
+      product_type, create_describe, create_name, 
+      create_time, android_packet_size, android_packet_url, 
+      ios_packet_size, ios_packet_url,is_back)
+    values (#{productName,jdbcType=VARCHAR}, #{productIden,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, 
+      #{productType,jdbcType=VARCHAR}, #{createDescribe,jdbcType=VARCHAR}, #{createName,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{androidPacketSize,jdbcType=VARCHAR}, #{androidPacketUrl,jdbcType=VARCHAR}, 
+      #{iosPacketSize,jdbcType=VARCHAR}, #{iosPacketUrl,jdbcType=VARCHAR}, #{isBack,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" keyProperty="id" parameterType="common.codrim.pojo.TbProduct" useGeneratedKeys="true" >
+    insert into tb_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      product_name,
+      product_iden,
+      customer_name,
+      product_type,
+      create_describe,
+      create_name,
+      create_time,
+      android_packet_size,
+      android_packet_url,
+      ios_packet_size,
+      ios_packet_url,
+      is_back,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{productName,jdbcType=VARCHAR},
+      #{productIden,jdbcType=VARCHAR},
+      #{customerName,jdbcType=VARCHAR},
+      #{productType,jdbcType=VARCHAR},
+      #{createDescribe,jdbcType=VARCHAR},
+      #{createName,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{androidPacketSize,jdbcType=VARCHAR},
+      #{androidPacketUrl,jdbcType=VARCHAR},
+      #{iosPacketSize,jdbcType=VARCHAR},
+      #{iosPacketUrl,jdbcType=VARCHAR},
+      #{isBack,jdbcType=SMALLINT},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbProduct">
+    update tb_product
+    <set>
+      <if test="productName != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productIden != null">
+        product_iden = #{productIden,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null">
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null">
+        product_type = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="createDescribe != null">
+        create_describe = #{createDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null">
+        create_name = #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="androidPacketSize != null">
+        android_packet_size = #{androidPacketSize,jdbcType=VARCHAR},
+      </if>
+      <if test="androidPacketUrl != null">
+        android_packet_url = #{androidPacketUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="iosPacketSize != null">
+        ios_packet_size = #{iosPacketSize,jdbcType=VARCHAR},
+      </if>
+      <if test="iosPacketUrl != null">
+        ios_packet_url = #{iosPacketUrl,jdbcType=VARCHAR},
+      </if>
+            <if test="isBack != null">
+         is_back=#{isBack,jdbcType=SMALLINT},
+      </if>
+     
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbProduct">
+    update tb_product
+    set product_name = #{productName,jdbcType=VARCHAR},
+      product_iden = #{productIden,jdbcType=VARCHAR},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      product_type = #{productType,jdbcType=VARCHAR},
+      create_describe = #{createDescribe,jdbcType=VARCHAR},
+      create_name = #{createName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      android_packet_size = #{androidPacketSize,jdbcType=VARCHAR},
+      android_packet_url = #{androidPacketUrl,jdbcType=VARCHAR},
+      ios_packet_size = #{iosPacketSize,jdbcType=VARCHAR},
+      ios_packet_url = #{iosPacketUrl,jdbcType=VARCHAR},
+     is_back=#{isBack,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+</mapper>

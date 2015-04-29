@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzGameH5Mapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzGameH5" >
+       <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="game_name" property="gameName" jdbcType="VARCHAR" />
+    <result column="game_icon" property="gameIcon" jdbcType="VARCHAR" />
+    <result column="game_url" property="gameUrl" jdbcType="VARCHAR" />
+    <result column="game_desc" property="gameDesc" jdbcType="VARCHAR" />
+    <result column="playing_num" property="playingNum" jdbcType="INTEGER" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="start_time" property="startTime" jdbcType="DATE" />
+    <result column="end_time" property="endTime" jdbcType="DATE" />
+    <result column="add_date" property="addDate" jdbcType="TIMESTAMP" />
+    <result column="weight" property="weight" jdbcType="SMALLINT" />
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, game_name, game_icon, game_url, game_desc, playing_num, company, `status`, start_time, 
+    end_time, add_date, weight
+  </sql>
+  
+  
+      <select id="getTotalGameH5"  resultType="java.lang.Integer"  parameterType="common.codrim.common.SelectResultByCodition">
+    select count(1)
+    from tb_wz_game_h5
+             <if test="runningStatus != null" >
+           where status=#{runningStatus}
+      </if>
+  </select>
+  
+    <select id="getGameH5List" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_game_h5
+          <if test="runningStatus != null" >
+           where status=#{runningStatus}
+      </if>
+
+    order by weight desc , add_date limit #{startPage},#{size} 
+  </select>
+  
+   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_game_h5
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_game_h5
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzGameH5" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_game_h5 (game_name, game_icon, game_url, 
+      game_desc, playing_num, company, 
+      `status`, start_time, end_time, 
+      add_date, weight)
+    values (#{gameName,jdbcType=VARCHAR}, #{gameIcon,jdbcType=VARCHAR}, #{gameUrl,jdbcType=VARCHAR}, 
+      #{gameDesc,jdbcType=VARCHAR}, #{playingNum,jdbcType=INTEGER}, #{company,jdbcType=VARCHAR}, 
+      #{status,jdbcType=SMALLINT}, #{startTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, 
+      #{addDate,jdbcType=TIMESTAMP}, #{weight,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzGameH5" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_game_h5
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      game_name,
+      game_icon,
+      game_url,
+      game_desc,
+      playing_num,
+      company,
+      `status`,
+      start_time,
+      end_time,
+      add_date,
+      weight,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{gameName,jdbcType=VARCHAR},
+      #{gameIcon,jdbcType=VARCHAR},
+      #{gameUrl,jdbcType=VARCHAR},
+      #{gameDesc,jdbcType=VARCHAR},
+      #{playingNum,jdbcType=INTEGER},
+      #{company,jdbcType=VARCHAR},
+      #{status,jdbcType=SMALLINT},
+      #{startTime,jdbcType=DATE},
+      #{endTime,jdbcType=DATE},
+      #{addDate,jdbcType=TIMESTAMP},
+      #{weight,jdbcType=SMALLINT},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzGameH5" >
+    update tb_wz_game_h5
+    <set >
+      <if test="gameName != null and gameName!='null'" >
+        game_name = #{gameName,jdbcType=VARCHAR},
+      </if>
+      <if test="gameIcon != null and gameIcon !='null'" >
+        game_icon = #{gameIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="gameUrl != null and gameUrl!='null'" >
+        game_url = #{gameUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="gameDesc != null  and gameDesc!='null'" >
+        game_desc = #{gameDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="playingNum != null  " >
+        playing_num = #{playingNum,jdbcType=INTEGER},
+      </if>
+      <if test="company != null  and company!='null'" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null  " >
+        `status` = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="startTime != null " >
+        start_time = #{startTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null " >
+        end_time = #{endTime,jdbcType=DATE},
+      </if>
+      <if test="addDate != null "  >
+        add_date = #{addDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="weight != null " >
+        weight = #{weight,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzGameH5" >
+    update tb_wz_game_h5
+    set game_name = #{gameName,jdbcType=VARCHAR},
+      game_icon = #{gameIcon,jdbcType=VARCHAR},
+      game_url = #{gameUrl,jdbcType=VARCHAR},
+      game_desc = #{gameDesc,jdbcType=VARCHAR},
+      playing_num = #{playingNum,jdbcType=INTEGER},
+      company = #{company,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=SMALLINT},
+      start_time = #{startTime,jdbcType=DATE},
+      end_time = #{endTime,jdbcType=DATE},
+      add_date = #{addDate,jdbcType=TIMESTAMP},
+      weight = #{weight,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

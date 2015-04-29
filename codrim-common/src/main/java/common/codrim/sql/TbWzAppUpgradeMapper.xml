@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzAppUpgradeMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzAppUpgrade" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="apk_version" property="apkVersion" jdbcType="VARCHAR" />
+    <result column="apk_url" property="apkUrl" jdbcType="VARCHAR" />
+    <result column="upgrade_info" property="upgradeInfo" jdbcType="VARCHAR" />
+    <result column="is_mandatory" property="isMandatory" jdbcType="INTEGER" />
+    <result column="publish_date" property="publishDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, apk_version, apk_url, upgrade_info, is_mandatory, publish_date
+  </sql>
+  
+    <select id="selectAllAppUpgrade" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_app_upgrade
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_app_upgrade
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_app_upgrade
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzAppUpgrade" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_app_upgrade (apk_version, apk_url, upgrade_info, 
+      is_mandatory, publish_date)
+    values (#{apkVersion,jdbcType=VARCHAR}, #{apkUrl,jdbcType=VARCHAR}, #{upgradeInfo,jdbcType=VARCHAR}, 
+      #{isMandatory,jdbcType=INTEGER}, #{publishDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzAppUpgrade" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_app_upgrade
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      apk_version,
+      apk_url,
+      upgrade_info,
+      is_mandatory,
+      publish_date,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{apkVersion,jdbcType=VARCHAR},
+      #{apkUrl,jdbcType=VARCHAR},
+      #{upgradeInfo,jdbcType=VARCHAR},
+      #{isMandatory,jdbcType=INTEGER},
+      #{publishDate,jdbcType=TIMESTAMP},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzAppUpgrade" >
+    update tb_wz_app_upgrade
+    <set >
+      <if test="apkVersion != null" >
+        apk_version = #{apkVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="apkUrl != null" >
+        apk_url = #{apkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="upgradeInfo != null" >
+        upgrade_info = #{upgradeInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isMandatory != null" >
+        is_mandatory = #{isMandatory,jdbcType=INTEGER},
+      </if>
+      <if test="publishDate != null" >
+        publish_date = #{publishDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzAppUpgrade" >
+    update tb_wz_app_upgrade
+    set apk_version = #{apkVersion,jdbcType=VARCHAR},
+      apk_url = #{apkUrl,jdbcType=VARCHAR},
+      upgrade_info = #{upgradeInfo,jdbcType=VARCHAR},
+      is_mandatory = #{isMandatory,jdbcType=INTEGER},
+      publish_date = #{publishDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

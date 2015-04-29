@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+         http://www.springframework.org/schema/task
+         http://www.springframework.org/schema/task/spring-task-3.1.xsd 
+         http://www.springframework.org/schema/aop 
+		 http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context-3.1.xsd
+         http://www.springframework.org/schema/tx 
+         http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+         http://www.springframework.org/schema/util 
+         http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+         
+	<context:component-scan base-package="common.codrim.*" /> 
+	<context:component-scan base-package="com.cordrim.*" />
+	<aop:aspectj-autoproxy />
+  	
+	<bean id="exceptionHandler" class="com.codrim.util.MyExceptionHandler" />
+	
+	<!-- 配置一个拦截器对象，处理具体的切换数据源的业务 />-->
+	<bean id="dataSourceMethodInterceptor" class="common.codrim.util.DataSourceMethodInterceptor" />
+  	<!--    
+  	<bean id="methodPointCut" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice" ref="dataSourceMethodInterceptor" />
+        <property name="mappedNames">
+            <list>
+                <value>add*</value>
+                <value>search*</value>
+                <value>delete*</value>
+                <value>get*</value>
+                <value>update*</value>
+                <value>modify*</value>
+                <value>select*</value>
+            </list>
+        </property>
+    </bean>
+    -->
+
+	<!-- 参与动态切换数据源的切入点对象 (切入点对象，确定何时何地调用拦截器) -->
+	<bean id="methodPointCut" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="advice" ref="dataSourceMethodInterceptor" />
+		<property name="patterns">
+		    <list>
+		        <value>common.codrim.dao.*Mapper*\.*.*</value>
+		    </list>
+		</property>
+	</bean>
+	   
+	<context:property-placeholder location="classpath*:jdbc.properties,classpath*:cache.properties" />
+	
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath*:wz.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="properties" ref="configProperties" />
+    </bean>
+	   
+	<import resource="classpath:mybatis.xml" />
+	<!-- <import resource="classpath:activemq.xml" /> -->
+	<import resource="classpath:memcached.xml" /> 
+	
+</beans>

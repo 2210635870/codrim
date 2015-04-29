@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbAdvertPutChannelMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbAdvertPutChannel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="advert_id" property="advertId" jdbcType="BIGINT" />
+    <result column="put_channel_type" property="putChannelType" jdbcType="SMALLINT" />
+    <result column="put_channel_id" property="putChannelId" jdbcType="BIGINT" />
+    <result column="put_price" property="putPrice" jdbcType="DOUBLE" />
+    <result column="start_time" property="startTime" jdbcType="DATE" />
+    <result column="end_time" property="endTime" jdbcType="DATE" />
+    <result column="settlement_way" property="settlementWay" jdbcType="SMALLINT" />
+    <result column="effect_type" property="effectType" jdbcType="SMALLINT" />
+    <result column="effect_type_back" property="effectTypeBack" jdbcType="SMALLINT" />
+    <result column="running_status" property="runningStatus" jdbcType="SMALLINT" />
+    <result column="effect_call_back_type" property="effectCallBackType" jdbcType="SMALLINT" />
+    <result column="effect_call_back_param_name" property="effectCallBackParamName" jdbcType="VARCHAR" />
+    <result column="effect_call_back_url" property="effectCallBackUrl" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="person_in_charge" property="personInCharge" jdbcType="VARCHAR" />
+    <result column="isBack" property="isback" jdbcType="SMALLINT" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="channelName" property="channelName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product_id, advert_id, put_channel_type, put_channel_id, put_price, start_time, 
+    end_time, settlement_way, effect_type, effect_type_back, running_status, effect_call_back_type, 
+    effect_call_back_param_name, effect_call_back_url, remark, person_in_charge, isBack, 
+    add_time
+  </sql>
+  
+  
+  
+  	<select id="selectCountProductAdvertByProductIdAndStatus"  resultType="java.lang.Integer"  parameterType="common.codrim.common.SelectResultByCodition">
+    select count(1)
+    from tb_advert_put_channel
+    where product_id = #{productId} 
+    <if test="type !=null ">
+	and	running_status=#{type} 
+		</if>
+  </select>
+    <select id="selectPutChannelNumByAdvertId" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+    select count(1)
+    from tb_advert_put_channel
+    where advert_id = #{advertId,jdbcType=BIGINT}
+  </select>
+    <select id="selectPutChannelByAdvertId"  resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select ad.id as id, ad.product_id as product_id, ad.advert_id as advert_id, ad.put_channel_type as put_channel_type, ad.put_channel_id as put_channel_id, 
+    ad.put_price as put_price, ad.start_time as start_time, 
+    ad.end_time as end_time, ad.settlement_way as settlement_way, ad.effect_type as effect_type,  ad.running_status as running_status, 
+    ad.person_in_charge as person_in_charge, ad.isBack as isBack, 
+    ch.channel_name as channelName
+    from tb_advert_put_channel as ad inner join tb_channel as ch on ch.id=ad.put_channel_id
+    where ad.advert_id = #{advertId,jdbcType=BIGINT}
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_advert_put_channel
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_advert_put_channel
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbAdvertPutChannel" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_advert_put_channel (product_id, advert_id, put_channel_type, 
+      put_channel_id, put_price, start_time, 
+      end_time, settlement_way, effect_type, 
+      effect_type_back, running_status, effect_call_back_type, 
+      effect_call_back_param_name, effect_call_back_url, 
+      remark, person_in_charge, isBack, 
+      add_time)
+    values (#{productId,jdbcType=BIGINT}, #{advertId,jdbcType=BIGINT}, #{putChannelType,jdbcType=SMALLINT}, 
+      #{putChannelId,jdbcType=BIGINT}, #{putPrice,jdbcType=DOUBLE}, #{startTime,jdbcType=DATE}, 
+      #{endTime,jdbcType=DATE}, #{settlementWay,jdbcType=SMALLINT}, #{effectType,jdbcType=SMALLINT}, 
+      #{effectTypeBack,jdbcType=SMALLINT}, #{runningStatus,jdbcType=SMALLINT}, #{effectCallBackType,jdbcType=SMALLINT}, 
+      #{effectCallBackParamName,jdbcType=VARCHAR}, #{effectCallBackUrl,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{personInCharge,jdbcType=VARCHAR}, #{isback,jdbcType=SMALLINT}, 
+      #{addTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbAdvertPutChannel" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_advert_put_channel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      product_id,
+      advert_id,
+      put_channel_type,
+      put_channel_id,
+      put_price,
+      start_time,
+      end_time,
+      settlement_way,
+      effect_type,
+      effect_type_back,
+      running_status,
+      effect_call_back_type,
+      effect_call_back_param_name,
+      effect_call_back_url,
+      remark,
+      person_in_charge,
+      isBack,
+      add_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{productId,jdbcType=BIGINT},
+      #{advertId,jdbcType=BIGINT},
+      #{putChannelType,jdbcType=SMALLINT},
+      #{putChannelId,jdbcType=BIGINT},
+      #{putPrice,jdbcType=DOUBLE},
+      #{startTime,jdbcType=DATE},
+      #{endTime,jdbcType=DATE},
+      #{settlementWay,jdbcType=SMALLINT},
+      #{effectType,jdbcType=SMALLINT},
+      #{effectTypeBack,jdbcType=SMALLINT},
+      #{runningStatus,jdbcType=SMALLINT},
+      #{effectCallBackType,jdbcType=SMALLINT},
+      #{effectCallBackParamName,jdbcType=VARCHAR},
+      #{effectCallBackUrl,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR},
+      #{personInCharge,jdbcType=VARCHAR},
+      #{isback,jdbcType=SMALLINT},
+      #{addTime,jdbcType=TIMESTAMP},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbAdvertPutChannel" >
+    update tb_advert_put_channel
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="advertId != null" >
+        advert_id = #{advertId,jdbcType=BIGINT},
+      </if>
+      <if test="putChannelType != null" >
+        put_channel_type = #{putChannelType,jdbcType=SMALLINT},
+      </if>
+      <if test="putChannelId != null" >
+        put_channel_id = #{putChannelId,jdbcType=BIGINT},
+      </if>
+      <if test="putPrice != null" >
+        put_price = #{putPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=DATE},
+      </if>
+      <if test="settlementWay != null" >
+        settlement_way = #{settlementWay,jdbcType=SMALLINT},
+      </if>
+      <if test="effectType != null" >
+        effect_type = #{effectType,jdbcType=SMALLINT},
+      </if>
+      <if test="effectTypeBack != null" >
+        effect_type_back = #{effectTypeBack,jdbcType=SMALLINT},
+      </if>
+      <if test="runningStatus != null" >
+        running_status = #{runningStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="effectCallBackType != null" >
+        effect_call_back_type = #{effectCallBackType,jdbcType=SMALLINT},
+      </if>
+      <if test="effectCallBackParamName != null" >
+        effect_call_back_param_name = #{effectCallBackParamName,jdbcType=VARCHAR},
+      </if>
+      <if test="effectCallBackUrl != null" >
+        effect_call_back_url = #{effectCallBackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="personInCharge != null" >
+        person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="isback != null" >
+        isBack = #{isback,jdbcType=SMALLINT},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbAdvertPutChannel" >
+    update tb_advert_put_channel
+    set product_id = #{productId,jdbcType=BIGINT},
+      advert_id = #{advertId,jdbcType=BIGINT},
+      put_channel_type = #{putChannelType,jdbcType=SMALLINT},
+      put_channel_id = #{putChannelId,jdbcType=BIGINT},
+      put_price = #{putPrice,jdbcType=DOUBLE},
+      start_time = #{startTime,jdbcType=DATE},
+      end_time = #{endTime,jdbcType=DATE},
+      settlement_way = #{settlementWay,jdbcType=SMALLINT},
+      effect_type = #{effectType,jdbcType=SMALLINT},
+      effect_type_back = #{effectTypeBack,jdbcType=SMALLINT},
+      running_status = #{runningStatus,jdbcType=SMALLINT},
+      effect_call_back_type = #{effectCallBackType,jdbcType=SMALLINT},
+      effect_call_back_param_name = #{effectCallBackParamName,jdbcType=VARCHAR},
+      effect_call_back_url = #{effectCallBackUrl,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      isBack = #{isback,jdbcType=SMALLINT},
+      add_time = #{addTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

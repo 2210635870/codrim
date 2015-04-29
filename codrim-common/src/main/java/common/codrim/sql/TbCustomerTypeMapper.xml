@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbCustomerTypeMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbCustomerType" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="customer_type" property="customerType" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, customer_type, remark, create_date
+  </sql>
+  
+  	  <select id="getAllCustomerType" resultMap="BaseResultMap"  >
+	    select <include refid="Base_Column_List" /> from tb_customer_type
+	  </select>
+	  <select id="count" resultType="java.lang.Integer"  >
+	    select count(1) from tb_customer_type
+	  </select>
+	  <select id="page" resultMap="BaseResultMap">
+	    select <include refid="Base_Column_List" /> from tb_customer_type 
+	    limit #{startPage},#{size}	    
+	  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_customer_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_customer_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbCustomerType" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_customer_type (customer_type, remark, create_date
+      )
+    values (#{customerType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createDate,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbCustomerType" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_customer_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      customer_type,
+      remark,
+      create_date,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{customerType,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR},
+      #{createDate,jdbcType=DATE},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbCustomerType" >
+    update tb_customer_type
+    <set >
+      <if test="customerType != null" >
+        customer_type = #{customerType,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbCustomerType" >
+    update tb_customer_type
+    set customer_type = #{customerType,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=DATE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

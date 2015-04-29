@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzTaskStepMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzTaskStep" >
+    <id column="step_id" property="stepId" jdbcType="BIGINT" />
+    <result column="task_id" property="taskId" jdbcType="BIGINT" />
+    <result column="step_type" property="stepType" jdbcType="INTEGER" />
+    <result column="step_desc" property="stepDesc" jdbcType="VARCHAR" />
+    <result column="reward_percent" property="rewardPercent" jdbcType="INTEGER" />
+    <result column="screen_no" property="screenNo" jdbcType="INTEGER" />
+    <result column="screen_desc" property="screenDesc" jdbcType="VARCHAR" />
+    <result column="count_duration" property="countDuration" jdbcType="INTEGER" />
+    <result column="count_interval" property="countInterval" jdbcType="INTEGER" />
+    <result column="is_final" property="isFinal" jdbcType="INTEGER" />
+    <result column="step_order" property="stepOrder" jdbcType="SMALLINT" />
+    
+  </resultMap>
+  <resultMap id="StepWithUserRecordResultMap" type="common.codrim.wz.sql.result.StepWithUserRecord" >
+    <id column="step_id" property="stepId" jdbcType="BIGINT" />
+    <result column="task_id" property="taskId" jdbcType="BIGINT" />
+    <result column="step_type" property="stepType" jdbcType="INTEGER" />
+    <result column="step_desc" property="stepDesc" jdbcType="VARCHAR" />
+    <result column="reward_percent" property="rewardPercent" jdbcType="INTEGER" />
+    <result column="screen_no" property="screenNo" jdbcType="INTEGER" />
+    <result column="screen_desc" property="screenDesc" jdbcType="VARCHAR" />
+    <result column="count_duration" property="countDuration" jdbcType="INTEGER" />
+    <result column="count_interval" property="countInterval" jdbcType="INTEGER" />
+    <result column="is_final" property="isFinal" jdbcType="INTEGER" />
+    <result column="income_gold" property="incomeGold" jdbcType="INTEGER" />
+    <result column="finish_date" property="finishDate" jdbcType="DATE" />
+    <result column="review_status" property="reviewStatus" jdbcType="INTEGER" />
+        <result column="step_order" property="stepOrder" jdbcType="SMALLINT" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    step_id, task_id, step_type, step_desc, reward_percent, screen_no, screen_desc, count_duration, 
+    count_interval, is_final,step_order
+  </sql>
+  
+    <select id="getStepsByTask" resultMap="BaseResultMap" >
+		select <include refid="Base_Column_List" />
+		from tb_wz_task_step
+		where task_id = #{taskId}
+	</select>
+	<delete id="deleteByTaskId" parameterType="java.lang.Long" >
+	    delete from tb_wz_task_step
+	    where task_id = #{taskId,jdbcType=BIGINT}
+	</delete>
+	<select id="getStepsByTaskAndUser" resultMap="StepWithUserRecordResultMap" >
+		select ts.step_id, ts.task_id, ts.step_type, step_desc, reward_percent, screen_no, screen_desc, count_duration, 
+    		count_interval, is_final,tr.income_gold,tr.finish_date,tr.review_status	,ts.step_order
+		from tb_wz_task_step ts
+		left join tb_wz_task_record tr on tr.step_id=ts.step_id and tr.user_id=#{userId}
+		where ts.task_id=#{taskId}
+	</select>
+	<select id="getStepWithLastFinishedRecord" resultMap="StepWithUserRecordResultMap" >
+		select ts.step_id, ts.task_id, ts.step_type, step_desc, reward_percent, screen_no, screen_desc, count_duration, 
+    		count_interval, is_final,tr.finish_date
+		from tb_wz_task_step ts
+		left join (
+			select task_id,finish_date
+			from tb_wz_task_record
+			where user_id=#{userId} and task_id=#{taskId}
+			order by record_id desc limit 1
+		) tr on tr.task_id=ts.task_id
+		where ts.step_id=#{stepId}
+	</select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_task_step
+    where step_id = #{stepId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_task_step
+    where step_id = #{stepId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzTaskStep" useGeneratedKeys="true" keyProperty="stepId" >
+    insert into tb_wz_task_step (task_id, step_type, step_desc, 
+      reward_percent, screen_no, screen_desc, 
+      count_duration, count_interval, is_final,step_order
+      )
+    values (#{taskId,jdbcType=BIGINT}, #{stepType,jdbcType=INTEGER}, #{stepDesc,jdbcType=VARCHAR}, 
+      #{rewardPercent,jdbcType=INTEGER}, #{screenNo,jdbcType=INTEGER}, #{screenDesc,jdbcType=VARCHAR}, 
+      #{countDuration,jdbcType=INTEGER}, #{countInterval,jdbcType=INTEGER}, #{isFinal,jdbcType=INTEGER},
+      #{stepOrder,jdbcType=SMALLINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzTaskStep" useGeneratedKeys="true" keyProperty="stepId" >
+    insert into tb_wz_task_step
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      task_id,
+      step_type,
+      step_desc,
+      reward_percent,
+      screen_no,
+      screen_desc,
+      count_duration,
+      count_interval,
+      is_final,
+      step_order,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{taskId,jdbcType=BIGINT},
+      #{stepType,jdbcType=INTEGER},
+      #{stepDesc,jdbcType=VARCHAR},
+      #{rewardPercent,jdbcType=INTEGER},
+      #{screenNo,jdbcType=INTEGER},
+      #{screenDesc,jdbcType=VARCHAR},
+      #{countDuration,jdbcType=INTEGER},
+      #{countInterval,jdbcType=INTEGER},
+      #{isFinal,jdbcType=INTEGER},
+      #{stepOrder,jdbcType=SMALLINT},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzTaskStep" >
+    update tb_wz_task_step
+    <set >
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="stepType != null" >
+        step_type = #{stepType,jdbcType=INTEGER},
+      </if>
+      <if test="stepDesc != null" >
+        step_desc = #{stepDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="rewardPercent != null" >
+        reward_percent = #{rewardPercent,jdbcType=INTEGER},
+      </if>
+      <if test="screenNo != null" >
+        screen_no = #{screenNo,jdbcType=INTEGER},
+      </if>
+      <if test="screenDesc != null" >
+        screen_desc = #{screenDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="countDuration != null" >
+        count_duration = #{countDuration,jdbcType=INTEGER},
+      </if>
+      <if test="countInterval != null" >
+        count_interval = #{countInterval,jdbcType=INTEGER},
+      </if>
+      <if test="isFinal != null" >
+        is_final = #{isFinal,jdbcType=INTEGER},
+      </if>
+       <if test="stepOrder != null" >
+        step_order = #{stepOrder,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where step_id = #{stepId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzTaskStep" >
+    update tb_wz_task_step
+    set task_id = #{taskId,jdbcType=BIGINT},
+      step_type = #{stepType,jdbcType=INTEGER},
+      step_desc = #{stepDesc,jdbcType=VARCHAR},
+      reward_percent = #{rewardPercent,jdbcType=INTEGER},
+      screen_no = #{screenNo,jdbcType=INTEGER},
+      screen_desc = #{screenDesc,jdbcType=VARCHAR},
+      count_duration = #{countDuration,jdbcType=INTEGER},
+      count_interval = #{countInterval,jdbcType=INTEGER},
+      is_final = #{isFinal,jdbcType=INTEGER},
+     step_order = #{stepOrder,jdbcType=SMALLINT}
+    where step_id = #{stepId,jdbcType=BIGINT}
+  </update>
+</mapper>

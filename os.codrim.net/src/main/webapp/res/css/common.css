@@ -1,0 +1,123 @@
+@CHARSET "UTF-8";
+
+body {
+	margin: 0;
+}
+
+fieldset{
+	width: 95%;
+	border: 1px dashed #666;
+	margin: 3px auto;
+}
+ 
+legend{
+	height: 120px;
+	height: 30px;
+	color: #630;
+	font-weight: bolder;
+	font-size: 18px;
+	line-height: 30px;
+	margin: -20px 10px 10px;
+	padding: 0 10px;
+}
+
+/* Table & Form */
+.field-name {
+	font-weight: bold; 
+	text-align: right;
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+.tb-form {
+	border: 0;
+	padding: 3px;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.tb-form td {
+	padding: 5px;
+}
+
+
+/* Dialog */
+.fbody {
+	padding: 10px 20px;
+}
+
+.ftitle { 
+	font-size: 14px; 
+	font-weight: bold; 
+	padding: 5px 0; 
+	margin-bottom: 10px; 
+	border-bottom: 1px solid #ccc; 
+}
+
+.fitem { 
+	margin-bottom: 5px; 
+}
+
+.fitem:hover {
+	background: #EBEBEB;
+}
+
+.fitem label {
+	font-weight: bold; 
+	display: inline-block; 
+	width: 30%; 
+}
+
+.fitem input {
+	width: 220px; 
+}
+
+/* Comment */
+.comments {
+	
+}
+
+.comments ul {
+	padding-left: 2px;
+}
+
+.comments ul li {
+	border-bottom: 1px #eee solid;
+	padding: 5px 0 15px 5px;
+	list-style: none;
+}
+
+.comments .comment {
+	position: relative;
+}
+
+.operation {
+	display: none;
+	font-size: 8px;
+	position: absolute;
+    top: 0px;
+    right: 3px;
+}
+
+.comments ul li:hover {
+	background: #EBEBEB;
+}
+
+.comments ul li:hover .operation {
+	display: block;
+}
+
+.comments .commentInfo .username {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.comments .commentInfo .time {
+	color: #999;
+	margin-left: 8px;
+}
+
+.comments .commentMsg {
+	padding-top: 3px;
+}
+

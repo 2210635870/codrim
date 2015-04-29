@@ -1,0 +1,131 @@
+.list {
+	width: 97.3%;
+	margin: 0 auto;
+}
+.list li {
+	overflow: hidden;
+	margin-bottom: 10px;
+	position: relative;
+	background-color: #fff;
+	border-top: 1px solid #e2e1e1;
+	border-bottom: 1px solid #e2e1e1;
+}
+.list li a {
+	display: block;
+	overflow: hidden;	
+}
+.list .wallet {
+	height: 100%;
+	background: url(../images/wallet2.png) no-repeat;
+	background-size: cover;
+	width: 76px;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.list .icon {
+	height: 100%;
+	width: 68px;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+.list .paypal {
+	background: url(../images/paypal.png) no-repeat;
+	background-size: cover;
+}
+.list .zhifubao {
+	background: url(../images/zhifubao.png) no-repeat;
+	background-size: cover;
+}
+.list .huafei {
+	background: url(../images/huafei.png) no-repeat;
+	background-size: cover;
+}
+.list dl {
+	float: left;
+}
+.list dt {
+	color: #242424;
+}
+.list dd {
+	color: #969696;
+}
+@media screen and (min-width: 320px) {
+	.list {
+		margin-top: 61px;
+	}
+	.list li {
+		padding: 9px;
+		height: 55px;
+	}
+	.list .wallet {
+		width: 76px;
+	}
+	.list .icon {
+		width: 68px;
+	}
+	.list dl {
+		margin-top: 4px;
+		margin-left: 68px;
+	}
+	.list dt {
+		font-size: 16px;
+		margin-bottom: 8px;
+	}
+	.list dd {
+		font-size: 12px;
+	}
+}
+@media screen and (min-width: 360px) {
+	.list {
+		margin-top: 68px;
+	}
+	.list li {
+		padding: 10px;
+		height: 60px;
+	}
+	.list .wallet {
+		width: 84px;
+	}
+	.list .icon {
+		width: 74px;
+	}
+	.list dl {
+		margin-top: 2px;
+		margin-left: 77px;
+	}
+	.list dt {
+		font-size: 18px;
+		margin-bottom: 11px;
+	}
+	.list dd {
+		font-size: 14px;
+	}
+}
+@media screen and (min-width: 400px) {
+	.list {
+		margin-top: 76px;
+	}
+	.list li {
+		padding: 11px;
+		height: 65px;
+	}
+	.list .wallet {
+		width: 91px;
+	}
+	.list .icon {
+		width: 80px;
+	}
+	.list dl {
+		margin-top: 2px;
+		margin-left: 83px;
+	}
+	.list dt {
+		font-size: 20px;
+		margin-bottom: 14px;
+	}
+	.list dd {
+		font-size: 16px;
+	}
+}

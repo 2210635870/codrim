@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbEffectMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbEffect" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="effect" property="effect" jdbcType="SMALLINT" />
+    <result column="effect_time" property="effectTime" jdbcType="TIMESTAMP" />
+    <result column="deviceplate" property="deviceplate" jdbcType="VARCHAR" />
+    <result column="mac" property="mac" jdbcType="VARCHAR" />
+    <result column="idfa" property="idfa" jdbcType="VARCHAR" />
+    <result column="udid" property="udid" jdbcType="VARCHAR" />
+    <result column="imei" property="imei" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+
+  
+  
+  <sql id="Base_Column_List" >
+    id, product_name, channel_name, effect, effect_time, deviceplate, mac, idfa, udid, imei, remark
+  </sql>
+    <select id="selectEffectWithDate" resultType="java.util.Date">
+	SELECT DATE(action_time)  FROM `tb_effect_rankings` GROUP BY DATE(action_time)
+    </select>
+  
+    <select id="getEffectNum" resultType="java.lang.Integer" >
+     select count(*) from `tb_effect` where product_name=#{productName}  
+     AND channel_name=#{channelName} 
+    <if test="deviceplate!=null">
+	   and deviceplate=#{deviceplate}
+	</if>
+     AND effect=#{effect} AND DATE(effect_time) = #{date}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_effect
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+   <select id="getTotalNum" resultType="java.lang.Integer" parameterType="common.codrim.common.SelectResultByCodition">
+		select
+		count(*)
+		from tb_effect
+		where product_name=#{productName} and channel_name=#{channelName} and effect_time BETWEEN #{startTime} and #{endTime}
+		<if test="effect!=-1">
+		  and effect=#{effect}
+		</if>
+	</select> 
+	<select id="selectTbEffectByPages" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+		select
+		<include refid="Base_Column_List" />
+		from tb_effect
+		where product_name=#{productName} and channel_name=#{channelName} and effect_time BETWEEN #{startTime} and #{endTime}
+		<if test="effect!=-1">
+		  and effect=#{effect}
+		</if>
+		limit #{startPage},#{size}
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_effect
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbEffect" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_effect (product_name, channel_name, effect, 
+      effect_time, deviceplate, mac, 
+      idfa, udid, remark)
+    values (#{productName,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, #{effect,jdbcType=SMALLINT}, 
+      #{effectTime,jdbcType=TIMESTAMP}, #{deviceplate,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR}, 
+      #{idfa,jdbcType=VARCHAR}, #{udid,jdbcType=VARCHAR},#{imei,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  		<insert id="insertByBatch" parameterType="java.util.List"
+		useGeneratedKeys="true" keyProperty="id">
+	  insert into tb_effect (product_name, channel_name, effect, 
+      effect_time, deviceplate, mac, 
+      idfa, udid, imei, remark)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+	(#{item.productName}, #{item.channelName}, #{item.effect}, 
+      #{item.effectTime}, #{item.deviceplate}, #{item.mac}, 
+      #{item.idfa}, #{item.udid}, #{item.imei}, #{item.remark})
+		</foreach>
+	</insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbEffect" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_effect
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      product_name,
+      channel_name,
+      effect,
+      effect_time,
+      deviceplate,
+      mac,
+      idfa,
+      udid,
+      imei,
+      remark,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{productName,jdbcType=VARCHAR},
+      #{channelName,jdbcType=VARCHAR},
+      #{effect,jdbcType=SMALLINT},
+      #{effectTime,jdbcType=TIMESTAMP},
+      #{deviceplate,jdbcType=VARCHAR},
+      #{mac,jdbcType=VARCHAR},
+      #{idfa,jdbcType=VARCHAR},
+      #{udid,jdbcType=VARCHAR},
+      #{imei,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbEffect" >
+    update tb_effect
+    <set >
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="effect != null" >
+        effect = #{effect,jdbcType=SMALLINT},
+      </if>
+      <if test="effectTime != null" >
+        effect_time = #{effectTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deviceplate != null" >
+        deviceplate = #{deviceplate,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null" >
+        mac = #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="idfa != null" >
+        idfa = #{idfa,jdbcType=VARCHAR},
+      </if>
+      <if test="udid != null" >
+        udid = #{udid,jdbcType=VARCHAR},
+      </if>
+       <if test="imei != null" >
+        imei = #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbEffect" >
+    update tb_effect
+    set product_name = #{productName,jdbcType=VARCHAR},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      effect = #{effect,jdbcType=SMALLINT},
+      effect_time = #{effectTime,jdbcType=TIMESTAMP},
+      deviceplate = #{deviceplate,jdbcType=VARCHAR},
+      mac = #{mac,jdbcType=VARCHAR},
+      idfa = #{idfa,jdbcType=VARCHAR},
+      udid = #{udid,jdbcType=VARCHAR},
+      imei = #{imei,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

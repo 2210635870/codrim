@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbOfficeMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbOffice" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="office_name" property="officeName" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="DATE" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, office_name, `date`, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_office
+    where id = #{id,jdbcType=INTEGER}
+   </select>
+  <select id="selectAllTbOffice" resultMap="BaseResultMap">
+   select 
+   <include refid="Base_Column_List" />
+   from tb_office
+  </select>
+  <select id="selectTbOfficeByPages" resultMap="BaseResultMap">
+    select  
+    <include refid="Base_Column_List" />
+     from tb_office 
+    limit #{startPage},#{size}
+  </select>
+   <select id="getTotalNum" resultType="java.lang.Integer"  >
+    select  count(*) from tb_office
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_office
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbOffice" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_office (office_name, `date`, remark
+      )
+    values (#{officeName,jdbcType=VARCHAR}, #{date,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbOffice" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_office
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      office_name,
+      `date`,
+      remark,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{officeName,jdbcType=VARCHAR},
+      #{date,jdbcType=DATE},
+      #{remark,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbOffice" >
+    update tb_office
+    <set >
+      <if test="officeName != null" >
+        office_name = #{officeName,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        `date` = #{date,jdbcType=DATE},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbOffice" >
+    update tb_office
+    set office_name = #{officeName,jdbcType=VARCHAR},
+      `date` = #{date,jdbcType=DATE},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

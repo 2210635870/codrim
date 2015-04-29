@@ -1,0 +1,9 @@
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/res/jQuery.easyui.1.2.2/css/default.css"  />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/res/jQuery.easyui.1.2.2/js/themes/gray/easyui.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/res/jQuery.easyui.1.2.2/js/themes/icon.css">
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/jQuery.easyui.1.2.2/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/jQuery.easyui.1.2.2/js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/jQuery.easyui.1.2.2/js/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/jQuery.easyui.1.2.2/js/plugins/jquery.edatagrid.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/jQuery.easyui.1.2.2/js/plugins/jquery.edatagrid.lang.js"></script>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>社交墙-paypal充值</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no, maximum-scale=1"/>
+	<meta name="Keywords" content="" />
+    <meta name="Description" content="" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link rel="stylesheet" type="text/css" href="../css/paypal.css">
+</head>
+<body>
+	<header class="bar">
+		<a href="exchange.html"><img src="../images/l_arrow.png"></a>
+		<p>paypal充值</p>
+	</header>
+	<div class="top">
+		<header>
+			我的余额 :
+		</header>
+		<section>			
+			<p>165,462</p>
+			<img src="../images/dollar.png">
+		</section>
+	</div>
+	<div class="tips">
+		<p>余额不足</p>	
+		<img src="../images/close2.png" class="close">
+		<a href="tasklist.html"><img src="../images/earn.jpg" class="earn"></a>
+	</div>
+	<ul class="input">
+		<li>
+			<label>paypal账号：</label>
+			<input type="text" name="username">
+		</li>
+		<li class="price">
+			<label>充值金额：</label>
+			<p></p>
+		</li>
+	</ul>
+	<a class="btn submit">提交</a>
+	<div class="fixed"></div>
+	<div class="selected">
+		<ul>
+			<li><span>10</span> $</li>
+			<li><span>20</span> $</li>
+			<li><span>30</span> $</li>
+		</ul>
+		<a class="btn cancel">取消</a>
+	</div>
+
+	<script src="../../dist/zepto/zepto.min.js"></script>
+	<script src="../js/paypal.js"></script>
+</body>
+</html>

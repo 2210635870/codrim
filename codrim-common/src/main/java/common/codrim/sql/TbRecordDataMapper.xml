@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbRecordDataMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbRecordData" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_contact_name" property="channelContactName" jdbcType="VARCHAR" />
+    <result column="access_price" property="accessPrice" jdbcType="VARCHAR" />
+    <result column="put_price" property="putPrice" jdbcType="VARCHAR" />
+    <result column="customer_settled_num" property="customerSettledNum" jdbcType="INTEGER" />
+    <result column="channel_feedBack_num" property="channelFeedbackNum" jdbcType="INTEGER" />
+    <result column="channel_settled_num" property="channelSettledNum" jdbcType="INTEGER" />
+    <result column="subtract_channel_proportion" property="subtractChannelProportion" jdbcType="VARCHAR" />
+    <result column="product_conversion_rate" property="productConversionRate" jdbcType="VARCHAR" />
+    <result column="settled_income" property="settledIncome" jdbcType="DOUBLE" />
+    <result column="settled_costs" property="settledCosts" jdbcType="DOUBLE" />
+    <result column="gross_profit" property="grossProfit" jdbcType="DOUBLE" />
+    <result column="gross_margin" property="grossMargin" jdbcType="VARCHAR" />
+    <result column="record_name" property="recordName" jdbcType="VARCHAR" />
+    <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, customer_name, product_name, product_type, channel_name, channel_contact_name, 
+    access_price, put_price, customer_settled_num, channel_feedBack_num, channel_settled_num, 
+    subtract_channel_proportion, product_conversion_rate, settled_income, settled_costs, 
+    gross_profit, gross_margin, record_name, record_time, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_record_data
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllTbRecordDataByCodition" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_record_data
+    where product_name=#{productName} and channel_name=#{channelName}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_record_data
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbRecordData" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_record_data (customer_name, product_name, product_type, 
+      channel_name, channel_contact_name, access_price, 
+      put_price, customer_settled_num, channel_feedBack_num, 
+      channel_settled_num, subtract_channel_proportion, 
+      product_conversion_rate, settled_income, settled_costs, 
+      gross_profit, gross_margin, record_name, 
+      record_time, remark)
+    values (#{customerName,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, 
+      #{channelName,jdbcType=VARCHAR}, #{channelContactName,jdbcType=VARCHAR}, #{accessPrice,jdbcType=VARCHAR}, 
+      #{putPrice,jdbcType=VARCHAR}, #{customerSettledNum,jdbcType=INTEGER}, #{channelFeedbackNum,jdbcType=INTEGER}, 
+      #{channelSettledNum,jdbcType=INTEGER}, #{subtractChannelProportion,jdbcType=VARCHAR}, 
+      #{productConversionRate,jdbcType=VARCHAR}, #{settledIncome,jdbcType=DOUBLE}, #{settledCosts,jdbcType=DOUBLE}, 
+      #{grossProfit,jdbcType=DOUBLE}, #{grossMargin,jdbcType=VARCHAR}, #{recordName,jdbcType=VARCHAR}, 
+      #{recordTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbRecordData" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_record_data
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      customer_name,
+      product_name,
+      product_type,
+      channel_name,
+      channel_contact_name,
+      access_price,
+      put_price,
+      customer_settled_num,
+      channel_feedBack_num,
+      channel_settled_num,
+      subtract_channel_proportion,
+      product_conversion_rate,
+      settled_income,
+      settled_costs,
+      gross_profit,
+      gross_margin,
+      record_name,
+      record_time,
+      remark,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{customerName,jdbcType=VARCHAR},
+      #{productName,jdbcType=VARCHAR},
+      #{productType,jdbcType=VARCHAR},
+      #{channelName,jdbcType=VARCHAR},
+      #{channelContactName,jdbcType=VARCHAR},
+      #{accessPrice,jdbcType=VARCHAR},
+      #{putPrice,jdbcType=VARCHAR},
+      #{customerSettledNum,jdbcType=INTEGER},
+      #{channelFeedbackNum,jdbcType=INTEGER},
+      #{channelSettledNum,jdbcType=INTEGER},
+      #{subtractChannelProportion,jdbcType=VARCHAR},
+      #{productConversionRate,jdbcType=VARCHAR},
+      #{settledIncome,jdbcType=DOUBLE},
+      #{settledCosts,jdbcType=DOUBLE},
+      #{grossProfit,jdbcType=DOUBLE},
+      #{grossMargin,jdbcType=VARCHAR},
+      #{recordName,jdbcType=VARCHAR},
+      #{recordTime,jdbcType=TIMESTAMP},
+      #{remark,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbRecordData" >
+    update tb_record_data
+    <set >
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        product_type = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelContactName != null" >
+        channel_contact_name = #{channelContactName,jdbcType=VARCHAR},
+      </if>
+      <if test="accessPrice != null" >
+        access_price = #{accessPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="putPrice != null" >
+        put_price = #{putPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="customerSettledNum != null" >
+        customer_settled_num = #{customerSettledNum,jdbcType=INTEGER},
+      </if>
+      <if test="channelFeedbackNum != null" >
+        channel_feedBack_num = #{channelFeedbackNum,jdbcType=INTEGER},
+      </if>
+      <if test="channelSettledNum != null" >
+        channel_settled_num = #{channelSettledNum,jdbcType=INTEGER},
+      </if>
+      <if test="subtractChannelProportion != null" >
+        subtract_channel_proportion = #{subtractChannelProportion,jdbcType=VARCHAR},
+      </if>
+      <if test="productConversionRate != null" >
+        product_conversion_rate = #{productConversionRate,jdbcType=VARCHAR},
+      </if>
+      <if test="settledIncome != null" >
+        settled_income = #{settledIncome,jdbcType=DOUBLE},
+      </if>
+      <if test="settledCosts != null" >
+        settled_costs = #{settledCosts,jdbcType=DOUBLE},
+      </if>
+      <if test="grossProfit != null" >
+        gross_profit = #{grossProfit,jdbcType=DOUBLE},
+      </if>
+      <if test="grossMargin != null" >
+        gross_margin = #{grossMargin,jdbcType=VARCHAR},
+      </if>
+      <if test="recordName != null" >
+        record_name = #{recordName,jdbcType=VARCHAR},
+      </if>
+      <if test="recordTime != null" >
+        record_time = #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbRecordData" >
+    update tb_record_data
+    set customer_name = #{customerName,jdbcType=VARCHAR},
+      product_name = #{productName,jdbcType=VARCHAR},
+      product_type = #{productType,jdbcType=VARCHAR},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      channel_contact_name = #{channelContactName,jdbcType=VARCHAR},
+      access_price = #{accessPrice,jdbcType=VARCHAR},
+      put_price = #{putPrice,jdbcType=VARCHAR},
+      customer_settled_num = #{customerSettledNum,jdbcType=INTEGER},
+      channel_feedBack_num = #{channelFeedbackNum,jdbcType=INTEGER},
+      channel_settled_num = #{channelSettledNum,jdbcType=INTEGER},
+      subtract_channel_proportion = #{subtractChannelProportion,jdbcType=VARCHAR},
+      product_conversion_rate = #{productConversionRate,jdbcType=VARCHAR},
+      settled_income = #{settledIncome,jdbcType=DOUBLE},
+      settled_costs = #{settledCosts,jdbcType=DOUBLE},
+      gross_profit = #{grossProfit,jdbcType=DOUBLE},
+      gross_margin = #{grossMargin,jdbcType=VARCHAR},
+      record_name = #{recordName,jdbcType=VARCHAR},
+      record_time = #{recordTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

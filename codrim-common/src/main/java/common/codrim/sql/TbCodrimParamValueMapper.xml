@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="common.codrim.dao.TbCodrimParamValueMapper">
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbCodrimParamValue">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="codrim_link_param_id" jdbcType="BIGINT" property="codrimLinkParamId" />
+    <result column="default_value" jdbcType="VARCHAR" property="defaultValue" />
+    <result column="default_name" jdbcType="VARCHAR" property="defaultName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, codrim_link_param_id, default_value, default_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_codrim_param_value
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_codrim_param_value
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyProperty="id" parameterType="common.codrim.pojo.TbCodrimParamValue" useGeneratedKeys="true">
+    insert into tb_codrim_param_value (codrim_link_param_id, default_value, default_name
+      )
+    values (#{codrimLinkParamId,jdbcType=BIGINT}, #{defaultValue,jdbcType=VARCHAR}, #{defaultName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyProperty="id" parameterType="common.codrim.pojo.TbCodrimParamValue" useGeneratedKeys="true">
+    insert into tb_codrim_param_value
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      codrim_link_param_id,
+      default_value,
+      default_name,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{codrimLinkParamId,jdbcType=BIGINT},
+      #{defaultValue,jdbcType=VARCHAR},
+      #{defaultName,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbCodrimParamValue">
+    update tb_codrim_param_value
+    <set>
+      <if test="codrimLinkParamId != null">
+        codrim_link_param_id = #{codrimLinkParamId,jdbcType=BIGINT},
+      </if>
+      <if test="defaultValue != null">
+        default_value = #{defaultValue,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultName != null">
+        default_name = #{defaultName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbCodrimParamValue">
+    update tb_codrim_param_value
+    set codrim_link_param_id = #{codrimLinkParamId,jdbcType=BIGINT},
+      default_value = #{defaultValue,jdbcType=VARCHAR},
+      default_name = #{defaultName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+ 
+</mapper>

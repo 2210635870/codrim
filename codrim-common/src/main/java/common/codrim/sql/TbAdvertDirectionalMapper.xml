@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbAdvertDirectionalMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbAdvertDirectional" >
+    <result column="product_series_id" property="productSeriesId" jdbcType="BIGINT" />
+    <result column="directional_type" property="directionalType" jdbcType="SMALLINT" />
+    <result column="directional_value" property="directionalValue" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="common.codrim.pojo.TbAdvertDirectional" extends="BaseResultMap" >
+    <result column="id" property="id" jdbcType="BINARY" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    product_series_id, directional_type, directional_value
+  </sql>
+  <sql id="Blob_Column_List" >
+    id
+  </sql>
+  <insert id="insert" parameterType="common.codrim.pojo.TbAdvertDirectional" >
+    insert into tb_advert_directional (product_series_id, directional_type, 
+      directional_value, id)
+    values (#{productSeriesId,jdbcType=BIGINT}, #{directionalType,jdbcType=SMALLINT}, 
+      #{directionalValue,jdbcType=VARCHAR}, #{id,jdbcType=BINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbAdvertDirectional" >
+    insert into tb_advert_directional
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      product_series_id,
+      directional_type,
+      directional_value,
+      id,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{productSeriesId,jdbcType=BIGINT},
+      #{directionalType,jdbcType=SMALLINT},
+      #{directionalValue,jdbcType=VARCHAR},
+      #{id,jdbcType=BINARY},
+    </trim>
+  </insert>
+</mapper>

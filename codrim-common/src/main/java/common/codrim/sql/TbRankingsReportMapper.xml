@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbRankingsReportMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbRankingsReport" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="deviceplate" property="deviceplate" jdbcType="VARCHAR" />
+    <result column="access_price" property="accessPrice" jdbcType="VARCHAR" />
+    <result column="put_price" property="putPrice" jdbcType="VARCHAR" />
+    <result column="click_num" property="clickNum" jdbcType="BIGINT" />
+    <result column="effect_num" property="effectNum" jdbcType="BIGINT" />
+     <result column="effect_num_with_deduplication" property="effectNumWithDeduplication" jdbcType="BIGINT" />
+    <result column="deduplication_num" property="deduplicationNum" jdbcType="BIGINT" />
+    <result column="deduplication_rate" property="deduplicationRate" jdbcType="VARCHAR" />
+    <result column="subtract_num" property="subtractNum" jdbcType="INTEGER" />
+    <result column="channel_external_num" property="channelExternalNum" jdbcType="BIGINT" />
+    <result column="isSubtract" property="issubtract" jdbcType="SMALLINT" />
+    <result column="income" property="income" jdbcType="DOUBLE" />
+    <result column="conversin_rate" property="conversinRate" jdbcType="VARCHAR" />
+    <result column="costs" property="costs" jdbcType="DOUBLE" />
+    <result column="gross_profit" property="grossProfit" jdbcType="DOUBLE" />
+    <result column="gross_margin" property="grossMargin" jdbcType="VARCHAR" />
+    <result column="activate" property="activate" jdbcType="INTEGER" />
+    <result column="register" property="register" jdbcType="INTEGER" />
+    <result column="consume_one" property="consumeOne" jdbcType="INTEGER" />
+    <result column="consume_more" property="consumeMore" jdbcType="INTEGER" />
+    <result column="recharge" property="recharge" jdbcType="INTEGER" />
+    <result column="credit" property="credit" jdbcType="INTEGER" />
+    <result column="baddept" property="baddept" jdbcType="INTEGER" />
+    <result column="rankings_time" property="rankingsTime" jdbcType="DATE" />
+    <result column="rankings_hour" property="rankingsHour" jdbcType="SMALLINT" />
+  </resultMap>
+    <resultMap id="totalReportResultMap" type="common.codrim.common.TotalReportBean" >
+    <id column="income" property="allIncome" />
+    <result column="costs" property="allCosts"  />
+    <result column="gross_profit" property="allGrossProfit" />
+  </resultMap>
+  
+  
+   <sql id="Base_Column_List" >
+    id, product_name, customer_name, channel_name, deviceplate, access_price, put_price, 
+    click_num, effect_num, effect_num_with_deduplication, deduplication_num, deduplication_rate, 
+    subtract_num, channel_external_num, isSubtract, income, conversin_rate, costs, gross_profit, 
+    gross_margin, activate, register, consume_one, consume_more, recharge, credit, baddept, 
+    rankings_time, rankings_hour
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_rankings_report
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="getTotalNum" resultType="java.lang.Integer" parameterType="common.codrim.common.SelectResultByCodition">
+		select
+		count(*)
+		from tb_rankings_report
+		where deviceplate=#{deviceplate} and customer_name=#{customerName} and product_name=#{productName} and channel_name=#{channelName} and rankings_time BETWEEN #{startTime} and #{endTime}
+	</select> 
+	<select id="selectTbRankingsReportByPages" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+		select
+		<include refid="Base_Column_List" />
+		from tb_rankings_report
+		where rankings_time BETWEEN #{startTime} and #{endTime} 
+		<if test="deviceplate !=null ">
+	and	 deviceplate=#{deviceplate} 
+		</if>
+		<if test="customerName !=null ">
+	and			customer_name=#{customerName} 
+		</if>
+			<if test="productName !=null ">
+	and product_name=#{productName}
+		</if>
+			<if test="channelName !=null ">
+	 and channel_name=#{channelName} 
+		</if>
+		<if test="startPage !=-1 ">
+		limit #{startPage},#{size}
+		</if>
+	</select>
+	
+	<select id="selectTbRankingsReportWithExternal" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+	SELECT  id, product_name, customer_name, channel_name, deviceplate, access_price, put_price, 
+    SUM(click_num) as click_num, SUM(effect_num) as effect_num, 
+    SUM(channel_external_num) as channel_external_num,
+    SUM(income) as income, conversin_rate, costs, gross_profit, gross_margin, 
+    SUM(activate) as activate, SUM(register) as register, SUM(consume_one) as consume_one, SUM(consume_more) as consume_more,
+     recharge, credit, baddept, rankings_time
+		FROM tb_rankings_report
+		WHERE product_name=#{productName} AND channel_name=#{channelName} AND rankings_time BETWEEN #{startTime} AND #{endTime} 
+		<if test="deviceplate != null">
+				and deviceplate=#{deviceplate}
+		</if>
+		and isSubtract=1
+	 GROUP BY product_name,channel_name,rankings_time	LIMIT #{startPage},#{size}
+	</select>
+	<select id="getTbRankingsReportTotalNumWithExternal" resultType="java.lang.Integer" parameterType="common.codrim.common.SelectResultByCodition">
+	SELECT count(*)
+		FROM tb_rankings_report
+		WHERE product_name=#{productName} AND
+		<if test="deviceplate != null">
+				and deviceplate=#{deviceplate}
+		</if>
+		 channel_name=#{channelName} AND rankings_time BETWEEN #{startTime} AND #{endTime}  and isSubtract=1
+	</select>
+	<select id="selectTbRankingsReportByCodition" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+		select
+		<include refid="Base_Column_List" />
+		from tb_rankings_report
+		where deviceplate=#{deviceplate}  and product_name=#{productName} and channel_name=#{channelName} and rankings_time=#{startTime} 
+	</select>
+	<select id="selectSumData" resultMap="totalReportResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+		select SUM(income) AS income,SUM(costs) AS costs,SUM(gross_profit) AS gross_profit
+		from tb_rankings_report
+		where rankings_time between #{startTime} and #{endTime}
+		<if test="productName!=null">
+		and product_name=#{productName} 
+		</if>
+			<if test="channelName!=null">
+		and channel_name=#{channelName} 
+		</if>
+			<if test="customerName!=null">
+		and customer_name=#{customerName} 
+		</if>
+			<if test="deviceplate!=null">
+		and deviceplate=#{deviceplate} 
+		</if>
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_rankings_report
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+ 
+ <insert id="insert" parameterType="common.codrim.pojo.TbRankingsReport" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_rankings_report (product_name, customer_name, channel_name, 
+      deviceplate, access_price, put_price, 
+      click_num, effect_num, effect_num_with_deduplication, 
+      deduplication_num, deduplication_rate, subtract_num, 
+      channel_external_num, isSubtract, income, 
+      conversin_rate, costs, gross_profit, 
+      gross_margin, activate, register, 
+      consume_one, consume_more, recharge, 
+      credit, baddept, rankings_time, 
+      rankings_hour)
+    values (#{productName,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, 
+      #{deviceplate,jdbcType=VARCHAR}, #{accessPrice,jdbcType=VARCHAR}, #{putPrice,jdbcType=VARCHAR}, 
+      #{clickNum,jdbcType=BIGINT}, #{effectNum,jdbcType=BIGINT}, #{effectNumWithDeduplication,jdbcType=BIGINT}, 
+      #{deduplicationNum,jdbcType=BIGINT}, #{deduplicationRate,jdbcType=VARCHAR}, #{subtractNum,jdbcType=INTEGER}, 
+      #{channelExternalNum,jdbcType=BIGINT}, #{issubtract,jdbcType=SMALLINT}, #{income,jdbcType=DOUBLE}, 
+      #{conversinRate,jdbcType=VARCHAR}, #{costs,jdbcType=DOUBLE}, #{grossProfit,jdbcType=DOUBLE}, 
+      #{grossMargin,jdbcType=VARCHAR}, #{activate,jdbcType=INTEGER}, #{register,jdbcType=INTEGER}, 
+      #{consumeOne,jdbcType=INTEGER}, #{consumeMore,jdbcType=INTEGER}, #{recharge,jdbcType=INTEGER}, 
+      #{credit,jdbcType=INTEGER}, #{baddept,jdbcType=INTEGER}, #{rankingsTime,jdbcType=DATE}, 
+      #{rankingsHour,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertByBatch" parameterType="java.util.List" >
+	insert into tb_rankings_report (product_name, customer_name, channel_name, 
+      deviceplate, access_price, put_price, 
+      click_num, effect_num, effect_num_with_deduplication, 
+      deduplication_num, deduplication_rate, subtract_num, 
+      channel_external_num, isSubtract, income, 
+      conversin_rate, costs, gross_profit, 
+      gross_margin, activate, register, 
+      consume_one, consume_more, recharge, 
+      credit, baddept, rankings_time,rankings_hour
+      )
+	 values
+	<foreach collection="list" item="item" index="index" separator=",">
+     (#{item.productName}, #{item.customerName}, #{item.channelName}, #{item.deviceplate},
+      #{item.accessPrice}, #{item.putPrice}, #{item.clickNum}, 
+      #{item.effectNum},#{item.effectNumWithDeduplication}, 
+      #{item.deduplicationNum}, #{item.deduplicationRate}, #{item.subtractNum}, 
+      #{item.channelExternalNum}, #{item.issubtract}, #{item.income}, #{item.conversinRate}, 
+      #{item.costs},#{item.grossProfit},#{item.grossMargin},#{item.activate},
+      #{item.register},#{item.consumeOne},#{item.consumeMore},
+      #{item.recharge},#{item.credit},#{item.baddept},#{item.rankingsTime},#{item.rankingsHour})
+	</foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbRankingsReport" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_rankings_report
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      product_name,
+      customer_name,
+      channel_name,
+      deviceplate,
+      access_price,
+      put_price,
+      click_num,
+      effect_num,
+      effect_num_with_deduplication,
+      deduplication_num,
+      deduplication_rate,
+      subtract_num,
+      channel_external_num,
+      isSubtract,
+      income,
+      conversin_rate,
+      costs,
+      gross_profit,
+      gross_margin,
+      activate,
+      register,
+      consume_one,
+      consume_more,
+      recharge,
+      credit,
+      baddept,
+      rankings_time,
+      rankings_hour,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{productName,jdbcType=VARCHAR},
+      #{customerName,jdbcType=VARCHAR},
+      #{channelName,jdbcType=VARCHAR},
+      #{deviceplate,jdbcType=VARCHAR},
+      #{accessPrice,jdbcType=VARCHAR},
+      #{putPrice,jdbcType=VARCHAR},
+      #{clickNum,jdbcType=BIGINT},
+      #{effectNum,jdbcType=BIGINT},
+      #{effectNumWithDeduplication,jdbcType=BIGINT},
+      #{deduplicationNum,jdbcType=BIGINT},
+      #{deduplicationRate,jdbcType=VARCHAR},
+      #{subtractNum,jdbcType=INTEGER},
+      #{channelExternalNum,jdbcType=BIGINT},
+      #{issubtract,jdbcType=SMALLINT},
+      #{income,jdbcType=DOUBLE},
+      #{conversinRate,jdbcType=VARCHAR},
+      #{costs,jdbcType=DOUBLE},
+      #{grossProfit,jdbcType=DOUBLE},
+      #{grossMargin,jdbcType=VARCHAR},
+      #{activate,jdbcType=INTEGER},
+      #{register,jdbcType=INTEGER},
+      #{consumeOne,jdbcType=INTEGER},
+      #{consumeMore,jdbcType=INTEGER},
+      #{recharge,jdbcType=INTEGER},
+      #{credit,jdbcType=INTEGER},
+      #{baddept,jdbcType=INTEGER},
+      #{rankingsTime,jdbcType=DATE},
+      #{rankingsHour,jdbcType=SMALLINT},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbRankingsReport" >
+    update tb_rankings_report
+    <set >
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceplate != null" >
+        deviceplate = #{deviceplate,jdbcType=VARCHAR},
+      </if>
+      <if test="accessPrice != null" >
+        access_price = #{accessPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="putPrice != null" >
+        put_price = #{putPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="clickNum != null" >
+        click_num = #{clickNum,jdbcType=BIGINT},
+      </if>
+      <if test="effectNum != null" >
+        effect_num = #{effectNum,jdbcType=BIGINT},
+      </if>
+      <if test="effectNumWithDeduplication != null" >
+        effect_num_with_deduplication = #{effectNumWithDeduplication,jdbcType=BIGINT},
+      </if>
+      <if test="deduplicationNum != null" >
+        deduplication_num = #{deduplicationNum,jdbcType=BIGINT},
+      </if>
+      <if test="deduplicationRate != null" >
+        deduplication_rate = #{deduplicationRate,jdbcType=VARCHAR},
+      </if>
+      <if test="subtractNum != null" >
+        subtract_num = #{subtractNum,jdbcType=INTEGER},
+      </if>
+      <if test="channelExternalNum != null" >
+        channel_external_num = #{channelExternalNum,jdbcType=BIGINT},
+      </if>
+      <if test="issubtract != null" >
+        isSubtract = #{issubtract,jdbcType=SMALLINT},
+      </if>
+      <if test="income != null" >
+        income = #{income,jdbcType=DOUBLE},
+      </if>
+      <if test="conversinRate != null" >
+        conversin_rate = #{conversinRate,jdbcType=VARCHAR},
+      </if>
+      <if test="costs != null" >
+        costs = #{costs,jdbcType=DOUBLE},
+      </if>
+      <if test="grossProfit != null" >
+        gross_profit = #{grossProfit,jdbcType=DOUBLE},
+      </if>
+      <if test="grossMargin != null" >
+        gross_margin = #{grossMargin,jdbcType=VARCHAR},
+      </if>
+      <if test="activate != null" >
+        activate = #{activate,jdbcType=INTEGER},
+      </if>
+      <if test="register != null" >
+        register = #{register,jdbcType=INTEGER},
+      </if>
+      <if test="consumeOne != null" >
+        consume_one = #{consumeOne,jdbcType=INTEGER},
+      </if>
+      <if test="consumeMore != null" >
+        consume_more = #{consumeMore,jdbcType=INTEGER},
+      </if>
+      <if test="recharge != null" >
+        recharge = #{recharge,jdbcType=INTEGER},
+      </if>
+      <if test="credit != null" >
+        credit = #{credit,jdbcType=INTEGER},
+      </if>
+      <if test="baddept != null" >
+        baddept = #{baddept,jdbcType=INTEGER},
+      </if>
+      <if test="rankingsTime != null" >
+        rankings_time = #{rankingsTime,jdbcType=DATE},
+      </if>
+      <if test="rankingsHour != null" >
+        rankings_hour = #{rankingsHour,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbRankingsReport" >
+    update tb_rankings_report
+    set product_name = #{productName,jdbcType=VARCHAR},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      deviceplate = #{deviceplate,jdbcType=VARCHAR},
+      access_price = #{accessPrice,jdbcType=VARCHAR},
+      put_price = #{putPrice,jdbcType=VARCHAR},
+      click_num = #{clickNum,jdbcType=BIGINT},
+      effect_num = #{effectNum,jdbcType=BIGINT},
+      effect_num_with_deduplication = #{effectNumWithDeduplication,jdbcType=BIGINT},
+      deduplication_num = #{deduplicationNum,jdbcType=BIGINT},
+      deduplication_rate = #{deduplicationRate,jdbcType=VARCHAR},
+      subtract_num = #{subtractNum,jdbcType=INTEGER},
+      channel_external_num = #{channelExternalNum,jdbcType=BIGINT},
+      isSubtract = #{issubtract,jdbcType=SMALLINT},
+      income = #{income,jdbcType=DOUBLE},
+      conversin_rate = #{conversinRate,jdbcType=VARCHAR},
+      costs = #{costs,jdbcType=DOUBLE},
+      gross_profit = #{grossProfit,jdbcType=DOUBLE},
+      gross_margin = #{grossMargin,jdbcType=VARCHAR},
+      activate = #{activate,jdbcType=INTEGER},
+      register = #{register,jdbcType=INTEGER},
+      consume_one = #{consumeOne,jdbcType=INTEGER},
+      consume_more = #{consumeMore,jdbcType=INTEGER},
+      recharge = #{recharge,jdbcType=INTEGER},
+      credit = #{credit,jdbcType=INTEGER},
+      baddept = #{baddept,jdbcType=INTEGER},
+      rankings_time = #{rankingsTime,jdbcType=DATE},
+      rankings_hour = #{rankingsHour,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

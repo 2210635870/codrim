@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbProductResourceMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbProductResource" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="source_url" property="sourceUrl" jdbcType="VARCHAR" />
+    <result column="source_type" property="sourceType" jdbcType="SMALLINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product_id, source_url, source_type
+  </sql>
+   <select id="selectProductResourcesByProductId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_product_resource
+    where product_id = #{productId,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_product_resource
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_product_resource
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+   <insert id="insertByBatch" parameterType="java.util.List" >
+ insert into tb_product_resource (product_id, source_url, source_type
+      )
+    values 
+	<foreach collection="list" item="item" index="index" separator=",">
+   (#{item.productId}, #{item.sourceUrl}, #{item.sourceType}
+      )
+	</foreach>
+  </insert>
+  
+  <insert id="insert" parameterType="common.codrim.pojo.TbProductResource" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_product_resource (product_id, source_url, source_type
+      )
+    values (#{productId,jdbcType=BIGINT}, #{sourceUrl,jdbcType=VARCHAR}, #{sourceType,jdbcType=SMALLINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbProductResource" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_product_resource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      product_id,
+      source_url,
+      source_type,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{productId,jdbcType=BIGINT},
+      #{sourceUrl,jdbcType=VARCHAR},
+      #{sourceType,jdbcType=SMALLINT},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbProductResource" >
+    update tb_product_resource
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="sourceUrl != null" >
+        source_url = #{sourceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceType != null" >
+        source_type = #{sourceType,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbProductResource" >
+    update tb_product_resource
+    set product_id = #{productId,jdbcType=BIGINT},
+      source_url = #{sourceUrl,jdbcType=VARCHAR},
+      source_type = #{sourceType,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

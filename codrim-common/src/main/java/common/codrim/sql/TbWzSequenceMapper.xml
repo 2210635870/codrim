@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzSequenceMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzSequence" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="value" property="value" jdbcType="SMALLINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `value`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_sequence
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_sequence
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzSequence" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_sequence (`value`)
+    values (#{value,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzSequence" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_wz_sequence
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      `value`,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{value,jdbcType=SMALLINT},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzSequence" >
+    update tb_wz_sequence
+    <set >
+      <if test="value != null" >
+        `value` = #{value,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzSequence" >
+    update tb_wz_sequence
+    set `value` = #{value,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

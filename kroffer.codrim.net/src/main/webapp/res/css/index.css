@@ -1,0 +1,282 @@
+.top {
+	width: 100%;
+	background: url(../images/top.jpg) no-repeat;
+	background-size: cover;
+	color: #fff;
+	position: relative;
+}
+.top header {
+	margin: 0 0 35px 20px;
+}
+.top header img {
+	vertical-align: sub;
+	display: inline-block;
+}
+.top section {
+	overflow: hidden;
+}
+.top section img {
+	float: left;
+}
+.top footer {
+	text-align: right;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+	background-color: rgba(35, 166, 227, 0.31);
+}
+.list {
+	border-top: 1px solid #e2e1e1;
+	border-bottom: 1px solid #e2e1e1;
+	background-color: #fff;
+}
+.list li {
+	overflow: hidden;
+	border-bottom: 1px solid #efefef;
+}
+.list li a {
+	display: block;
+	overflow: hidden;	
+}
+.list a img:last-child {
+	display: block;
+	float: right;
+}
+.list a img:first-child {
+	float: left;
+}
+.list li p {
+	float: left;
+}
+#fixed {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1001;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	font-family: '黑体';
+}
+#fixed section {
+	margin: 0 auto;
+	width: 270px;
+	height: 95px;
+	padding: 0 10px;
+	background-color: #f7f9fb;
+	border-radius: 12px;
+	border: 2px solid #c7c7c7;
+	color: #505050;
+	font-size: 12px;
+}
+#fixed header {
+	padding: 7px 0;
+	text-indent: 5px;
+	border-bottom: 1px dashed #e5e1d1;
+}
+#fixed section:first-child article {
+	overflow: hidden;
+	background: url(../images/tips_1.jpg) no-repeat;
+	background-size: contain;
+	width: 270px;
+	height: 47px;
+	margin: 10px auto;
+}
+#download {
+	float: right;
+	display: block;
+	width: 92px;
+	height: 34px;
+	margin: 5px 5px 0 0;
+}
+#fixed > img {
+	display: block;
+	width: 32px;
+	margin: 18px auto;
+}
+#fixed section, #fixed > img {
+	top: 10%;
+	position: relative;
+}
+#fixed section:last-child header {
+	padding: 12px 0;
+}
+#fixed section:last-child article {
+	overflow: hidden;
+	width: 270px;
+	height: 36px;
+	margin: 10px auto;
+}
+#fixed section:last-child article label, #fixed section:last-child article input, #fixed section:last-child article a {
+	display: inline-block;
+	vertical-align: top;
+	height: 34px;
+	line-height: 34px;
+}
+#fixed section:last-child article input {
+	width: 117px;
+	border-radius: 5px;
+	border: 1px solid #e5e5e5;
+	font-size: 16px;
+}
+#fixed section:last-child article a {
+	width: 85px;
+	text-align: center;
+	color: #fff;
+	background-color: #1ca7f8;
+	border-radius: 5px;
+	margin-left: 5px;
+	height: 36px;
+	line-height: 36px;
+	font-size: 14px;
+}
+@media screen and (max-height: 340px) {
+	#fixed section, #fixed > img {
+		top: -10%;
+		position: relative;
+	}
+}
+@media screen and (min-width: 320px) {
+	.top {
+		padding: 20px 0 65px;
+		font-size: 14px;
+		margin-bottom: 15px;
+	}
+	.top header {
+		margin: 0 0 35px 20px;
+	}
+	.top header img {
+		width: 20px;
+	}
+	.top section {
+		padding: 0 30px;
+	}
+	.top section img {
+		width: 20px;
+		margin-top: 17px;
+	}
+	.top section p {
+		float: right;
+		font-size: 48px;
+	}
+	.top footer {
+		font-size: 16px;
+		padding-right: 30px;
+		height: 40px;
+		line-height: 40px;
+	}
+	.list li {
+		padding: 15px 0;
+		margin-left: 15px;
+	}
+	.list a img:last-child {
+		width: 13px;
+		margin-right: 18px;
+		margin-top: 5px;
+	}
+	.list a img:first-child {
+		width: 37px;
+	}
+	.list li p {
+		font-size: 18px;
+		margin-top: 5px;
+		margin-left: 20px;
+	}
+}
+@media screen and (min-width: 360px) {
+	.top {
+		padding: 22px 0 72px;
+		font-size: 16px;
+		margin-bottom: 17px;
+	}
+	.top header {
+		margin: 0 0 37px 22px;
+	}
+	.top header img {
+		width: 23px;
+	}
+	.top section {
+		padding: 0 35px;
+	}
+	.top section img {
+		width: 22px;
+		margin-top: 19px;
+	}
+	.top section p {
+		float: right;
+		font-size: 55px;
+	}
+	.top footer {
+		font-size: 18px;
+		padding-right: 35px;
+		height: 45px;
+		line-height: 45px;
+	}
+	.list li {
+		padding: 15px 0;
+		margin-left: 19px;
+	}
+	.list a img:last-child {
+		width: 14px;
+		margin-right: 19px;
+		margin-top: 7px;
+	}
+	.list a img:first-child {
+		width: 44px;
+	}
+	.list li p {
+		font-size: 20px;
+		margin-top: 7px;
+		margin-left: 20px;
+	}
+}
+@media screen and (min-width: 400px) {
+	.top {
+		padding: 25px 0 80px;
+		font-size: 18px;
+		margin-bottom: 20px;
+	}
+	.top header {
+		margin: 0 0 40px 25px;
+	}
+	.top header img {
+		width: 25px;
+	}
+	.top section {
+		padding: 0 40px;
+	}
+	.top section img {
+		width: 25px;
+		margin-top: 22px;
+	}
+	.top section p {
+		float: right;
+		font-size: 62px;
+	}
+	.top footer {
+		font-size: 20px;
+		padding-right: 40px;
+		height: 50px;
+		line-height: 50px;
+	}
+	.list li {
+		padding: 15px 0;
+		margin-left: 23px;
+	}
+	.list a img:last-child {
+		width: 15px;
+		margin-right: 20px;
+		margin-top: 9px;
+	}
+	.list a img:first-child {
+		width: 50px;
+	}
+	.list li p {
+		font-size: 22px;
+		margin-top: 9px;
+		margin-left: 20px;
+	}
+}

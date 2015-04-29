@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbProductDetailMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbProductDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_id" property="productId" jdbcType="VARCHAR" />
+    <result column="appId" property="appid" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="access_price" property="accessPrice" jdbcType="VARCHAR" />
+    <result column="put_price" property="putPrice" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="DATE" />
+    <result column="end_time" property="endTime" jdbcType="DATE" />
+    <result column="product_tracking_link" property="productTrackingLink" jdbcType="VARCHAR" />
+    <result column="codrim_tracking_link" property="codrimTrackingLink" jdbcType="VARCHAR" />
+    <result column="channel_contact_name" property="channelContactName" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_ranking_number" property="channelRankingNumber" jdbcType="VARCHAR" />
+    <result column="settlement_way" property="settlementWay" jdbcType="SMALLINT" />
+    <result column="effect_type" property="effectType" jdbcType="SMALLINT" />
+    <result column="channel_post_back_link" property="channelPostBackLink" jdbcType="VARCHAR" />
+    <result column="codrim_post_back_link" property="codrimPostBackLink" jdbcType="VARCHAR" />
+    <result column="running_status" property="runningStatus" jdbcType="SMALLINT" />
+    <result column="product_property" property="productProperty" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+    <result column="apply_require" property="applyRequire" jdbcType="VARCHAR" />
+    <result column="person_in_charge" property="personInCharge" jdbcType="VARCHAR" />
+    <result column="apply_name" property="applyName" jdbcType="VARCHAR" />
+    <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="evaluate_name" property="evaluateName" jdbcType="VARCHAR" />
+    <result column="evaluate_result" property="evaluateResult" jdbcType="SMALLINT" />
+    <result column="evaluate_time" property="evaluateTime" jdbcType="TIMESTAMP" />
+    <result column="deviceplate" property="deviceplate" jdbcType="VARCHAR" />
+    <result column="packet_size" property="packetSize" jdbcType="VARCHAR" />
+    <result column="webSite" property="website" jdbcType="VARCHAR" />
+    <result column="product_isBack" property="productIsback" jdbcType="SMALLINT" />
+     <result column="channel_isBack" property="channelIsback" jdbcType="SMALLINT" />
+    <result column="isRankingProduct" property="isrankingproduct" jdbcType="SMALLINT" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="add_name" property="addName" jdbcType="VARCHAR" />
+    <result column="apply_remark" property="applyRemark" jdbcType="VARCHAR" />
+    <result column="evaluate_remark" property="evaluateRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product_name, product_id, appId, customer_name, access_price, put_price, start_time, 
+    end_time, product_tracking_link, codrim_tracking_link, channel_contact_name, channel_name, 
+    channel_ranking_number, settlement_way, effect_type, channel_post_back_link, codrim_post_back_link, 
+    running_status, product_property, product_type, apply_require, person_in_charge, 
+    apply_name, apply_time, evaluate_name, evaluate_result, evaluate_time, deviceplate, 
+    packet_size, webSite, product_isBack,channel_isBack, isRankingProduct, add_time, add_name, apply_remark, 
+    evaluate_remark
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap">
+		select * from tb_product_detail group by product_name,channel_name
+	</select>
+	<select id="getTotalNum" resultType="java.lang.Integer">
+		select count(*) from tb_product_detail
+	</select>
+
+	
+	
+	<select id="selectProductsByPage" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_product_detail 
+		   <if test="evaluateResult != 0" >
+      where  evaluate_result = #{evaluateResult,jdbcType=SMALLINT}
+      </if>
+		limit #{startPage},#{size}
+	</select>
+	<select id="selectByCustomerName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from tb_product_detail
+		where customer_name =#{customer_name,jdbcType=VARCHAR}
+	</select>
+	<select id="getChannelNamestByProductName" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_product_detail
+		where product_name =#{productName}
+	</select>
+	<select id="getProduct" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from tb_product_detail 
+		where  channel_name = #{channelName}
+		and   product_name =#{productName} group by product_name,channel_name
+	</select>
+		<select id="getProductByChannelName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from tb_product_detail 
+		where  channel_name =#{channelName,jdbcType=VARCHAR} group by product_name
+	</select>
+	
+	<select id="selectTbProductDetailByCodition" resultMap="BaseResultMap"
+		parameterType="common.codrim.common.SelectResultByCodition">
+		select
+		<include refid="Base_Column_List" />
+		from tb_product_detail
+		where deviceplate=#{deviceplate} 
+			<if test="productName != null" >
+		and product_name =#{productName} 
+		</if>
+			<if test="productId != null" >
+		and product_id =#{productId} 
+		</if>
+		<if test="appId != null" >
+       and appId=#{appId} 
+      </if>
+		<if test="channelNumber != null" >
+       and channel_ranking_number=#{channelNumber}
+      </if>
+			<if test="channelName != null" >
+       and channel_name=#{channelName}
+      </if>
+      	<if test="type != null" >
+       and running_status=#{type}
+      </if>
+	</select>
+	
+    <select id="selectTbProductDetailsByCodition" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+      select 
+      <include refid="Base_Column_List" />
+	  from tb_product_detail
+		where product_name=#{productName} 
+		<if test="runningStatus!=null">
+		 and running_status=#{runningStatus}
+		</if>
+		<if test="evaluateResult !=-1 and evaluateResult !=0">
+		 and evaluate_result=#{evaluateResult}
+		</if>
+			<if test="startTime !=null">
+		and  apply_time between #{startTime} and #{endTime}
+		</if>
+			<if test="deviceplate !=null">
+		and  deviceplate = #{deviceplate} 
+		</if>
+			<if test="customerName  !=null">
+		 and customer_name=#{customerName}
+		</if>
+		limit #{startPage},#{size}
+    </select>
+
+     <select id="selectTotalProductDetailsByCodition" resultType="java.lang.Integer" parameterType="common.codrim.common.SelectResultByCodition">
+      select 
+      count(*)
+	  from tb_product_detail
+		where product_name=#{productName} 
+		<if test="runningStatus!=-1 and runningStatus !=0">
+		 and running_status=#{runningStatus}
+		</if>
+		<if test="evaluateResult !=-1 and evaluateResult !=0">
+		 and evaluate_result=#{evaluateResult}
+		</if>
+			<if test="startTime !=null">
+		and  apply_time between #{startTime} and #{endTime}
+		</if>
+			<if test="deviceplate !=null">
+		and  deviceplate = #{deviceplate} 
+		</if>
+			<if test="customerName  !=null">
+		 and customer_name=#{customerName}
+		</if>
+    </select>
+    <select id="selectAllTbProductDetailByProductProperty" resultMap="BaseResultMap" parameterType="common.codrim.common.SelectResultByCodition">
+      select 
+      <include refid="Base_Column_List" />
+	  from tb_product_detail
+	  where product_property=#{productProperty}
+		<if test="customerName  !=null">
+		 and customer_name=#{customerName}
+		</if>
+			<if test="productName != null" >
+		and product_name =#{productName} 
+		</if>
+			<if test="channelName != null" >
+		and channel_name =#{channelName} 
+		</if>
+		and  date(apply_time) between #{startTime} and #{endTime} group by product_name,channel_name
+    </select>
+    <select id="selectChannelNameByChannelContactName" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_product_detail
+		where channel_contact_name =#{channelContactName}
+	</select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_product_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_product_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbProductDetail" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_product_detail (product_name, product_id, appId, 
+      customer_name, access_price, put_price, 
+      start_time, end_time, product_tracking_link, 
+      codrim_tracking_link, channel_contact_name, 
+      channel_name, channel_ranking_number, settlement_way, 
+      effect_type, channel_post_back_link, codrim_post_back_link, 
+      running_status, product_property, product_type, 
+      apply_require, person_in_charge, apply_name, 
+      apply_time, evaluate_name, evaluate_result, 
+      evaluate_time, deviceplate, packet_size, 
+      webSite, product_isBack,channel_isBack, isRankingProduct, 
+      add_time, add_name, apply_remark, 
+      evaluate_remark)
+    values (#{productName,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, #{appid,jdbcType=VARCHAR}, 
+      #{customerName,jdbcType=VARCHAR}, #{accessPrice,jdbcType=VARCHAR}, #{putPrice,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, #{productTrackingLink,jdbcType=VARCHAR}, 
+      #{codrimTrackingLink,jdbcType=VARCHAR}, #{channelContactName,jdbcType=VARCHAR}, 
+      #{channelName,jdbcType=VARCHAR}, #{channelRankingNumber,jdbcType=VARCHAR}, #{settlementWay,jdbcType=SMALLINT}, 
+      #{effectType,jdbcType=SMALLINT}, #{channelPostBackLink,jdbcType=VARCHAR}, #{codrimPostBackLink,jdbcType=VARCHAR}, 
+      #{runningStatus,jdbcType=SMALLINT}, #{productProperty,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, 
+      #{applyRequire,jdbcType=VARCHAR}, #{personInCharge,jdbcType=VARCHAR}, #{applyName,jdbcType=VARCHAR}, 
+      #{applyTime,jdbcType=TIMESTAMP}, #{evaluateName,jdbcType=VARCHAR}, #{evaluateResult,jdbcType=SMALLINT}, 
+      #{evaluateTime,jdbcType=TIMESTAMP}, #{deviceplate,jdbcType=VARCHAR}, #{packetSize,jdbcType=VARCHAR}, 
+      #{website,jdbcType=VARCHAR}, #{productIsback,jdbcType=SMALLINT},  #{channelIsback,jdbcType=SMALLINT}, #{isrankingproduct,jdbcType=SMALLINT}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{addName,jdbcType=VARCHAR}, #{applyRemark,jdbcType=VARCHAR}, 
+      #{evaluateRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbProductDetail" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_product_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      product_name,
+      product_id,
+      appId,
+      customer_name,
+      access_price,
+      put_price,
+      start_time,
+      end_time,
+      product_tracking_link,
+      codrim_tracking_link,
+      channel_contact_name,
+      channel_name,
+      channel_ranking_number,
+      settlement_way,
+      effect_type,
+      channel_post_back_link,
+      codrim_post_back_link,
+      running_status,
+      product_property,
+      product_type,
+      apply_require,
+      person_in_charge,
+      apply_name,
+      apply_time,
+      evaluate_name,
+      evaluate_result,
+      evaluate_time,
+      deviceplate,
+      packet_size,
+      webSite,
+      product_isBack,
+     channel_isBack,
+      isRankingProduct,
+      add_time,
+      add_name,
+      apply_remark,
+      evaluate_remark,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{productName,jdbcType=VARCHAR},
+      #{productId,jdbcType=VARCHAR},
+      #{appid,jdbcType=VARCHAR},
+      #{customerName,jdbcType=VARCHAR},
+      #{accessPrice,jdbcType=VARCHAR},
+      #{putPrice,jdbcType=VARCHAR},
+      #{startTime,jdbcType=DATE},
+      #{endTime,jdbcType=DATE},
+      #{productTrackingLink,jdbcType=VARCHAR},
+      #{codrimTrackingLink,jdbcType=VARCHAR},
+      #{channelContactName,jdbcType=VARCHAR},
+      #{channelName,jdbcType=VARCHAR},
+      #{channelRankingNumber,jdbcType=VARCHAR},
+      #{settlementWay,jdbcType=SMALLINT},
+      #{effectType,jdbcType=SMALLINT},
+      #{channelPostBackLink,jdbcType=VARCHAR},
+      #{codrimPostBackLink,jdbcType=VARCHAR},
+      #{runningStatus,jdbcType=SMALLINT},
+      #{productProperty,jdbcType=VARCHAR},
+      #{productType,jdbcType=VARCHAR},
+      #{applyRequire,jdbcType=VARCHAR},
+      #{personInCharge,jdbcType=VARCHAR},
+      #{applyName,jdbcType=VARCHAR},
+      #{applyTime,jdbcType=TIMESTAMP},
+      #{evaluateName,jdbcType=VARCHAR},
+      #{evaluateResult,jdbcType=SMALLINT},
+      #{evaluateTime,jdbcType=TIMESTAMP},
+      #{deviceplate,jdbcType=VARCHAR},
+      #{packetSize,jdbcType=VARCHAR},
+      #{website,jdbcType=VARCHAR},
+      #{productIsback,jdbcType=SMALLINT},  #{channelIsback,jdbcType=SMALLINT},
+      #{isrankingproduct,jdbcType=SMALLINT},
+      #{addTime,jdbcType=TIMESTAMP},
+      #{addName,jdbcType=VARCHAR},
+      #{applyRemark,jdbcType=VARCHAR},
+      #{evaluateRemark,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbProductDetail" >
+    update tb_product_detail
+    <set >
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="appid != null" >
+        appId = #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="accessPrice != null" >
+        access_price = #{accessPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="putPrice != null" >
+        put_price = #{putPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=DATE},
+      </if>
+      <if test="productTrackingLink != null" >
+        product_tracking_link = #{productTrackingLink,jdbcType=VARCHAR},
+      </if>
+      <if test="codrimTrackingLink != null" >
+        codrim_tracking_link = #{codrimTrackingLink,jdbcType=VARCHAR},
+      </if>
+      <if test="channelContactName != null" >
+        channel_contact_name = #{channelContactName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelRankingNumber != null" >
+        channel_ranking_number = #{channelRankingNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="settlementWay != null" >
+        settlement_way = #{settlementWay,jdbcType=SMALLINT},
+      </if>
+      <if test="effectType != null" >
+        effect_type = #{effectType,jdbcType=SMALLINT},
+      </if>
+      <if test="channelPostBackLink != null" >
+        channel_post_back_link = #{channelPostBackLink,jdbcType=VARCHAR},
+      </if>
+      <if test="codrimPostBackLink != null" >
+        codrim_post_back_link = #{codrimPostBackLink,jdbcType=VARCHAR},
+      </if>
+      <if test="runningStatus != null" >
+        running_status = #{runningStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="productProperty != null" >
+        product_property = #{productProperty,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        product_type = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyRequire != null" >
+        apply_require = #{applyRequire,jdbcType=VARCHAR},
+      </if>
+      <if test="personInCharge != null" >
+        person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="applyName != null" >
+        apply_name = #{applyName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null" >
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="evaluateName != null" >
+        evaluate_name = #{evaluateName,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateResult != null" >
+        evaluate_result = #{evaluateResult,jdbcType=SMALLINT},
+      </if>
+      <if test="evaluateTime != null" >
+        evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deviceplate != null" >
+        deviceplate = #{deviceplate,jdbcType=VARCHAR},
+      </if>
+      <if test="packetSize != null" >
+        packet_size = #{packetSize,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        webSite = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="productIsback != null" >
+        product_isBack =#{productIsback,jdbcType=SMALLINT},
+      </if>
+       <if test="channelIsback != null" >
+        channel_isBack = #{channelIsback,jdbcType=SMALLINT},
+      </if>
+      <if test="isrankingproduct != null" >
+        isRankingProduct = #{isrankingproduct,jdbcType=SMALLINT},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addName != null" >
+        add_name = #{addName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyRemark != null" >
+        apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateRemark != null" >
+        evaluate_remark = #{evaluateRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbProductDetail" >
+    update tb_product_detail
+    set product_name = #{productName,jdbcType=VARCHAR},
+      product_id = #{productId,jdbcType=VARCHAR},
+      appId = #{appid,jdbcType=VARCHAR},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      access_price = #{accessPrice,jdbcType=VARCHAR},
+      put_price = #{putPrice,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=DATE},
+      end_time = #{endTime,jdbcType=DATE},
+      product_tracking_link = #{productTrackingLink,jdbcType=VARCHAR},
+      codrim_tracking_link = #{codrimTrackingLink,jdbcType=VARCHAR},
+      channel_contact_name = #{channelContactName,jdbcType=VARCHAR},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      channel_ranking_number = #{channelRankingNumber,jdbcType=VARCHAR},
+      settlement_way = #{settlementWay,jdbcType=SMALLINT},
+      effect_type = #{effectType,jdbcType=SMALLINT},
+      channel_post_back_link = #{channelPostBackLink,jdbcType=VARCHAR},
+      codrim_post_back_link = #{codrimPostBackLink,jdbcType=VARCHAR},
+      running_status = #{runningStatus,jdbcType=SMALLINT},
+      product_property = #{productProperty,jdbcType=VARCHAR},
+      product_type = #{productType,jdbcType=VARCHAR},
+      apply_require = #{applyRequire,jdbcType=VARCHAR},
+      person_in_charge = #{personInCharge,jdbcType=VARCHAR},
+      apply_name = #{applyName,jdbcType=VARCHAR},
+      apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      evaluate_name = #{evaluateName,jdbcType=VARCHAR},
+      evaluate_result = #{evaluateResult,jdbcType=SMALLINT},
+      evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
+      deviceplate = #{deviceplate,jdbcType=VARCHAR},
+      packet_size = #{packetSize,jdbcType=VARCHAR},
+      webSite = #{website,jdbcType=VARCHAR},
+      product_isBack =#{productIsback,jdbcType=SMALLINT},
+       channel_isBack = #{channelIsback,jdbcType=SMALLINT},
+      isRankingProduct = #{isrankingproduct,jdbcType=SMALLINT},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      add_name = #{addName,jdbcType=VARCHAR},
+      apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      evaluate_remark = #{evaluateRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

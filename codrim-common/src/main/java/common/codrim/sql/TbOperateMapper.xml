@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbOperateMapper">
+	<resultMap id="BaseResultMap" type="common.codrim.pojo.TbOperate">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="product_name" property="productName" jdbcType="VARCHAR" />
+		<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+		<result column="deviceplate" property="deviceplate" jdbcType="VARCHAR" />
+		<result column="operate" property="operate" jdbcType="INTEGER" />
+		<result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+
+      <select id="getOperateNum" resultType="java.lang.Integer" >
+ select count(*) from tb_operate where product_name=#{productName}  
+ AND channel_name=#{channelName} AND operate=#{operate} 
+  <if test="deviceplate!=null">
+	   and deviceplate=#{deviceplate}
+	 </if>
+ AND DATE(operate_time)  = #{date};
+  </select>
+  
+	<sql id="Base_Column_List">
+		id, product_name, customer_name, channel_name,deviceplate, operate, operate_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from tb_operate
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from tb_operate
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="common.codrim.pojo.TbOperate"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into tb_operate (product_name, customer_name, channel_name,deviceplate,
+		operate, operate_time)
+		values (#{productName,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR},
+		#{channelName,jdbcType=VARCHAR},#{deviceplate,jdbcType=VARCHAR},
+		#{operate,jdbcType=INTEGER}, #{operateTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="common.codrim.pojo.TbOperate"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into tb_operate
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			product_name,
+			customer_name,
+			channel_name,
+			deviceplate,
+			operate,
+			operate_time,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{productName,jdbcType=VARCHAR},
+			#{customerName,jdbcType=VARCHAR},
+			#{channelName,jdbcType=VARCHAR},
+			#{deviceplate,jdbcType=VARCHAR},
+			#{operate,jdbcType=INTEGER},
+			#{operateTime,jdbcType=TIMESTAMP},
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbOperate">
+		update tb_operate
+		<set>
+			<if test="productName != null">
+				product_name = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="customerName != null">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelName != null">
+				channel_name = #{channelName,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceplate != null">
+				deviceplate = #{deviceplate,jdbcType=VARCHAR},
+			</if>
+			<if test="operate != null">
+				operate = #{operate,jdbcType=INTEGER},
+			</if>
+			<if test="operateTime != null">
+				operate_time = #{operateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+		<insert id="insertByBatch" parameterType="java.util.List"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into tb_operate (product_name, customer_name, channel_name,deviceplate,
+		operate, operate_time)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+		 (#{item.productName}, #{item.customerName},
+		#{item.channelName},#{item.deviceplate},
+		#{item.operate}, #{item.operateTime})
+		</foreach>
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbOperate">
+		update tb_operate
+		set product_name = #{productName,jdbcType=VARCHAR},
+		customer_name = #{customerName,jdbcType=VARCHAR},
+		channel_name = #{channelName,jdbcType=VARCHAR},
+		deviceplate = #{deviceplate,jdbcType=VARCHAR},
+		operate = #{operate,jdbcType=INTEGER},
+		operate_time = #{operateTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

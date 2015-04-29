@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzBindingMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzBinding" >
+    <id column="binding_id" property="bindingId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+    <result column="device_plat" property="devicePlat" jdbcType="INTEGER" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="mac" property="mac" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="region" property="region" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="isp" property="isp" jdbcType="VARCHAR" />
+    <result column="binding_date" property="bindingDate" jdbcType="TIMESTAMP" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    binding_id, user_id, device_id, device_plat, ip, mac, country, region, city, isp, 
+    binding_date,channel_name
+  </sql>
+  
+  	<select id="count" resultType="java.lang.Integer" >
+		select count(1) 
+		from tb_wz_binding
+		<where>
+			<if test="param.userId != null">
+				user_id = #{param.userId}
+			</if>
+		</where>
+	</select>
+	<select id="page" resultMap="BaseResultMap" >
+		select <include refid="Base_Column_List" />
+		from tb_wz_binding
+		<where>
+			<if test="param.userId != null">
+				user_id = #{param.userId}
+			</if>
+		</where>
+		order by binding_id desc
+		limit #{startPage},#{size}
+	</select>
+	<select id="selectByDeviceId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from tb_wz_binding
+	    where device_id = #{deviceId,jdbcType=VARCHAR}
+	</select>
+	<insert id="batchTransferBinding" >
+	    update tb_wz_binding set user_id=#{toUser} where user_id=#{fromUser}
+	</insert>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_binding
+    where binding_id = #{bindingId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_binding
+    where binding_id = #{bindingId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzBinding" useGeneratedKeys="true" keyProperty="bindingId" >
+    insert into tb_wz_binding (user_id, device_id, device_plat, 
+      ip, mac, country, region, 
+      city, isp, binding_date,channel_name
+      )
+    values (#{userId,jdbcType=BIGINT}, #{deviceId,jdbcType=VARCHAR}, #{devicePlat,jdbcType=INTEGER}, 
+      #{ip,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{isp,jdbcType=VARCHAR}, #{bindingDate,jdbcType=TIMESTAMP}, #{channelName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzBinding" useGeneratedKeys="true" keyProperty="bindingId" >
+    insert into tb_wz_binding
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      user_id,
+      device_id,
+      device_plat,
+      ip,
+      mac,
+      country,
+      region,
+      city,
+      isp,
+      binding_date,
+      channel_name,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{userId,jdbcType=BIGINT},
+      #{deviceId,jdbcType=VARCHAR},
+      #{devicePlat,jdbcType=INTEGER},
+      #{ip,jdbcType=VARCHAR},
+      #{mac,jdbcType=VARCHAR},
+      #{country,jdbcType=VARCHAR},
+      #{region,jdbcType=VARCHAR},
+      #{city,jdbcType=VARCHAR},
+      #{isp,jdbcType=VARCHAR},
+      #{bindingDate,jdbcType=TIMESTAMP},
+      #{channelName,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzBinding" >
+    update tb_wz_binding
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="deviceId != null" >
+        device_id = #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="devicePlat != null" >
+        device_plat = #{devicePlat,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null" >
+        mac = #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null" >
+        region = #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="isp != null" >
+        isp = #{isp,jdbcType=VARCHAR},
+      </if>
+      <if test="bindingDate != null" >
+        binding_date = #{bindingDate,jdbcType=TIMESTAMP},
+      </if>
+        <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      
+    </set>
+    where binding_id = #{bindingId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzBinding" >
+    update tb_wz_binding
+    set user_id = #{userId,jdbcType=BIGINT},
+      device_id = #{deviceId,jdbcType=VARCHAR},
+      device_plat = #{devicePlat,jdbcType=INTEGER},
+      ip = #{ip,jdbcType=VARCHAR},
+      mac = #{mac,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      region = #{region,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      isp = #{isp,jdbcType=VARCHAR},
+      binding_date = #{bindingDate,jdbcType=TIMESTAMP},
+ channel_name = #{channelName,jdbcType=VARCHAR}
+    where binding_id = #{bindingId,jdbcType=BIGINT}
+  </update>
+</mapper>

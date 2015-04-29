@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbAdvertPutChannelBudgetMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbAdvertPutChannelBudget" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="advert_put_advert_id" property="advertPutAdvertId" jdbcType="BIGINT" />
+    <result column="budget_type" property="budgetType" jdbcType="SMALLINT" />
+    <result column="budget_time" property="budgetTime" jdbcType="DATE" />
+    <result column="budge_num" property="budgeNum" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, advert_put_advert_id, budget_type, budget_time, budge_num
+  </sql>
+  
+     <insert id="insertByBatch" parameterType="java.util.List" >
+ insert into tb_advert_put_channel_budget (advert_put_advert_id, budget_type, budget_time, 
+      budge_num)
+    values 
+	<foreach collection="list" item="item" index="index" separator=",">
+   (#{item.advertPutAdvertId}, #{item.budgetType}, #{item.budgetTime},  #{item.budgeNum} )
+	</foreach>
+  </insert>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_advert_put_channel_budget
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_advert_put_channel_budget
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbAdvertPutChannelBudget" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_advert_put_channel_budget (advert_put_advert_id, budget_type, budget_time, 
+      budge_num)
+    values (#{advertPutAdvertId,jdbcType=BIGINT}, #{budgetType,jdbcType=SMALLINT}, #{budgetTime,jdbcType=DATE}, 
+      #{budgeNum,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbAdvertPutChannelBudget" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_advert_put_channel_budget
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      advert_put_advert_id,
+      budget_type,
+      budget_time,
+      budge_num,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{advertPutAdvertId,jdbcType=BIGINT},
+      #{budgetType,jdbcType=SMALLINT},
+      #{budgetTime,jdbcType=DATE},
+      #{budgeNum,jdbcType=BIGINT},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbAdvertPutChannelBudget" >
+    update tb_advert_put_channel_budget
+    <set >
+      <if test="advertPutAdvertId != null" >
+        advert_put_advert_id = #{advertPutAdvertId,jdbcType=BIGINT},
+      </if>
+      <if test="budgetType != null" >
+        budget_type = #{budgetType,jdbcType=SMALLINT},
+      </if>
+      <if test="budgetTime != null" >
+        budget_time = #{budgetTime,jdbcType=DATE},
+      </if>
+      <if test="budgeNum != null" >
+        budge_num = #{budgeNum,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbAdvertPutChannelBudget" >
+    update tb_advert_put_channel_budget
+    set advert_put_advert_id = #{advertPutAdvertId,jdbcType=BIGINT},
+      budget_type = #{budgetType,jdbcType=SMALLINT},
+      budget_time = #{budgetTime,jdbcType=DATE},
+      budge_num = #{budgeNum,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

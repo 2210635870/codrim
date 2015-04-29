@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzTaskMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzTask" >
+    <id column="task_id" property="taskId" jdbcType="BIGINT" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
+    <result column="task_name" property="taskName" jdbcType="VARCHAR" />
+    <result column="task_desc" property="taskDesc" jdbcType="VARCHAR" />
+    <result column="task_remark" property="taskRemark" jdbcType="VARCHAR" />
+    <result column="task_orig_price" property="taskOrigPrice" jdbcType="DOUBLE" />
+    <result column="task_status" property="taskStatus" jdbcType="INTEGER" />
+    <result column="task_effect" property="taskEffect" jdbcType="INTEGER" />
+    <result column="task_start_date" property="taskStartDate" jdbcType="DATE" />
+    <result column="task_end_date" property="taskEndDate" jdbcType="DATE" />
+    <result column="app_icon" property="appIcon" jdbcType="VARCHAR" />
+    <result column="app_screen1" property="appScreen1" jdbcType="VARCHAR" />
+    <result column="app_screen2" property="appScreen2" jdbcType="VARCHAR" />
+    <result column="app_url" property="appUrl" jdbcType="VARCHAR" />
+    <result column="app_pname" property="appPname" jdbcType="VARCHAR" />
+    <result column="app_size" property="appSize" jdbcType="INTEGER" />
+    <result column="task_belong" property="taskBelong" jdbcType="SMALLINT" />
+    <result column="weight" property="weight" jdbcType="SMALLINT" />
+    <result column="add_date" property="addDate" jdbcType="DATE" />
+    <result column="product_weight" property="productWeight" jdbcType="SMALLINT" />
+    <result column="app_screenlock_file" property="appScreenlockFile" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="GroupTaskResultMap" type="common.codrim.wz.sql.result.TaskWithGroupRatio" >
+    <id column="task_id" property="taskId" jdbcType="BIGINT" />
+    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
+    <result column="task_name" property="taskName" jdbcType="VARCHAR" />
+    <result column="task_desc" property="taskDesc" jdbcType="VARCHAR" />
+    <result column="task_remark" property="taskRemark" jdbcType="VARCHAR" />
+    <result column="task_orig_price" property="taskOrigPrice" jdbcType="DOUBLE" />
+    <result column="task_status" property="taskStatus" jdbcType="INTEGER" />
+    <result column="task_effect" property="taskEffect" jdbcType="INTEGER" />
+    <result column="task_start_date" property="taskStartDate" jdbcType="DATE" />
+    <result column="task_end_date" property="taskEndDate" jdbcType="DATE" />
+    <result column="app_icon" property="appIcon" jdbcType="VARCHAR" />
+    <result column="app_screen1" property="appScreen1" jdbcType="VARCHAR" />
+    <result column="app_screen2" property="appScreen2" jdbcType="VARCHAR" />
+    <result column="app_url" property="appUrl" jdbcType="VARCHAR" />
+    <result column="app_pname" property="appPname" jdbcType="VARCHAR" />
+    <result column="app_size" property="appSize" jdbcType="INTEGER" />
+    <result column="leader_percent" property="leaderPercent" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="totalStepCount" property="totalStepCount" jdbcType="INTEGER" />
+    <result column="remainStepCount" property="remainStepCount" jdbcType="INTEGER" />
+    <result column="nextStep" property="nextStep" jdbcType="BIGINT" />
+    <result column="nextStepType" property="nextStepType" jdbcType="INTEGER" />
+    <result column="nextStepRewardPercent" property="nextStepRewardPercent" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="KeyValResultMap" type="common.codrim.wz.sql.result.KeyValResult" >
+  	<result column="key" property="key" jdbcType="VARCHAR" />
+  	<result column="value" property="value" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="ScreenlockTaskMap" type="common.codrim.wz.sql.result.ScreenlockTask">
+  	<result column="task_id" property="taskId" jdbcType="INTEGER" />
+  	<result column="task_name" property="taskName" jdbcType="VARCHAR" />
+  	<result column="type" property="type" jdbcType="INTEGER" />
+  	<result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+  	<result column="price" property="price" jdbcType="DOUBLE" />
+  	<result column="weight" property="weight" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    task_id, customer_id, task_name, task_desc, task_remark, task_orig_price, task_status, 
+    task_effect, task_start_date, task_end_date, app_icon, app_screen1, app_screen2, 
+    app_url, app_pname, app_size,task_belong,weight,add_date,product_weight,app_screenlock_file
+  </sql>
+  
+    <select id="count" resultType="java.lang.Integer" >
+		select count(1) from tb_wz_task
+		<where>
+			<if test="param.taskId != null">
+				task_id = #{param.taskId}
+			</if>
+			<if test="param.taskStatus != null">
+				and task_status = #{param.taskStatus}
+			</if>
+			<if test="param.taskStartDate != null">
+				and task_start_date = #{param.taskStartDate}
+			</if>
+			<if test="param.taskEndDate != null">
+				and task_end_date = #{param.taskEndDate}
+			</if>
+			<if test="param.taskName != null">
+				and task_name = #{param.taskName}
+			</if>
+		</where>
+	</select>
+
+	<select id="page" resultMap="BaseResultMap" >
+		select <include refid="Base_Column_List" />
+		from tb_wz_task 
+		<where>
+			<if test="param.taskId != null">
+				task_id = #{param.taskId}
+			</if>
+			<if test="param.taskStatus != null">
+				and task_status = #{param.taskStatus}
+			</if>
+			<if test="param.taskStartDate != null">
+				and task_start_date = #{param.taskStartDate}
+			</if>
+			<if test="param.taskEndDate != null">
+				and task_end_date = #{param.taskEndDate}
+			</if>
+		</where>
+		order by task_id desc
+		<if test="startPage != null  and size!=null">
+			limit #{startPage},#{size}
+			</if>
+	</select>
+	
+	<select id="pageWithGroupRatio" resultMap="GroupTaskResultMap" >
+ 		SELECT t.task_id, task_name, task_remark, task_orig_price, app_icon,
+		    s.nextStep, s.step_type AS nextStepType, s.reward_percent AS nextStepRewardPercent,
+		    s.remainStepCount, s.totalStepCount
+		FROM tb_wz_task t
+		LEFT JOIN (
+				SELECT nts.task_id,mts.stepOrder,mts.remainStepCount,nts.step_id AS nextStep,nts.step_type,nts.reward_percent,COUNT(1) AS totalStepCount
+		FROM tb_wz_task_step nts INNER JOIN(
+		SELECT ts.task_id AS taskId,MIN(ts.step_order) AS stepOrder, COUNT(1) AS remainStepCount
+				FROM tb_wz_task_step ts
+				LEFT JOIN tb_wz_task_record tr ON tr.step_id=ts.step_id AND tr.user_id=#{userId}
+				WHERE tr.record_id IS NULL OR (tr.step_type=3 AND tr.review_status IN (1,3))
+				GROUP BY ts.task_id ) 
+				AS mts 
+				ON mts.taskId=nts.task_id AND nts.step_order=mts.stepOrder 
+				
+				JOIN tb_wz_task_step ms ON ms.task_id=mts.taskId
+		                      GROUP BY ms.task_id
+		) s ON s.task_id=t.task_id
+		WHERE t.task_status=1 AND t.task_belong=#{taskBelong} AND CURDATE() BETWEEN t.task_start_date AND t.task_end_date ORDER BY t.weight DESC,t.`add_date`DESC
+			limit #{startPage},#{size}
+	</select>
+	
+	<select id="selectScreenlockTasks" resultType="java.util.HashMap">
+		SELECT t.task_id, task_name, task_orig_price as price, app_screenlock_file as pic_url, 
+			product_weight as weight, s.reward_percent AS nextStepRewardPercent, s.remainStepCount, 
+			s.totalStepCount, s.step_type AS nextStepType
+		FROM tb_wz_task t
+		LEFT JOIN (
+				SELECT nts.task_id,mts.stepOrder,mts.remainStepCount,nts.step_id AS nextStep,nts.step_type,nts.reward_percent,COUNT(1) AS totalStepCount
+				FROM tb_wz_task_step nts INNER JOIN(
+					SELECT ts.task_id AS taskId,MIN(ts.step_order) AS stepOrder, COUNT(1) AS remainStepCount
+					FROM tb_wz_task_step ts
+					LEFT JOIN tb_wz_task_record tr ON tr.step_id=ts.step_id
+					<if test="userId != null">  
+						AND tr.user_id=#{userId}
+					</if>
+					WHERE tr.record_id IS NULL OR (tr.step_type=3 AND tr.review_status IN (1,3))
+					GROUP BY ts.task_id 
+				)  AS mts  ON mts.taskId=nts.task_id AND nts.step_order=mts.stepOrder 
+				JOIN tb_wz_task_step ms ON ms.task_id=mts.taskId
+		      GROUP BY ms.task_id
+		) s ON s.task_id=t.task_id
+		JOIN (
+			SELECT ROUND(RAND() * ((SELECT MAX(task_id) FROM tb_wz_task)-(SELECT MIN(task_id) FROM tb_wz_task))+(SELECT MIN(task_id) FROM tb_wz_task)) AS task_id
+		) AS rt
+		WHERE t.task_id >= rt.task_id
+		AND t.task_belong=1
+		AND s.totalStepCount > 0
+		limit #{size,jdbcType=INTEGER}
+	</select>
+	
+	<select id="getTask" resultMap="GroupTaskResultMap" >
+		select t.task_id, customer_id, task_name, task_desc, task_remark, task_orig_price, task_status, 
+		    task_effect, task_start_date, task_end_date, app_icon, app_screen1, app_screen2, 
+		    app_url, app_pname, app_size,ug.group_id,ug.leader_percent
+		from tb_wz_task t
+		left join (
+			select u.group_id,gtr.leader_percent,gtr.task_id
+			from tb_wz_user u
+			join tb_wz_group_task_ratio gtr on gtr.group_id=u.group_id
+			where u.user_id=#{userId}
+		) ug on ug.task_id=t.task_id
+		where t.task_id=#{taskId}
+	</select>
+	
+	<select id="getAllTaskSelectOptions" resultMap="KeyValResultMap">
+		select task_id as 'key', task_name as 'value'
+		from tb_wz_task 
+	</select>
+	
+	 <update id="changeStatus" >
+	 	update tb_wz_task
+	 	set task_status = #{status}
+	 	where task_id = #{taskId}
+	 </update>
+  
+  
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_task
+    where task_id = #{taskId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_task
+    where task_id = #{taskId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzTask" useGeneratedKeys="true" keyProperty="taskId" >
+    insert into tb_wz_task (customer_id, task_name, task_desc, 
+      task_remark, task_orig_price, task_status, 
+      task_effect, task_start_date, task_end_date, 
+      app_icon, app_screen1, app_screen2, 
+      app_url, app_pname, app_size,task_belong,weight,product_weight,app_screenlock_file
+      )
+    values (#{customerId,jdbcType=BIGINT}, #{taskName,jdbcType=VARCHAR}, #{taskDesc,jdbcType=VARCHAR}, 
+      #{taskRemark,jdbcType=VARCHAR}, #{taskOrigPrice,jdbcType=DOUBLE}, #{taskStatus,jdbcType=INTEGER}, 
+      #{taskEffect,jdbcType=INTEGER}, #{taskStartDate,jdbcType=DATE}, #{taskEndDate,jdbcType=DATE}, 
+      #{appIcon,jdbcType=VARCHAR}, #{appScreen1,jdbcType=VARCHAR}, #{appScreen2,jdbcType=VARCHAR}, 
+      #{appUrl,jdbcType=VARCHAR}, #{appPname,jdbcType=VARCHAR}, #{appSize,jdbcType=INTEGER},
+	  #{taskBelong,jdbcType=SMALLINT}, #{weight,jdbcType=SMALLINT},
+	  #{productWeight,jdbcType=SMALLINT}, #{appScreenlockFile,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzTask" useGeneratedKeys="true" keyProperty="taskId" >
+    insert into tb_wz_task
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      customer_id,
+      task_name,
+      task_desc,
+      task_remark,
+      task_orig_price,
+      task_status,
+      task_effect,
+      task_start_date,
+      task_end_date,
+      app_icon,
+      app_screen1,
+      app_screen2,
+      app_url,
+      app_pname,
+      app_size,
+      task_belong,
+      weight,
+      product_weight,
+      app_screenlock_file,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{customerId,jdbcType=BIGINT},
+      #{taskName,jdbcType=VARCHAR},
+      #{taskDesc,jdbcType=VARCHAR},
+      #{taskRemark,jdbcType=VARCHAR},
+      #{taskOrigPrice,jdbcType=DOUBLE},
+      #{taskStatus,jdbcType=INTEGER},
+      #{taskEffect,jdbcType=INTEGER},
+      #{taskStartDate,jdbcType=DATE},
+      #{taskEndDate,jdbcType=DATE},
+      #{appIcon,jdbcType=VARCHAR},
+      #{appScreen1,jdbcType=VARCHAR},
+      #{appScreen2,jdbcType=VARCHAR},
+      #{appUrl,jdbcType=VARCHAR},
+      #{appPname,jdbcType=VARCHAR},
+      #{appSize,jdbcType=INTEGER},
+      #{taskBelong,jdbcType=SMALLINT},
+      #{weight,jdbcType=SMALLINT},
+      #{productWeight,jdbcType=SMALLINT},
+      #{appScreenlockFile,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzTask" >
+    update tb_wz_task
+    <set >
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="taskName != null" >
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskDesc != null" >
+        task_desc = #{taskDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="taskRemark != null" >
+        task_remark = #{taskRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="taskOrigPrice != null" >
+        task_orig_price = #{taskOrigPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="taskStatus != null" >
+        task_status = #{taskStatus,jdbcType=INTEGER},
+      </if>
+      <if test="taskEffect != null" >
+        task_effect = #{taskEffect,jdbcType=INTEGER},
+      </if>
+      <if test="taskStartDate != null" >
+        task_start_date = #{taskStartDate,jdbcType=DATE},
+      </if>
+      <if test="taskEndDate != null" >
+        task_end_date = #{taskEndDate,jdbcType=DATE},
+      </if>
+      <if test="appIcon != null" >
+        app_icon = #{appIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="appScreen1 != null" >
+        app_screen1 = #{appScreen1,jdbcType=VARCHAR},
+      </if>
+      <if test="appScreen2 != null" >
+        app_screen2 = #{appScreen2,jdbcType=VARCHAR},
+      </if>
+      <if test="appUrl != null" >
+        app_url = #{appUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="appPname != null" >
+        app_pname = #{appPname,jdbcType=VARCHAR},
+      </if>
+      <if test="appSize != null" >
+        app_size = #{appSize,jdbcType=INTEGER},
+      </if>
+      <if test="taskBelong != null" >
+        task_belong = #{taskBelong,jdbcType=SMALLINT},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=SMALLINT},
+      </if>
+      <if test="productWeight != null" >
+        product_weight = #{productWeight,jdbcType=SMALLINT},
+      </if>
+      <if test="appScreenlockFile != null" >
+        app_screenlock_file = #{appScreenlockFile,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where task_id = #{taskId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzTask" >
+    update tb_wz_task
+    set customer_id = #{customerId,jdbcType=BIGINT},
+      task_name = #{taskName,jdbcType=VARCHAR},
+      task_desc = #{taskDesc,jdbcType=VARCHAR},
+      task_remark = #{taskRemark,jdbcType=VARCHAR},
+      task_orig_price = #{taskOrigPrice,jdbcType=DOUBLE},
+      task_status = #{taskStatus,jdbcType=INTEGER},
+      task_effect = #{taskEffect,jdbcType=INTEGER},
+      task_start_date = #{taskStartDate,jdbcType=DATE},
+      task_end_date = #{taskEndDate,jdbcType=DATE},
+      app_icon = #{appIcon,jdbcType=VARCHAR},
+      app_screen1 = #{appScreen1,jdbcType=VARCHAR},
+      app_screen2 = #{appScreen2,jdbcType=VARCHAR},
+      app_url = #{appUrl,jdbcType=VARCHAR},
+      app_pname = #{appPname,jdbcType=VARCHAR},
+      app_size = #{appSize,jdbcType=INTEGER},
+      task_belong = #{taskBelong,jdbcType=SMALLINT},
+      weight = #{weight,jdbcType=SMALLINT},
+      product_weight = #{productWeight,jdbcType=SMALLINT}, 
+      app_screenlock_file = #{appScreenlockFile,jdbcType=VARCHAR}
+    where task_id = #{taskId,jdbcType=BIGINT}
+  </update>
+</mapper>

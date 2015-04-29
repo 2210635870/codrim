@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbLinkParamMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbLinkParam" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="advert_put_channel_id" property="advertPutChannelId" jdbcType="BIGINT" />
+    <result column="codrim_param_id" property="codrimParamId" jdbcType="BIGINT" />
+    <result column="is_change_defult_value" property="isChangeDefultValue" jdbcType="SMALLINT" />
+    <result column="default_value_id" property="defaultValueId" jdbcType="BIGINT" />
+    <result column="change_value" property="changeValue" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="link_type" property="linkType" jdbcType="SMALLINT" />
+  </resultMap>
+  <resultMap id="codrimLinkMap" type="common.codrim.pojo.TbCodrimLinkParam">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="paramZhName" jdbcType="VARCHAR" property="paramZhName" />
+    <result column="paramEnName" jdbcType="VARCHAR" property="paramEnName" />
+    <result column="paramType" jdbcType="SMALLINT" property="paramType" />
+    <result column="addTime" jdbcType="TIMESTAMP" property="addTime" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product_id, advert_put_channel_id, codrim_param_id, is_change_defult_value, default_value_id, 
+    change_value, add_time, link_type
+  </sql>
+  
+    <select id="getLinkParamsByProductId" resultMap="codrimLinkMap" parameterType="java.lang.Long" >
+    select cod.param_zh_name as paramZhName,cod.param_en_name as paramEnName,cod.param_type as paramType,cod.add_time as addTime
+	from tb_link_param as lin inner join tb_codrim_link_param as cod on lin.codrim_param_id=cod.id
+	where product_id = #{productId}
+  </select>
+  
+  
+    <insert id="insertByBatch" parameterType="java.util.List" >
+  insert into tb_link_param (product_id, advert_put_channel_id, codrim_param_id, 
+      is_change_defult_value, default_value_id, change_value, 
+      add_time, link_type)
+    values 
+	<foreach collection="list" item="item" index="index" separator=",">
+   (#{item.productId}, #{item.advertPutChannelId}, #{item.codrimParamId}, 
+      #{item.isChangeDefultValue}, #{item.defaultValueId}, #{item.changeValue}, 
+      #{item.addTime}, #{item.linkType})
+	</foreach>
+  </insert>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_link_param
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_link_param
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbLinkParam" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_link_param (product_id, advert_put_channel_id, codrim_param_id, 
+      is_change_defult_value, default_value_id, change_value, 
+      add_time, link_type)
+    values (#{productId,jdbcType=BIGINT}, #{advertPutChannelId,jdbcType=BIGINT}, #{codrimParamId,jdbcType=BIGINT}, 
+      #{isChangeDefultValue,jdbcType=SMALLINT}, #{defaultValueId,jdbcType=BIGINT}, #{changeValue,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{linkType,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbLinkParam" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_link_param
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      product_id,
+      advert_put_channel_id,
+      codrim_param_id,
+      is_change_defult_value,
+      default_value_id,
+      change_value,
+      add_time,
+      link_type,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{productId,jdbcType=BIGINT},
+      #{advertPutChannelId,jdbcType=BIGINT},
+      #{codrimParamId,jdbcType=BIGINT},
+      #{isChangeDefultValue,jdbcType=SMALLINT},
+      #{defaultValueId,jdbcType=BIGINT},
+      #{changeValue,jdbcType=VARCHAR},
+      #{addTime,jdbcType=TIMESTAMP},
+      #{linkType,jdbcType=SMALLINT},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbLinkParam" >
+    update tb_link_param
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="advertPutChannelId != null" >
+        advert_put_channel_id = #{advertPutChannelId,jdbcType=BIGINT},
+      </if>
+      <if test="codrimParamId != null" >
+        codrim_param_id = #{codrimParamId,jdbcType=BIGINT},
+      </if>
+      <if test="isChangeDefultValue != null" >
+        is_change_defult_value = #{isChangeDefultValue,jdbcType=SMALLINT},
+      </if>
+      <if test="defaultValueId != null" >
+        default_value_id = #{defaultValueId,jdbcType=BIGINT},
+      </if>
+      <if test="changeValue != null" >
+        change_value = #{changeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="linkType != null" >
+        link_type = #{linkType,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbLinkParam" >
+    update tb_link_param
+    set product_id = #{productId,jdbcType=BIGINT},
+      advert_put_channel_id = #{advertPutChannelId,jdbcType=BIGINT},
+      codrim_param_id = #{codrimParamId,jdbcType=BIGINT},
+      is_change_defult_value = #{isChangeDefultValue,jdbcType=SMALLINT},
+      default_value_id = #{defaultValueId,jdbcType=BIGINT},
+      change_value = #{changeValue,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      link_type = #{linkType,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

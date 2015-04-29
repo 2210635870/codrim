@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbRandomSendNumMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbRandomSendNum" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="mobile_mark" property="mobileMark" jdbcType="VARCHAR" />
+        <result column="callBack_url" property="callBackUrl" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+        <result column="channel_name_two" property="channelNameTwo" jdbcType="VARCHAR" />
+        <result column="send_num" property="sendNum" jdbcType="INTEGER" />
+    <result column="random_num" property="randomNum" jdbcType="INTEGER" />
+     <result column="isToChanel" property="isToChanel" jdbcType="SMALLINT" />
+    <result column="time" property="time" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mobile_mark, callBack_url,product_name, channel_name, channel_name_two,send_num,random_num, isToChanel,`time`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_random_send_num
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+    <select id="selectByPCM" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_random_send_num
+    where mobile_mark = #{mobileMark,jdbcType=VARCHAR} 
+    and product_name= #{productName,jdbcType=VARCHAR} 
+    and channel_name=#{channelName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_random_send_num
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbRandomSendNum" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_random_send_num (mobile_mark,callBack_url, product_name, channel_name, channel_name_two,
+     send_num, random_num,isToChanel, `time`)
+    values (#{mobileMark,jdbcType=VARCHAR},#{callBackUrl,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, 
+     #{channelNameTwo,jdbcType=VARCHAR},#{sendNum,jdbcType=INTEGER}, #{randomNum,jdbcType=INTEGER},
+     #{isToChanel,jdbcType=SMALLINT},
+      #{time,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbRandomSendNum" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_random_send_num
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      mobile_mark,
+      callBack_url,
+      product_name,
+      channel_name,
+      channel_name_two,
+      send_num,
+      random_num,
+      isToChanel,
+      `time`,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{mobileMark,jdbcType=VARCHAR},
+      #{callBackUrl,jdbcType=VARCHAR},
+      #{productName,jdbcType=VARCHAR},
+      #{channelName,jdbcType=VARCHAR},
+       #{channelNameTwo,jdbcType=VARCHAR},
+       #{sendNum,jdbcType=INTEGER},
+      #{randomNum,jdbcType=INTEGER},
+      #{isToChanel,jdbcType=SMALLINT},
+      #{time,jdbcType=DATE},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbRandomSendNum" >
+    update tb_random_send_num
+    <set >
+      <if test="mobileMark != null" >
+        mobile_mark = #{mobileMark,jdbcType=VARCHAR},
+      </if>
+         <if test="callBackUrl != null" >
+        callBack_url = #{callBackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+         <if test="channelNameTwo != null" >
+        channel_name_two = #{channelNameTwo,jdbcType=VARCHAR},
+      </if>
+          <if test="sendNum != null" >
+        send_num = #{sendNum,jdbcType=INTEGER},
+      </if>
+      <if test="randomNum != null" >
+        random_num = #{randomNum,jdbcType=INTEGER},
+      </if>
+         <if test="isToChanel != null" >
+     isToChanel=  #{isToChanel,jdbcType=SMALLINT},
+      </if>
+    
+      <if test="time != null" >
+        `time` = #{time,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbRandomSendNum" >
+    update tb_random_send_num
+    set mobile_mark = #{mobileMark,jdbcType=VARCHAR},
+           callBack_url = #{callBackUrl,jdbcType=VARCHAR},
+      product_name = #{productName,jdbcType=VARCHAR},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      channel_name_two = #{channelNameTwo,jdbcType=VARCHAR},
+       send_num = #{sendNum,jdbcType=INTEGER},
+      random_num = #{randomNum,jdbcType=INTEGER},
+     isToChanel =  #{isToChanel,jdbcType=SMALLINT},
+      `time` = #{time,jdbcType=DATE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

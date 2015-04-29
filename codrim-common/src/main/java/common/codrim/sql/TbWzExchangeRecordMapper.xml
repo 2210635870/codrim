@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzExchangeRecordMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzExchangeRecord" >
+    <id column="record_id" property="recordId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="exchange_type" property="exchangeType" jdbcType="INTEGER" />
+    <result column="exchange_gold" property="exchangeGold" jdbcType="BIGINT" />
+    <result column="exchange_money" property="exchangeMoney" jdbcType="DOUBLE" />
+    <result column="exchange_date" property="exchangeDate" jdbcType="TIMESTAMP" />
+    <result column="zfb_account" property="zfbAccount" jdbcType="VARCHAR" />
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="review_status" property="reviewStatus" jdbcType="INTEGER" />
+    <result column="review_remark" property="reviewRemark" jdbcType="VARCHAR" />
+    <result column="review_by" property="reviewBy" jdbcType="BIGINT" />
+    <result column="review_date" property="reviewDate" jdbcType="DATE" />
+  </resultMap>
+  <resultMap id="ExchangeRecordResultMap" type="common.codrim.wz.sql.result.ExchangeRecordInfo" >
+    <id column="record_id" property="recordId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="exchange_type" property="exchangeType" jdbcType="INTEGER" />
+    <result column="exchange_gold" property="exchangeGold" jdbcType="BIGINT" />
+    <result column="exchange_money" property="exchangeMoney" jdbcType="DOUBLE" />
+    <result column="exchange_date" property="exchangeDate" jdbcType="TIMESTAMP" />
+    <result column="zfb_account" property="zfbAccount" jdbcType="VARCHAR" />
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="review_status" property="reviewStatus" jdbcType="INTEGER" />
+    <result column="review_remark" property="reviewRemark" jdbcType="VARCHAR" />
+    <result column="review_by" property="reviewBy" jdbcType="BIGINT" />
+    <result column="review_date" property="reviewDate" jdbcType="DATE" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="userEmail" property="userEmail" jdbcType="VARCHAR" />
+    <result column="userPhone" property="userPhone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    record_id, user_id, exchange_type, exchange_gold, exchange_money, exchange_date, 
+    zfb_account, phone_number, review_status, review_remark, review_by, review_date
+  </sql>
+  
+  	<select id="count" resultType="java.lang.Integer" >
+		select count(1) 
+		from tb_wz_exchange_record er
+		left join tb_wz_user u on u.user_id=er.user_id
+		<where>
+	<if test="param.exchangeStartDate != null  and  param.exchangeEndDate != null ">
+				er.exchange_date between #{param.exchangeStartDate} and #{param.exchangeEndDate} 
+			</if>
+			<if test="param.reviewStartDate != null  and  param.reviewEndDate != null ">
+			and	er.review_date between #{param.reviewStartDate} and #{param.reviewEndDate}  
+			</if>
+			<if test="param.userId != null">
+			and	er.user_id = #{param.userId}
+			</if>
+			<if test="param.username != null">
+			and	u.username = #{param.username}
+			</if>
+			<if test="param.userPhone != null">
+			and	u.phone_number = #{param.userPhone}
+			</if>
+			<if test="param.exchangeType != null">
+			and	er.exchange_type = #{param.exchangeType} 
+			</if>
+			<if test="param.reviewStatus != null">
+			and	er.review_status = #{param.reviewStatus}
+			</if>
+		</where>
+	</select>
+	
+	<select id="page" resultMap="ExchangeRecordResultMap" >
+		select record_id, er.user_id, exchange_type, exchange_gold, exchange_money, exchange_date, 
+    		zfb_account, er.phone_number, review_status, review_remark, review_by, review_date,
+    		u.username as username, u.phone_number as userPhone, u.email as userEmail
+		from tb_wz_exchange_record er
+		left join tb_wz_user u on u.user_id=er.user_id 
+		<where>
+		
+			<if test="param.userId != null">
+				er.user_id = #{param.userId}  
+			</if>
+			<if test="param.username != null">
+		and		u.username = #{param.username}  
+			</if>
+			<if test="param.userPhone != null">
+			and	u.phone_number = #{param.userPhone}  
+			</if>
+			<if test="param.exchangeType != null">
+			and	er.exchange_type = #{param.exchangeType}
+			</if>
+			<if test="param.reviewStatus != null">
+			and	er.review_status = #{param.reviewStatus}  
+			</if>
+			<if test="param.exchangeStartDate != null  and  param.exchangeEndDate != null ">
+			and	er.exchange_date between #{param.exchangeStartDate} and #{param.exchangeEndDate} 
+			</if>
+			<if test="param.reviewStartDate != null  and  param.reviewEndDate != null ">
+			and	er.review_date between #{param.reviewStartDate} and #{param.reviewEndDate}
+			</if>
+		</where>
+		order by record_id desc
+		limit #{startPage},#{size}
+	</select>
+	
+	<select id="getExchangeRecordInfo" resultMap="ExchangeRecordResultMap" >
+		select record_id, er.user_id, exchange_type, exchange_gold, exchange_money, exchange_date, 
+    		zfb_account, er.phone_number, review_status, review_remark, review_by, review_date,
+    		u.username as username, u.phone_number as userPhone, u.email as userEmail
+		from tb_wz_exchange_record er
+		left join tb_wz_user u on u.user_id=er.user_id
+		where er.record_id=#{recordId}
+	</select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_exchange_record
+    where record_id = #{recordId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_exchange_record
+    where record_id = #{recordId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzExchangeRecord" useGeneratedKeys="true" keyProperty="recordId" >
+    insert into tb_wz_exchange_record (user_id, exchange_type, exchange_gold, 
+      exchange_money, exchange_date, zfb_account, 
+      phone_number, review_status, review_remark, 
+      review_by, review_date)
+    values (#{userId,jdbcType=BIGINT}, #{exchangeType,jdbcType=INTEGER}, #{exchangeGold,jdbcType=BIGINT}, 
+      #{exchangeMoney,jdbcType=DOUBLE}, #{exchangeDate,jdbcType=TIMESTAMP}, #{zfbAccount,jdbcType=VARCHAR}, 
+      #{phoneNumber,jdbcType=VARCHAR}, #{reviewStatus,jdbcType=INTEGER}, #{reviewRemark,jdbcType=VARCHAR}, 
+      #{reviewBy,jdbcType=BIGINT}, #{reviewDate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzExchangeRecord" useGeneratedKeys="true" keyProperty="recordId" >
+    insert into tb_wz_exchange_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      user_id,
+      exchange_type,
+      exchange_gold,
+      exchange_money,
+      exchange_date,
+      zfb_account,
+      phone_number,
+      review_status,
+      review_remark,
+      review_by,
+      review_date,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{userId,jdbcType=BIGINT},
+      #{exchangeType,jdbcType=INTEGER},
+      #{exchangeGold,jdbcType=BIGINT},
+      #{exchangeMoney,jdbcType=DOUBLE},
+      #{exchangeDate,jdbcType=TIMESTAMP},
+      #{zfbAccount,jdbcType=VARCHAR},
+      #{phoneNumber,jdbcType=VARCHAR},
+      #{reviewStatus,jdbcType=INTEGER},
+      #{reviewRemark,jdbcType=VARCHAR},
+      #{reviewBy,jdbcType=BIGINT},
+      #{reviewDate,jdbcType=DATE},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzExchangeRecord" >
+    update tb_wz_exchange_record
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="exchangeType != null" >
+        exchange_type = #{exchangeType,jdbcType=INTEGER},
+      </if>
+      <if test="exchangeGold != null" >
+        exchange_gold = #{exchangeGold,jdbcType=BIGINT},
+      </if>
+      <if test="exchangeMoney != null" >
+        exchange_money = #{exchangeMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="exchangeDate != null" >
+        exchange_date = #{exchangeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="zfbAccount != null" >
+        zfb_account = #{zfbAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewStatus != null" >
+        review_status = #{reviewStatus,jdbcType=INTEGER},
+      </if>
+      <if test="reviewRemark != null" >
+        review_remark = #{reviewRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewBy != null" >
+        review_by = #{reviewBy,jdbcType=BIGINT},
+      </if>
+      <if test="reviewDate != null" >
+        review_date = #{reviewDate,jdbcType=DATE},
+      </if>
+    </set>
+    where record_id = #{recordId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzExchangeRecord" >
+    update tb_wz_exchange_record
+    set user_id = #{userId,jdbcType=BIGINT},
+      exchange_type = #{exchangeType,jdbcType=INTEGER},
+      exchange_gold = #{exchangeGold,jdbcType=BIGINT},
+      exchange_money = #{exchangeMoney,jdbcType=DOUBLE},
+      exchange_date = #{exchangeDate,jdbcType=TIMESTAMP},
+      zfb_account = #{zfbAccount,jdbcType=VARCHAR},
+      phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      review_status = #{reviewStatus,jdbcType=INTEGER},
+      review_remark = #{reviewRemark,jdbcType=VARCHAR},
+      review_by = #{reviewBy,jdbcType=BIGINT},
+      review_date = #{reviewDate,jdbcType=DATE}
+    where record_id = #{recordId,jdbcType=BIGINT}
+  </update>
+</mapper>

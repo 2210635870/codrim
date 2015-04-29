@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="common.codrim.dao.TbWzUserMapper" >
+  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzUser" >
+    <id column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="bind_status" property="bindStatus" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="balance" property="balance" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+    <result column="is_leader" property="isLeader" jdbcType="INTEGER" />
+    <result column="invite_by" property="inviteBy" jdbcType="BIGINT" />
+    <result column="user_effect" property="userEffect" jdbcType="INTEGER" />
+    <result column="step_effect" property="stepEffect" jdbcType="INTEGER" />
+    <result column="last_login_date" property="lastLoginDate" jdbcType="TIMESTAMP" />
+    <result column="last_sign_date" property="lastSignDate" jdbcType="DATE" />
+    <result column="last_cj_date" property="lastCjDate" jdbcType="TIMESTAMP" />
+    <result column="verify_code" property="verifyCode" jdbcType="VARCHAR" />
+    <result column="verify_code_date" property="verifyCodeDate" jdbcType="TIMESTAMP" />
+    <result column="qr_code_user" property="qrCodeUser" jdbcType="VARCHAR" />
+    <result column="qr_code_group" property="qrCodeGroup" jdbcType="VARCHAR" />
+      <result column="is_disable" property="isDisable" jdbcType="SMALLINT" />
+    <result column="user_source" property="userSource" jdbcType="SMALLINT"/>
+    
+  </resultMap>
+  <resultMap id="RankingInfoMap" type="common.codrim.wz.sql.result.RankingInfo" >
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="gold" property="gold" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, phone_number, `status`, bind_status, username, email, icon, balance, create_date, 
+    group_id, is_leader, invite_by, user_effect, step_effect, last_login_date, last_sign_date, 
+    last_cj_date, verify_code, verify_code_date, qr_code_user, qr_code_group,is_disable,user_source
+  </sql>
+  	
+  	<select id="selectByPhoneNumber" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from tb_wz_user
+	    where phone_number = #{phoneNumber,jdbcType=VARCHAR}
+  	</select>
+  	<select id="count" resultType="java.lang.Integer" >
+		select count(1) 
+		from tb_wz_user
+		<where>
+			<if test="param.groupId != null">
+				group_id = #{param.groupId}
+			</if>
+			<if test="param.userId != null">
+				and user_id = #{param.userId}
+			</if>
+			<if test="param.username != null">
+				and username = #{param.username}
+			</if>
+			<if test="param.phoneNumber != null">
+				and phone_number = #{param.phoneNumber}
+			</if>
+			<if test="param.isLeader != null">
+				and is_leader = #{param.isLeader}
+			</if>
+		</where>
+	</select>
+	<select id="page" resultMap="BaseResultMap" >
+		select <include refid="Base_Column_List" />
+		from tb_wz_user
+		<where>
+			<if test="param.groupId != null">
+				group_id = #{param.groupId}
+			</if>
+			<if test="param.userId != null">
+				and user_id = #{param.userId}
+			</if>
+			<if test="param.username != null">
+				and username = #{param.username}
+			</if>
+			<if test="param.phoneNumber != null">
+				and phone_number = #{param.phoneNumber}
+			</if>
+			<if test="param.isLeader != null">
+				and is_leader = #{param.isLeader}
+			</if>
+		</where>
+		order by ${order.property} ${order.order}
+		limit #{startPage},#{size}
+	</select>
+	<select id="getBalance" resultType="java.lang.Long" parameterType="java.lang.Long" >
+	    select balance
+	    from tb_wz_user
+	    where user_id = #{userId,jdbcType=BIGINT}
+	</select>
+	<select id="userRanking" resultMap="RankingInfoMap" >
+	    select username as name, balance as gold
+		from tb_wz_user
+		order by balance desc limit #{size}
+	 </select>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_wz_user
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_wz_user
+    where user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="common.codrim.pojo.TbWzUser" useGeneratedKeys="true" keyProperty="userId" >
+    insert into tb_wz_user (phone_number, `status`, bind_status, 
+      username, email, icon, 
+      balance, create_date, group_id, 
+      is_leader, invite_by, user_effect, 
+      step_effect, last_login_date, last_sign_date, 
+      last_cj_date, verify_code, verify_code_date, 
+      qr_code_user, qr_code_group,is_disable,user_source)
+    values (#{phoneNumber,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{bindStatus,jdbcType=INTEGER}, 
+      #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
+      #{balance,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{groupId,jdbcType=BIGINT}, 
+      #{isLeader,jdbcType=INTEGER}, #{inviteBy,jdbcType=BIGINT}, #{userEffect,jdbcType=INTEGER}, 
+      #{stepEffect,jdbcType=INTEGER}, #{lastLoginDate,jdbcType=TIMESTAMP}, #{lastSignDate,jdbcType=DATE}, 
+      #{lastCjDate,jdbcType=TIMESTAMP}, #{verifyCode,jdbcType=VARCHAR}, #{verifyCodeDate,jdbcType=TIMESTAMP}, 
+      #{qrCodeUser,jdbcType=VARCHAR}, #{qrCodeGroup,jdbcType=VARCHAR}, #{isDisable,jdbcType=SMALLINT}, #{userSource,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzUser" useGeneratedKeys="true" keyProperty="userId" >
+    insert into tb_wz_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      phone_number,
+      `status`,
+      bind_status,
+      username,
+      email,
+      icon,
+      balance,
+      create_date,
+      group_id,
+      is_leader,
+      invite_by,
+      user_effect,
+      step_effect,
+      last_login_date,
+      last_sign_date,
+      last_cj_date,
+      verify_code,
+      verify_code_date,
+      qr_code_user,
+      qr_code_group,
+      is_disable,
+      user_source,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{phoneNumber,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER},
+      #{bindStatus,jdbcType=INTEGER},
+      #{username,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR},
+      #{icon,jdbcType=VARCHAR},
+      #{balance,jdbcType=BIGINT},
+      #{createDate,jdbcType=TIMESTAMP},
+      #{groupId,jdbcType=BIGINT},
+      #{isLeader,jdbcType=INTEGER},
+      #{inviteBy,jdbcType=BIGINT},
+      #{userEffect,jdbcType=INTEGER},
+      #{stepEffect,jdbcType=INTEGER},
+      #{lastLoginDate,jdbcType=TIMESTAMP},
+      #{lastSignDate,jdbcType=DATE},
+      #{lastCjDate,jdbcType=TIMESTAMP},
+      #{verifyCode,jdbcType=VARCHAR},
+      #{verifyCodeDate,jdbcType=TIMESTAMP},
+      #{qrCodeUser,jdbcType=VARCHAR},
+      #{qrCodeGroup,jdbcType=VARCHAR},
+       #{isDisable,jdbcType=SMALLINT}, 
+       #{userSource,jdbcType=SMALLINT},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzUser" >
+    update tb_wz_user
+    <set >
+      <if test="phoneNumber != null" >
+        phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="bindStatus != null" >
+        bind_status = #{bindStatus,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="isLeader != null" >
+        is_leader = #{isLeader,jdbcType=INTEGER},
+      </if>
+      <if test="inviteBy != null" >
+        invite_by = #{inviteBy,jdbcType=BIGINT},
+      </if>
+      <if test="userEffect != null" >
+        user_effect = #{userEffect,jdbcType=INTEGER},
+      </if>
+      <if test="stepEffect != null" >
+        step_effect = #{stepEffect,jdbcType=INTEGER},
+      </if>
+      <if test="lastLoginDate != null" >
+        last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastSignDate != null" >
+        last_sign_date = #{lastSignDate,jdbcType=DATE},
+      </if>
+      <if test="lastCjDate != null" >
+        last_cj_date = #{lastCjDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="verifyCode != null" >
+        verify_code = #{verifyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyCodeDate != null" >
+        verify_code_date = #{verifyCodeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qrCodeUser != null" >
+        qr_code_user = #{qrCodeUser,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCodeGroup != null" >
+        qr_code_group = #{qrCodeGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="isDisable != null" >
+      is_disable= #{isDisable,jdbcType=SMALLINT}, 
+      </if>
+      <if test="userSource != null" >
+       user_source= #{userSource,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzUser" >
+    update tb_wz_user
+    set phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      bind_status = #{bindStatus,jdbcType=INTEGER},
+      username = #{username,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      group_id = #{groupId,jdbcType=BIGINT},
+      is_leader = #{isLeader,jdbcType=INTEGER},
+      invite_by = #{inviteBy,jdbcType=BIGINT},
+      user_effect = #{userEffect,jdbcType=INTEGER},
+      step_effect = #{stepEffect,jdbcType=INTEGER},
+      last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP},
+      last_sign_date = #{lastSignDate,jdbcType=DATE},
+      last_cj_date = #{lastCjDate,jdbcType=TIMESTAMP},
+      verify_code = #{verifyCode,jdbcType=VARCHAR},
+      verify_code_date = #{verifyCodeDate,jdbcType=TIMESTAMP},
+      qr_code_user = #{qrCodeUser,jdbcType=VARCHAR},
+      qr_code_group = #{qrCodeGroup,jdbcType=VARCHAR},
+       is_disable= #{isDisable,jdbcType=SMALLINT}, 
+          user_source= #{userSource,jdbcType=SMALLINT}
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+</mapper>
