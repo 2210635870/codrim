@@ -2,6 +2,7 @@ package common.codrim.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -27,4 +28,6 @@ public interface TbWzPointsLogMapper {
 	int getNowDayInvites(@Param("userId")long userId, @Param("date")Date date);
 	
 	TbWzPointsLog selectInvaiteesByInviterLog(TbWzPointsLog log);
+	
+	List<TbWzPointsLog> selectList(Map<String, Object> params);
 }

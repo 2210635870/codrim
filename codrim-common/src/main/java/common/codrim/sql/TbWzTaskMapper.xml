@@ -140,7 +140,7 @@
 	<select id="selectScreenlockTasks" resultType="java.util.HashMap">
 		SELECT t.task_id, task_name, task_orig_price as price, app_screenlock_file as pic_url, 
 			product_weight as weight, s.reward_percent AS nextStepRewardPercent, s.remainStepCount, 
-			s.totalStepCount, s.step_type AS nextStepType
+			s.totalStepCount, s.step_type AS nextStepType, t.app_icon
 		FROM tb_wz_task t
 		LEFT JOIN (
 				SELECT nts.task_id,mts.stepOrder,mts.remainStepCount,nts.step_id AS nextStep,nts.step_type,nts.reward_percent,COUNT(1) AS totalStepCount
@@ -153,7 +153,7 @@
 					</if>
 					WHERE tr.record_id IS NULL OR (tr.step_type=3 AND tr.review_status IN (1,3))
 					GROUP BY ts.task_id 
-				)  AS mts  ON mts.taskId=nts.task_id AND nts.step_order=mts.stepOrder 
+				)  AS mts ON mts.taskId=nts.task_id AND nts.step_order=mts.stepOrder 
 				JOIN tb_wz_task_step ms ON ms.task_id=mts.taskId
 		      GROUP BY ms.task_id
 		) s ON s.task_id=t.task_id
@@ -161,6 +161,7 @@
 			SELECT ROUND(RAND() * ((SELECT MAX(task_id) FROM tb_wz_task)-(SELECT MIN(task_id) FROM tb_wz_task))+(SELECT MIN(task_id) FROM tb_wz_task)) AS task_id
 		) AS rt
 		WHERE t.task_id >= rt.task_id
+		AND t.task_status=1
 		AND t.task_belong=1
 		AND s.totalStepCount > 0
 		limit #{size,jdbcType=INTEGER}

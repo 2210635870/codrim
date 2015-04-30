@@ -49,6 +49,9 @@
 		if(value==6){
 			return "团队成员";
 		}
+		if(value==8){
+			return "锁屏滑动签到";
+		}
 	}
 </script>
 

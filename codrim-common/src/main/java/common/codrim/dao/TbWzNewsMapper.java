@@ -7,7 +7,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import common.codrim.pojo.TbWzNews;
-import common.codrim.wz.sql.result.ScreenlockTask;
 
 @Repository
 public interface TbWzNewsMapper {

@@ -1,11 +1,8 @@
 package common.codrim.service.impl;
 
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -17,7 +14,6 @@ import common.codrim.dao.TbWzUserMapper;
 import common.codrim.pojo.TbWzBinding;
 import common.codrim.pojo.TbWzUser;
 import common.codrim.service.WzUserService;
-import common.codrim.util.StringUtil;
 import common.codrim.wz.sql.in.Order;
 import common.codrim.wz.sql.result.RankingInfo;
 

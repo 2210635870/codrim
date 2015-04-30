@@ -2,6 +2,7 @@ package common.codrim.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -43,5 +44,9 @@ TbWzPointsLogMapper pointsLogDao;
 	public TbWzPointsLog selectInvaiteesByInviterLog(TbWzPointsLog log) {
 		return pointsLogDao.selectInvaiteesByInviterLog(log);
 	}
-
+	
+	@Override
+	public List<TbWzPointsLog> selectList(Map<String, Object> params) {
+		return pointsLogDao.selectList(params);
+	}
 }

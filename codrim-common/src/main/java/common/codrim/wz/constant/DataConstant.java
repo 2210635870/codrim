@@ -36,6 +36,8 @@ public class DataConstant {
 	public static final int INCOME_POINTS_TYPE_GROUP = 6;
 	/** 被邀请 */
 	public static final int INCOME_POINTS_TYPE_INVITE_BY = 7;
+	/** 滑动签到 */
+	public static final int INCOME_POINTS_TYPE_SCREENLOCK_SIGNIN = 8;
 
 	/** User Status **/
 	public static final int USER_STATUS_ENABLE = 1;
