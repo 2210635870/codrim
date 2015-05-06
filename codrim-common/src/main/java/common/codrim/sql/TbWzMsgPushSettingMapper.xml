@@ -31,6 +31,9 @@
 				and value = #{value, jdbcType=VARCHAR} 
 			</if>
 		</where>
+		<if test="order != null">
+			order by ${order}
+		</if>
 		<if test="start != null and size != null">
  			limit #{start},#{size}
  		</if>

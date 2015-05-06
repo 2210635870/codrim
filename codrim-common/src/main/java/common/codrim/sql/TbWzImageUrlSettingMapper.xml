@@ -1,91 +1,129 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
-<mapper namespace="common.codrim.dao.TbWzImageUrlSettingMapper" >
-  <resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzImageUrlSetting" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="url" property="url" jdbcType="VARCHAR" />
-    <result column="skip_url" property="skipUrl" jdbcType="VARCHAR" />
-    <result column="type" property="type" jdbcType="SMALLINT" />
-    <result column="task_id" property="taskId" jdbcType="BIGINT" />
-    <result column="task_name" property="taskName" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, url, skip_url, `type`, task_id, task_name
-  </sql>
-  
-  
-  
- 
+<mapper namespace="common.codrim.dao.TbWzImageUrlSettingMapper">
+	<resultMap id="BaseResultMap" type="common.codrim.pojo.TbWzImageUrlSetting">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="skip_url" property="skipUrl" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="SMALLINT" />
+		<result column="task_id" property="taskId" jdbcType="BIGINT" />
+		<result column="task_name" property="taskName" jdbcType="VARCHAR" />
+		<result column="show_ser" property="showSer" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, url, skip_url, `type`, task_id, task_name, show_ser
+	</sql>
 
-<select id="selectUrlSettings" resultMap="BaseResultMap" >
-select 
-<include refid="Base_Column_List" />
-from tb_wz_image_url_setting
-</select> 
-  
-  
-  
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from tb_wz_image_url_setting
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from tb_wz_image_url_setting
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="common.codrim.pojo.TbWzImageUrlSetting" useGeneratedKeys="true" keyProperty="id" >
-    insert into tb_wz_image_url_setting (url, skip_url, `type`, 
-      task_id, task_name)
-    values (#{url,jdbcType=VARCHAR}, #{skipUrl,jdbcType=VARCHAR}, #{type,jdbcType=SMALLINT}, 
-      #{taskId,jdbcType=BIGINT}, #{taskName,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="common.codrim.pojo.TbWzImageUrlSetting" useGeneratedKeys="true" keyProperty="id" >
-    insert into tb_wz_image_url_setting
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      url,
-      skip_url,
-      `type`,
-      task_id,
-      task_name,
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      #{url,jdbcType=VARCHAR},
-      #{skipUrl,jdbcType=VARCHAR},
-      #{type,jdbcType=SMALLINT},
-      #{taskId,jdbcType=BIGINT},
-      #{taskName,jdbcType=VARCHAR},
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzImageUrlSetting" >
-    update tb_wz_image_url_setting
-    <set >
-      <if test="url != null" >
-        url = #{url,jdbcType=VARCHAR},
-      </if>
-      <if test="skipUrl != null" >
-        skip_url = #{skipUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null" >
-        `type` = #{type,jdbcType=SMALLINT},
-      </if>
-      <if test="taskId != null" >
-        task_id = #{taskId,jdbcType=BIGINT},
-      </if>
-      <if test="taskName != null" >
-        task_name = #{taskName,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzImageUrlSetting" >
-    update tb_wz_image_url_setting
-    set url = #{url,jdbcType=VARCHAR},
-      skip_url = #{skipUrl,jdbcType=VARCHAR},
-      `type` = #{type,jdbcType=SMALLINT},
-      task_id = #{taskId,jdbcType=BIGINT},
-      task_name = #{taskName,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+	<select id="selectUrlSettings" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_wz_image_url_setting
+		order by show_ser asc, id asc
+	</select>
+
+	<select id="selectList" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		select <include refid="Base_Column_List" />
+		from tb_wz_image_url_setting
+		<where>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR}
+			</if>
+			<if test="skipUrl != null">
+				and skip_url = #{skipUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="type != null">
+				and `type` = #{type,jdbcType=SMALLINT}
+			</if>
+			<if test="taskId != null">
+				and task_id = #{taskId,jdbcType=BIGINT}
+			</if>
+			<if test="taskName != null">
+				and task_name = #{taskName,jdbcType=VARCHAR}
+			</if>
+			<if test="showSer != null">
+				and show_ser = #{showSer,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from tb_wz_image_url_setting
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from tb_wz_image_url_setting
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="common.codrim.pojo.TbWzImageUrlSetting"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into tb_wz_image_url_setting (url, skip_url, `type`,
+		task_id, task_name, show_ser)
+		values (#{url,jdbcType=VARCHAR}, #{skipUrl,jdbcType=VARCHAR},
+		#{type,jdbcType=SMALLINT},
+		#{taskId,jdbcType=BIGINT}, #{taskName,jdbcType=VARCHAR}, #{showSer,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="common.codrim.pojo.TbWzImageUrlSetting"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into tb_wz_image_url_setting
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			url,
+			skip_url,
+			`type`,
+			task_id,
+			task_name,
+			show_ser,
+		</trim>
+		<trim prefix="select " suffix=" from dual">
+			#{url,jdbcType=VARCHAR} as url,
+			#{skipUrl,jdbcType=VARCHAR} as skip_url,
+			#{type,jdbcType=SMALLINT} as `type`,
+			#{taskId,jdbcType=BIGINT} as task_id,
+			#{taskName,jdbcType=VARCHAR} as task_name,
+			(1 + coalesce((select max(show_ser) from tb_wz_image_url_setting), 0))
+			as show_ser
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="common.codrim.pojo.TbWzImageUrlSetting">
+		update tb_wz_image_url_setting
+		<set>
+			<if test="url != null and url != ''">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="skipUrl != null">
+				skip_url = #{skipUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				`type` = #{type,jdbcType=SMALLINT},
+			</if>
+			<if test="taskId != null">
+				task_id = #{taskId,jdbcType=BIGINT},
+			</if>
+			<if test="taskName != null">
+				task_name = #{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test="showSer != null">
+				show_ser = #{showSer,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="common.codrim.pojo.TbWzImageUrlSetting">
+		update tb_wz_image_url_setting
+		set url = #{url,jdbcType=VARCHAR},
+		skip_url = #{skipUrl,jdbcType=VARCHAR},
+		`type` = #{type,jdbcType=SMALLINT},
+		task_id = #{taskId,jdbcType=BIGINT},
+		task_name = #{taskName,jdbcType=VARCHAR},
+		show_ser = #{showSer,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateShowSerAfterDelete" parameterType="java.lang.Integer">
+		update tb_wz_image_url_setting 
+		set show_ser = show_ser - 1 
+		where show_ser > #{showSer,jdbcType=INTEGER};
+	</update>
 </mapper>

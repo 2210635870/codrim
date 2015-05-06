@@ -20,31 +20,31 @@ $(function(){
 	initUpload();
 	getAllTask(null);
 });
+
+
 function datagrid(){
-	$('#view').datagrid({
-		url : '${ctx}/getImageUrlSettingList.do',
-		loadFilter: function(data){
-			$.each(data.rows,function(n,value){
-			if (value.type==1){
-				value.type='网页';
-			} else if(value.type==2){
-				value.type='任务';
+	$.ajax({
+		type: "post",
+		url: "${ctx}/getImageUrlSettingList.do",
+	    dataType: "json",
+		success: function (data) {
+			$('#view').datagrid('loadData', data);
+			var serList = $('#ser_list');
+			serList.html('');
+			serList.append('<label>显示顺序:</label>');
+			for(var i=1; i <= data.total; i++) {
+				serList.append($('<input name="serNum" style="width:auto" id="serNum_'+i+'"  type="radio" value="'+i+'">'+i+' </input>'));
 			}
-			if (value.url!=null&&value.url!=""){
-				value.url='<img src="http://img.codrim.net/'+value.url+'"  style="width: 200px;height: 20px;"  id="rowUrl"/>';
-			} 
-			});
-			return data;
 		}
-		});
+	});
 }
 
 function addImageUrlSetting(){
 	var data =$('#view').datagrid('getData');
-	if(data.rows.length>=4){
+	/* if(data.rows.length>=4){
 		alert("只能添加四个，可以前往更新！");
 		return;
-	}
+	} */
 	$('#dlg').dialog('open').dialog('setTitle','添加');
 	clearForm();
 	url = '${ctx}/addImageUrlSetting.do';
@@ -55,6 +55,7 @@ function clearForm(){
 	$("input[name='type'][value=1]").attr("checked",	true);
 	$("#task_list").css("display","none");
 	$("#skip_url").css("display","block");
+	$("#ser_list").css("display","none");
 }
 function changeDiv(type){
 	if(type==1){
@@ -75,6 +76,8 @@ function editImageUrlSetting(){
 		clearForm();
 		$('#dlg').dialog('open').dialog('setTitle','编辑');
 		$("#queue").html(row.url);
+		$("#ser_list").css("display","block");
+		$('#serNum_'+row.showSer).attr('checked', true);
 		if(row.type=='任务'){
 			getAllTask(row.taskId);
 			$("input[name='type'][value=2]").attr("checked",	true);
@@ -87,6 +90,37 @@ function editImageUrlSetting(){
 			$("#task_list").css("display","none");
 		}
 		url = '${ctx}/editImageUrlSetting.do?id='+row.id;
+	}else{
+		alert("请选择进行设置！");
+	}
+}
+
+function deleteImageUrlSetting() {
+	var row = $('#view').datagrid('getSelected');
+	if (row){
+		$.messager.confirm("删除图片", "确认删除该图片吗?", function(r){
+			if(r) {
+				$.ajax({
+					type: "post",
+					url: "${ctx}/deleteImageUrlSetting.do",
+					data: {
+						id: row.id
+					},
+				    dataType: "json",
+					success: function (data) {
+						if(data.success) {
+							 datagrid();
+						}else {
+							$.messager.alert('删除失败', result.msg, 'error');
+						}
+					},
+					error: function (msg) {
+						$.messager.alert('删除失败', msg, 'error');
+					}
+				});
+			}
+			
+		});
 	}else{
 		alert("请选择进行设置！");
 	}
@@ -120,16 +154,17 @@ function save(){
 		            url: url,
 		            dataType: "json",
 		            data:{
-		            	url:imageUrl,
+		            	url:imageUrl ? imageUrl: '',
 		            	skipUrl:$("#skipUrl").val(),
 		            	type:$('input[name="type"]:checked').val(),
 		            	taskId:$("#taskId").combobox('getValue'),
-		            	taskName:$("#taskId").combobox('getText')
+		            	taskName:$("#taskId").combobox('getText'),
+		            	showSer:$('input[name="serNum"]:checked').val()
 		            },
 		            success: function (data) {
 			         if(data.success){
 			        	 $('#dlg').dialog('close'); 
-							$('#view').datagrid('reload');
+			        	 datagrid();
 			         }
 			            },
 		            error: function (msg) {
@@ -183,7 +218,7 @@ function uploadify_onSelect(){
 }
 function urlCallback(res,file){
 	imageUrl=res.object;
-	var img='<img src="http://img.codrim.net/'+res.object.re+'"  style="width: 307px;height: 66px;">';
+	var img='<img src="http://img.codrim.net/'+res.object+'"  style="width: 307px;height: 66px;">';
 	var Id = file.id;
 	$("#"+Id+" .fileName").css("display","none");
 	$("#"+Id+" .data").css("display","none");
@@ -197,6 +232,22 @@ function deleteIcon(id){
 	imageUrl=null;
 }
 
+function imgUrlFormatter(value, row, index) {
+	if ( value != null && value != "" ){
+		return '<img src="http://img.codrim.net/'+value+'"  style="width: 200px;height: 20px;"  id="rowUrl"/>';
+	} 
+	return '';
+}
+
+function typeFormatter(value, row, index) {
+	if (value==1){
+		return '网页';
+	} else if(value==2){
+		return '任务';
+	}
+	return '';
+}
+
 </script>
 
 
@@ -207,9 +258,9 @@ function deleteIcon(id){
 	<table id="view" idField="id"   style="height:300px"class="easyui-datagrid" fitColumns="true" singleSelect="true"  toolbar="#tb">
 		<thead>
 			<tr>
-				<th field="id" width="80" align="center">编号</th>
-				<th field="url" align="center" width="120" editor="{type:'validatebox',options:{required:true}}">图片地址</th>
-				<th field="type" align="center" width="80" editor="{type:'validatebox',options:{required:true}}">跳转类型</th>
+				<th field="showSer" width="80" align="center">编号</th>
+				<th field="url" align="center" width="120" editor="{type:'validatebox',options:{required:true}}" formatter="imgUrlFormatter">图片地址</th>
+				<th field="type" align="center" width="80" editor="{type:'validatebox',options:{required:true}}" formatter="typeFormatter">跳转类型</th>
 				<th field="skipUrl" align="center" width="100" editor="{type:'validatebox',options:{required:true}}">跳转地址</th>
 				<th field="taskId" align="center" width="80" editor="{type:'validatebox',options:{required:true}}">任务id</th>
 				<th field="taskName" align="center" width="80" editor="{type:'validatebox',options:{required:true}}">任务名</th>
@@ -218,8 +269,9 @@ function deleteIcon(id){
 	</table>
 
 	<div id="tb">
-		 <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addImageUrlSetting()" id="add">新增</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addImageUrlSetting()" id="add">新增</a>
 	    <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editImageUrlSetting()" id="edit">编辑</a>
+	    <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="deleteImageUrlSetting()" id="delete">删除</a>
 	</div>
 	
 	<div id="dlg" class="easyui-dialog"
@@ -236,11 +288,13 @@ function deleteIcon(id){
 				<input name="type"  type="radio"  id="type_1" checked value="1"  style="width:auto" onclick="changeDiv(1)">网页
 				<input name="type"  type="radio"  id="type_2"  value="2"   style="width:auto" onclick="changeDiv(2)">任务
 			</div>
-		 <div class="fitem"  id="skip_url" style="display:none">
+		 	<div class="fitem"  id="skip_url" style="display:none">
 				<label>跳转地址:</label> <input name="skipUrl" id="skipUrl" class="easyui-validatebox" required="true" validType='url'>
 			</div>
 			<div class="fitem"  id="task_list" style="display:none">
 				<label>任务列表:</label> <input name="taskId" id="taskId"  type="text">
+			</div>
+			<div class="fitem"  id="ser_list" style="display:none">
 			</div>
 		</form>
 	</div>

@@ -15,8 +15,6 @@ import org.springframework.stereotype.Repository;
 import common.codrim.pojo.TbWzBinding;
 import common.codrim.pojo.TbWzUser;
 import common.codrim.service.WzUserService;
-import common.codrim.util.PropertiesUtil;
-import common.codrim.util.StringUtil;
 
 @Repository
 public class IntegralWallManager {
@@ -32,6 +30,13 @@ public class IntegralWallManager {
 	protected String call_back_Key;
 	@Value("#{configProperties['anwo_Key']}")
 	protected String anwo_Key;
+	@Value("#{configProperties['midi_Key']}")
+	protected String midi_Key;
+	@Value("#{configProperties['yijifen_Key']}")
+	protected String yijifen_Key;
+	
+	
+	
 	public IntegralWallResultBean resolveYouMi(HttpServletRequest request,
 			IntegralWallResultBean bean) throws UnsupportedEncodingException {
 		
@@ -308,7 +313,114 @@ return bean;
          }
 		return bean;
 	}
-
+	
+	public IntegralWallResultBean resolveMiDi(HttpServletRequest request, IntegralWallResultBean bean){ 
+		String queryString=request.getQueryString();
+		logger.info(queryString);
+		
+		String id = request.getParameter("id");//赚取积分的广告id
+		String trandNo = request.getParameter("trand_no");//交易流水号，唯一id；
+		String cash = request.getParameter("cash");//此次操作赚取的积分数量； cash=广告价格×应用和汇率
+		String imei = request.getParameter("imei");//imei
+		String param0 = request.getParameter("param0");//应用通过SDK上传的自定义参数
+		String sign = request.getParameter("sign");
+		StringBuilder sb = new StringBuilder(); //  签名字符串
+		sb.append(id).append(trandNo).append(cash).append(param0==null?"":param0).append(midi_Key);
+		logger.info("米迪回调 参数：|| 赚取积分广告id" + id + "||交易流水号id" + trandNo +
+				"||应用通过SDK上传的自定义参数" + param0 + "||积分" + cash);
+		
+		String token = this.MD5(sb.toString());
+		if(token.equalsIgnoreCase(sign)&&sign!=null){
+ 			TbWzBinding existedBinding = userService.getBindingByDevice(imei);
+               if(existedBinding!=null){
+            	   TbWzUser tbuser=userService.getUserById(existedBinding.getUserId());
+            	   tbuser.setBalance(tbuser.getBalance()+Long.parseLong(cash));
+            	  userService.modifyUser(tbuser);
+            	 bean.setSuccess(true);
+          	   logger.info("更新成功！");
+               }else{
+            	   logger.info("没有有绑定信息！");
+               }
+         }else{
+        	 logger.info("验证失败！");
+         }
+		
+		return bean;
+	}
+	
+	public IntegralWallResultBean resolveQiDian(HttpServletRequest request, IntegralWallResultBean bean) throws UnsupportedEncodingException{ 
+		String queryString=request.getQueryString();
+		logger.info(queryString);
+		
+		String order = this.decoder(request.getParameter("order"));//订单ID：该值是唯一的
+		String app = this.decoder(request.getParameter("app"));//开发者应用ID
+		String adsid = this.decoder(request.getParameter("adsid"));//广告的编号ID
+		String imei = this.decoder(request.getParameter("imei"));// 移动设备国际身份码
+		String mac = this.decoder(request.getParameter("mac"));//MAC地址
+		String android_id = this.decoder(request.getParameter("android_id"));//安卓机器D
+		String price = this.decoder(request.getParameter("price"));//开发者获得的收入
+		String point = this.decoder(request.getParameter("point"));// 用户可以赚取的积分
+		String task = this.decoder(request.getParameter("task"));// 当前得分的任务
+		String other = this.decoder(request.getParameter("other"));// 开发者在客户端传上来的其他值，如：客户端xxxID等
+		String sign = this.decoder(request.getParameter("sign"));// 签名
+		
+		//"order={$order}app={$applyid}adsid={$adsid}imei={$imei}mac={$mac}android_id={$android_id}user={服务器回调密码}price={$price}point={$point}task={$task}other={$other}"
+		
+		StringBuilder sb = new StringBuilder(); //  签名字符串
+		
+		sb.append("order=").append(order).append("app=").append(app).append("adsid=").append(adsid)
+		.append("imei=").append(imei).append("mac=").append(mac).append("android_id=").append(android_id).append("user=")
+		.append(call_back_Key).append("price=").append(price).append("point=").append(point).append("task=").append(task)
+		.append("other=").append(other);
+		
+		String token = this.MD5(sb.toString());
+		if(token.equalsIgnoreCase(sign)&&sign!=null){
+ 			TbWzBinding existedBinding = userService.getBindingByDevice(imei);
+               if(existedBinding!=null){
+            	   TbWzUser tbuser=userService.getUserById(existedBinding.getUserId());
+            	   tbuser.setBalance(tbuser.getBalance()+Long.parseLong(point));
+            	  userService.modifyUser(tbuser);
+            	 bean.setSuccess(true);
+          	   logger.info("更新成功！");
+               }else{
+            	   logger.info("没有有绑定信息！");
+               }
+         }else{
+        	 logger.info("验证失败！");
+         }
+		
+		return bean;
+	}
+	
+	public IntegralWallResultBean resolveYiJiFen(HttpServletRequest request, IntegralWallResultBean bean) throws UnsupportedEncodingException{ 
+		String queryString = request.getQueryString();
+		logger.info(queryString);
+		queryString = queryString.replaceAll("&ptn=yijifen&", "&")
+				.replaceAll("ptn=yijifen&", "").replaceAll("&ptn=yijifen", "");
+		queryString= queryString.substring(0, queryString.indexOf("&sign="));
+		
+		
+		String uuid = request.getParameter("uuid");// 签名
+		String sign = request.getParameter("sign");// 签名
+		String score = request.getParameter("score");// 签名
+		
+		String token = this.MD5(this.decoder(queryString)+yijifen_Key);
+		if(token.equalsIgnoreCase(sign)&&sign!=null){
+			TbWzBinding existedBinding = userService.getBindingByDevice(uuid);
+			if(existedBinding!=null){
+				TbWzUser tbuser=userService.getUserById(existedBinding.getUserId());
+				tbuser.setBalance(tbuser.getBalance()+Long.parseLong(score));
+				userService.modifyUser(tbuser);
+				bean.setSuccess(true);
+				logger.info("更新成功！");
+			}else{
+				logger.info("没有有绑定信息！");
+			}
+		}else{
+			logger.info("验证失败！");
+		}
+		return bean;
+	}
 }
 
 	

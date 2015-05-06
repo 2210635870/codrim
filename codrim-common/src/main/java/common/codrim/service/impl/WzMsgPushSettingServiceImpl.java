@@ -1,5 +1,7 @@
 package common.codrim.service.impl;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,8 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import common.codrim.dao.TbWzMsgPushSettingMapper;
+import common.codrim.dao.TbWzPointsLogMapper;
 import common.codrim.pojo.TbWzMsgPushSetting;
+import common.codrim.pojo.TbWzPointsLog;
 import common.codrim.service.WzMsgPushSettingService;
+import common.codrim.wz.constant.DataConstant;
 
 @Service
 @Transactional
@@ -18,6 +23,9 @@ public class WzMsgPushSettingServiceImpl implements WzMsgPushSettingService {
 
 	@Autowired
 	private TbWzMsgPushSettingMapper msgPushSettingDao;
+	
+	@Autowired
+	private TbWzPointsLogMapper pointsLogDao;
 	
 	@Override
 	public TbWzMsgPushSetting selectByPrimaryKey(Long id) throws DataAccessException {
@@ -49,10 +57,7 @@ public class WzMsgPushSettingServiceImpl implements WzMsgPushSettingService {
 		return msgPushSettingDao.getTotalNum(params);
 	}
 
-	@Override
 	public void updateValueByName(List<TbWzMsgPushSetting> list) throws DataAccessException {
 		msgPushSettingDao.updateValueByName(list);
 	}
-	
-	
 }

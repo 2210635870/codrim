@@ -53,7 +53,7 @@
 	<select id="selectForScreenlock" resultType="java.util.HashMap">
 		select 
 			n.id as task_id, news_url as task_name, news_screenlock as pic_url,
-			s.value as price, 1 as weight
+			s.value as price, 1 as weight, n.title
 		from tb_wz_news n
 		join tb_wz_msg_push_setting s
 		where s.id=2

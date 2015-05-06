@@ -1,7 +1,9 @@
 package common.codrim.dao;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import common.codrim.pojo.TbWzImageUrlSetting;
@@ -21,5 +23,10 @@ public interface TbWzImageUrlSettingMapper {
     int updateByPrimaryKey(TbWzImageUrlSetting record);
 
 	List<TbWzImageUrlSetting> selectUrlSettings();
+	
+	List<TbWzImageUrlSetting> selectList(Map<String, Object> params);
+	
+	int updateShowSerAfterDelete(@Param("showSer")Integer showSer);
+	
 
 }

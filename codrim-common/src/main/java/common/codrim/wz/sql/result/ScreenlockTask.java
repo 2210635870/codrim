@@ -4,6 +4,7 @@ public class ScreenlockTask {
 
 	private long taskId;
 	private String taskName;
+	private String title;
 	private int type;
 	private String picUrl;
 	private String price;
@@ -44,6 +45,12 @@ public class ScreenlockTask {
 	}
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }
 

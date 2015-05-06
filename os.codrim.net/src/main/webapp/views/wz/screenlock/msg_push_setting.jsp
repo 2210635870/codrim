@@ -73,14 +73,14 @@ function saveSettingInfo() {
 						<td class="field-name">${msgPushSetting.signin}:</td>
 						<td>
 							<input name="signinVal" maxlength="10" class="easyui-numberbox" id="signinInput" required="required" precision="2"
-								value="${msgPushSetting.signinVal}" />
+								value="${msgPushSetting.signinVal}" />人民币
 						</td>
 					</tr>
 					 <tr>
 						<td class="field-name">${msgPushSetting['readInfo']}:</td>
 						<td>
 							<input name="readInfoVal" maxlength="10" class="easyui-numberbox" id="readInfoInput" required="required" precision="2"
-								value="${msgPushSetting.readInfoVal}" />
+								value="${msgPushSetting.readInfoVal}" />人民币
 						</td>
 					</tr>
 					
@@ -90,6 +90,7 @@ function saveSettingInfo() {
 							<input name="msgDailyNumVal" maxlength="10" class="easyui-numberbox" id="msgDailyNumInput" required="required"
 								value="${msgPushSetting.msgDailyNumVal}" />
 						</td>
+					</tr>
 				</table>
 			</fieldset>
 			

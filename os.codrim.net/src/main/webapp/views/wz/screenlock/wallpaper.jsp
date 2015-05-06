@@ -63,23 +63,27 @@ function save(formId, url, $dialog) {
 }
 
 function deleteWallpape(index){
-	var row = $('#view').datagrid('getData').rows[index];
-	$.ajax({
-		type: "post",
-		url: "${ctx}/screenlock/deleteWallpaper.do",
-		data: {
-			id: row.id
-		},
-	    dataType: "json",
-		success: function (data) {
-			if(data.success) {
-				$('#view').datagrid('reload');
-			}else {
-				$.messager.alert('保存失败', result.msg, 'error');
-			}
-		},
-		error: function (msg) {
-			$.messager.alert('保存失败', msg, 'error');
+	$.messager.confirm("删除壁纸", "确认删除该壁纸吗?", function(r){
+		if(r) {
+			var row = $('#view').datagrid('getData').rows[index];
+			$.ajax({
+				type: "post",
+				url: "${ctx}/screenlock/deleteWallpaper.do",
+				data: {
+					id: row.id
+				},
+			    dataType: "json",
+				success: function (data) {
+					if(data.success) {
+						$('#view').datagrid('reload');
+					}else {
+						$.messager.alert('删除失败', result.msg, 'error');
+					}
+				},
+				error: function (msg) {
+					$.messager.alert('删除失败', msg, 'error');
+				}
+			});
 		}
 	});
 }

@@ -13,4 +13,6 @@ public int saveImageUrlSetting(TbWzImageUrlSetting urlSetting)throws DataAccessE
 	
 	
 public int updateImageUrlSetting(TbWzImageUrlSetting urlSetting)throws DataAccessException;
+
+public int deleteImageUrlSetting(Integer id)throws DataAccessException;
 }

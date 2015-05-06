@@ -75,6 +75,9 @@ public class ScreenlockController extends BaseController {
 		params.put("userId", userIdVal);
 		TbWzGroup group = groupService.getGroupByUser(userIdVal);
 		
+		Map<String, Object> msgParams = new HashMap<String, Object>();
+		msgParams.put("order", "id asc" );
+		List<TbWzMsgPushSetting> msgPushList = msgPushSettingService.selectList(msgParams);
 		
 		ParametersDebugUtils.debugParameters(request, "Task List", "userId");
 		List<ScreenlockTask> list = new ArrayList<ScreenlockTask>();
@@ -113,8 +116,11 @@ public class ScreenlockController extends BaseController {
 				list.add(st);
 			}
 			
+			TbWzMsgPushSetting msgPushSetting = msgPushList.get(2);
+			result.put("msgPush", msgPushSetting);
+			
 			if( taskList.size() < DataConstant.TASK_LIST_SIZE ) {
-				params.put("size", DataConstant.TASK_LIST_SIZE-taskList.size());
+				params.put("size", Integer.parseInt(msgPushSetting.getValue()));
 				List<Map<String, Object>> newsList = newsService.selectForScreenlock(params);
 				for( Map<String, Object> news : newsList ) {
 					ScreenlockTask st = new ScreenlockTask();
@@ -124,6 +130,7 @@ public class ScreenlockController extends BaseController {
 					st.setType(DataConstant.TASK_INFO_TYPE);
 					st.setWeight( news.get("weight")==null ? 1:(long)news.get("weight"));
 					st.setPrice(news.get("price").toString());
+					st.setTitle(news.get("title")==null ? "":news.get("title").toString());
 					list.add(st);
 				}
 			}
@@ -140,7 +147,9 @@ public class ScreenlockController extends BaseController {
 		List<TbWzPointsLog> logPOList = pointsLogService.selectList(logParams); 
 		TbWzPointsLog logPO = logPOList.size() > 0 ? logPOList.get(0) : null;
 		
-		TbWzMsgPushSetting signSetting = msgPushSettingService.selectByPrimaryKey(1L);
+		TbWzMsgPushSetting signSetting = msgPushList.get(0);
+		TbWzMsgPushSetting newsSetting = msgPushList.get(1);
+		//锁屏签到间隔满半小时才有金币
 		if(logPO != null) {
 			long diff = (new Date().getTime() - logPO.getIncomeDate().getTime()) / 1000;
 			if(diff < 1800) {
@@ -148,7 +157,16 @@ public class ScreenlockController extends BaseController {
 			}
 		}
 		
+		signSetting.setValue(toBigDecimal(signSetting.getValue())
+				.multiply(toBigDecimal(setting.getExchangeRate()))
+				.stripTrailingZeros().toPlainString());
+		
+		newsSetting.setValue(toBigDecimal(newsSetting.getValue())
+		.multiply(toBigDecimal(setting.getExchangeRate()))
+		.stripTrailingZeros().toPlainString());
+		
 		result.put("signin", signSetting);
+		result.put("news", newsSetting);
 		return result;
 	}
 	
@@ -186,7 +204,6 @@ public class ScreenlockController extends BaseController {
 		
 		TbWzCommonSetting setting = settingService.getCommonSetting();
 		TbWzMsgPushSetting msgSetting = msgPushSettingService.selectByPrimaryKey(1L);
-		
 		
 		long signinAdd = Long.parseLong(toBigDecimal(msgSetting.getValue())
 				.multiply(toBigDecimal(setting.getExchangeRate()))

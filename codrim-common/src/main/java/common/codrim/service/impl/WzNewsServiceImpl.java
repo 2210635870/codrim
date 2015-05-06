@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import common.codrim.dao.TbWzNewsMapper;
 import common.codrim.pojo.TbWzNews;
+import common.codrim.pojo.TbWzWallpaper;
 import common.codrim.service.WzNewsService;
 import common.codrim.util.StringUtil;
 import common.codrim.wz.sql.in.PageParamsUtil;
@@ -34,7 +35,14 @@ public class WzNewsServiceImpl implements WzNewsService {
 
 	@Override
 	public int deleteByPrimaryKey(Long id) throws DataAccessException {
-		return wzNewsDao.deleteByPrimaryKey(id);
+		TbWzNews news = wzNewsDao.selectByPrimaryKey(id);
+		File originalFile = new File(uploadRoot+news.getNewsScreenLock());
+		
+		int num = wzNewsDao.deleteByPrimaryKey(id);
+		if(originalFile.exists()) {
+			FileUtils.deleteQuietly(originalFile);
+		}
+		return num;
 	}
 
 	@Override

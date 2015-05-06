@@ -66,7 +66,8 @@ public class FileUtil {
 	            throw e;
 	        }
 	        bean.setSuccess(isSucc);
-	        bean.setObject(orgiSavePath.replace("/codrim_resource/sources", ""));
+	        orgiSavePath = orgiSavePath.replaceAll("/codrim_resource/sources", "");
+	        bean.setObject(orgiSavePath);
 	        return bean;
 	    }
 	  

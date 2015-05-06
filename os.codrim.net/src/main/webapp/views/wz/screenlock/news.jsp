@@ -31,8 +31,8 @@ function addNewsSetting(){
 	$('#dlg-add').dialog('open');
 }
 
-function editNewsSetting(){
-	var row = $('#view').datagrid('getSelected');
+function editNewsSetting(index){
+	var row = $('#view').datagrid('getData').rows[index];
 	if (row){
 		var dlg = $('#dlg-edit');
 		dlg.find('img').attr('src', '${imgRoot}'+row.newsScreenLock);
@@ -40,8 +40,6 @@ function editNewsSetting(){
 		dlg.find('[name=title]').val(row.title);
 		dlg.find('[name=newsUrl]').val(row.newsUrl);
 		dlg.dialog('open');
-	}else{
-		alert("请选择进行设置！");
 	}
 }
 
@@ -64,8 +62,30 @@ function save(formId, url, $dialog) {
 	});
 }
 
-function deleteNews() {
-	
+function deleteNews(index) {
+	$.messager.confirm("删除新闻", "确认删除该新闻吗?", function(r){
+		if (r) {
+			var row = $('#view').datagrid('getData').rows[index];
+			$.ajax({
+				type: "post",
+				url: "${ctx}/screenlock/deleteNews.do",
+				data: {
+					id: row.id
+				},
+			    dataType: "json",
+				success: function (data) {
+					if(data.success) {
+						$('#view').datagrid('reload');
+					}else {
+						$.messager.alert('删除失败', result.msg, 'error');
+					}
+				},
+				error: function (msg) {
+					$.messager.alert('删除失败', msg, 'error');
+				}
+			});
+		}
+	});
 }
 
 function newsScreenlockFormatter(value, row, index) {
@@ -80,13 +100,18 @@ function dialogClose() {
 	$(this).find('[name=newsUrl]').val('');
 }
 
+function actionColumnFormatter(value, row, index) {
+	var actionStr = '<a href="javascript:void(0)" onclick="editNewsSetting('+index+')">编辑</a>'+
+		'|<a href="javascript:void(0)" onclick="deleteNews('+index+')">删除</a>';
+	return actionStr;
+}
+
 </script>
 
 </head>
 <body style="visibility: visible;">
 	<div id="tb">
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addNewsSetting()" id="add">新增</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editNewsSetting()" id="edit">编辑</a>
 	</div>
 	<table id="view" idField="id" rownumbers="true" pagination="true" singleSelect="true" pageSize=10 toolbar="#tb" >
 		<thead>
@@ -95,6 +120,7 @@ function dialogClose() {
 				<th field="newsScreenLock" align="center" width="200" formatter="newsScreenlockFormatter">新闻图片</th>
 				<th field="title" align="center" width="400">新闻标题</th>
 				<th field=newsUrl align="center" width="600">新闻链接</th>
+				<th field=addDate align="center" width="200" formatter="actionColumnFormatter">操作</th>
 			</tr>
 		</thead>
 	</table>

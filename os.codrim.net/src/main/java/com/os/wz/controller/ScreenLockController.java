@@ -126,6 +126,23 @@ public class ScreenLockController extends BaseController {
 		return rjb;
 	}
 	
+	@RequestMapping("/screenlock/deleteNews.do")
+	@ResponseBody
+	public ResultJsonBean deleteNews(@RequestParam("id")long id, SessionStatus sessionStatusn) {
+		ResultJsonBean rjb = new ResultJsonBean();
+		
+		try {
+			newsService.deleteByPrimaryKey(id);
+			rjb.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(">>>>>  error:", e);
+			rjb.setSuccess(false);
+		}
+		
+		return rjb;
+	}
+	
 	@RequestMapping("/screenlock/getWallpaperList.do")
 	@ResponseBody
 	public Map<String, Object> getWallpaperList(HttpServletRequest request) {

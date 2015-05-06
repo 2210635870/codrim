@@ -18,6 +18,8 @@ public class TbWzImageUrlSetting implements Serializable {
     
     private Long taskId;
     private String taskName;
+    
+    private Integer showSer;
 
     public Long getTaskId() {
 		return taskId;
@@ -70,4 +72,13 @@ public class TbWzImageUrlSetting implements Serializable {
     public void setType(Short type) {
         this.type = type;
     }
+
+	public Integer getShowSer() {
+		return showSer;
+	}
+
+	public void setShowSer(Integer showSer) {
+		this.showSer = showSer;
+	}
+    
 }
