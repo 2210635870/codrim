@@ -254,7 +254,7 @@
 					<tr>
 						<td class="field-name">应用包下载地址:</td>
 						<td>
-								<form:input path="appUrl" maxlength="100" class="easyui-validatebox" id="appUrl" required="required" value="${task.appUrl}"/>
+								<form:input path="appUrl" maxlength="500" class="easyui-validatebox" id="appUrl" required="required" value="${task.appUrl}"/>
 								<span style="color:red" id="appUrlTips"></span>
 						</td>
 					</tr>

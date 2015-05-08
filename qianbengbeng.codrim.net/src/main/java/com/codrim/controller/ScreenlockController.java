@@ -1,5 +1,9 @@
 package com.codrim.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,11 +13,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.codrim.constant.ErrorCode;
 import com.codrim.util.ParametersDebugUtils;
@@ -23,12 +29,15 @@ import common.codrim.pojo.TbWzGroup;
 import common.codrim.pojo.TbWzMsgPushSetting;
 import common.codrim.pojo.TbWzPointsLog;
 import common.codrim.pojo.TbWzUser;
+import common.codrim.pojo.TbWzWallpaper;
 import common.codrim.service.WzGroupService;
 import common.codrim.service.WzMsgPushSettingService;
 import common.codrim.service.WzNewsService;
 import common.codrim.service.WzTaskService;
 import common.codrim.service.WzUserService;
+import common.codrim.service.WzWallpaperService;
 import common.codrim.util.StringUtil;
+import common.codrim.util.ZipFileUtil;
 import common.codrim.wz.constant.DataConstant;
 import common.codrim.wz.sql.result.ScreenlockTask;
 
@@ -46,6 +55,8 @@ public class ScreenlockController extends BaseController {
 	private WzGroupService groupService;
 	@Autowired
 	private WzMsgPushSettingService msgPushSettingService;
+	@Autowired
+	private WzWallpaperService wallpaperService;
 	
 	@RequestMapping("/getScreenlockTaskList.do")
 	@ResponseBody
@@ -234,5 +245,30 @@ public class ScreenlockController extends BaseController {
 		result.put("code", "1");
 		
 		return result;
+	}
+	
+	@RequestMapping("/getWallpaperZip.do")
+	public ModelAndView getWallpaperZip(HttpServletRequest request,HttpServletResponse response) {
+		
+		List<TbWzWallpaper> wallpaperFiles = wallpaperService.selectList(new HashMap<String, Object>());
+		
+		List<File> wallpapers = new ArrayList<File>();
+		
+		for(TbWzWallpaper wallpaper : wallpaperFiles) {
+			wallpapers.add(FileUtils.getFile(uploadRoot + wallpaper.getWallpaper()));
+		}
+		
+		try {
+			byte[] data = ZipFileUtil.zipFiles(wallpapers);
+			response.addHeader("Content-Disposition","attachment;filename=" + URLEncoder.encode("壁纸.zip","UTF-8"));  
+			OutputStream outputStream = response.getOutputStream();
+			outputStream.write(data);
+			outputStream.flush();   
+			outputStream.close(); 
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.error("打包壁纸出错  >>>>> " + e);
+		}
+		return null;
 	}
 }

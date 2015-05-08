@@ -166,6 +166,7 @@ public class UserController extends BaseController {
 					// TODO: handle exception
 					id=0;
 				}
+				
 				if(id!=0){
 					TbWzThirdDeviceUid thirdDeviceUid=thirdDeviceUidService.getThirdDeviceUidById(id);
                       if(thirdDeviceUid!=null){

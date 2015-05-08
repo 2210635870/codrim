@@ -24,8 +24,12 @@ function checkCookie(){
 			if(difId!=null&&difId!=""&&unionid!=null&&unionid!=""){
 				getUserData();
 			}else{
-				window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx3cc220d7b8b62251&redirect_uri=Http%3A%2F%2Fkroffer.codrim.net%2F"
+//				window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx3cc220d7b8b62251&redirect_uri=Http%3A%2F%2Fkroffer.codrim.net%2F"
+//					+"&response_type=code&scope=snsapi_userinfo&state=weixin#wechat_redirect";
+				window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx3cc220d7b8b62251&redirect_uri=Http%3A%2F%2Ftestkroffer.codrim.net%2F"
 					+"&response_type=code&scope=snsapi_userinfo&state=weixin#wechat_redirect";
+				
+				//Http%3A%2F%2Ftestkroffer.codrim.net%2F
 			}
 		}else{
 			getUserData();
@@ -35,7 +39,7 @@ function checkCookie(){
 		if(userId==null){
 			$("#fixed").css("display","block");
 		}else{
-			getUserData();
+			getUserData('y');
 		}
 	}
 	}
@@ -43,7 +47,7 @@ var difId;
 var unionid;
 var id;
 function toRedirect(){
-	window.location.href=projectPath+"/views/redirect.jsp?&difId="+difId+"&unionid="+unionid+"&id="+id;
+	window.location.href=projectPath+"/views/redirect.jsp?&difId="+(difId == undefined ?  "" : difId)+"&unionid="+(unionid == undefined ? "" : unionid)+"&id="+(id == undefined ? "" : id);
 }
 function addUidAndDifId(){
 	localStorage.setItem("difId",difId);//设置b为"isaac"
@@ -52,19 +56,25 @@ function addUidAndDifId(){
 
 
 
-function getUserData(){
+function getUserData(skipRedirect){
 	if(state==""||state=="null"||status==null){
 		state=localStorage.getItem("difId");
 	}
+	
+	var _userId = localStorage.getItem("user");
+	_userId = (!_userId || _userId == 'null' || _userId=='undefined') ? '': _userId;
+	var _unionid = localStorage.getItem("unionid");
+	_unionid = (!_unionid || _unionid == 'null' || _unionid=='undefined') ? '': _unionid;
+	
 	$.ajax({
 		 type: "post",
 		            url:  projectPath + '/user.do',
 		            dataType: "json",
 		           async:false,
 		          data:{
-		        	  userId:localStorage.getItem("user"),
+		        	  userId:_userId,
 		        	  weixinCode:code,
-		        	  unionid:localStorage.getItem("unionid"),
+		        	  unionid:_unionid,
 		        	  difId:state
 		          },
 		            success: function (data) {
@@ -80,9 +90,12 @@ function getUserData(){
 			        			addUser();
 			        			addUidAndDifId();
 			        	 }else{
+			        		 
 			        	//	 $("#fixed").css("display","block");
 			        		 addUidAndDifId();
-			        		 toRedirect();
+			        		 if(!skipRedirect){
+			        			 toRedirect();
+			        		 }
 			        	 }
 			         }else{
 			        	 alert("维护中，请稍后再来！");

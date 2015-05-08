@@ -157,11 +157,7 @@
 				JOIN tb_wz_task_step ms ON ms.task_id=mts.taskId
 		      GROUP BY ms.task_id
 		) s ON s.task_id=t.task_id
-		JOIN (
-			SELECT ROUND(RAND() * ((SELECT MAX(task_id) FROM tb_wz_task)-(SELECT MIN(task_id) FROM tb_wz_task))+(SELECT MIN(task_id) FROM tb_wz_task)) AS task_id
-		) AS rt
-		WHERE t.task_id >= rt.task_id
-		AND t.task_status=1
+		WHERE t.task_status=1
 		AND t.task_belong=1
 		AND s.totalStepCount > 0
 		limit #{size,jdbcType=INTEGER}

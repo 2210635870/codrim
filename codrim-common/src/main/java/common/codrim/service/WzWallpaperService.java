@@ -20,4 +20,5 @@ public interface WzWallpaperService {
 	List<TbWzWallpaper> selectList(Map<String, Object> params) throws DataAccessException;
 	
 	int getTotalNum(Map<String, Object> params) throws DataAccessException;
+	
 }
