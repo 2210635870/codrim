@@ -52,6 +52,12 @@ public class BaseController {
 	@Value("#{configProperties['user_disable_image_path']}")
 	protected String user_disable_image_path;
 	
+	@Value("#{configProperties['boot.background.img.path']}")
+	protected String bootBackgroundImgPath;
+	
+	@Value("#{configProperties['boot.background.default.img']}")
+	protected String bootBackgroundDefaultImg;
+	
 	@Autowired
 	protected WzSettingService settingService;
 	

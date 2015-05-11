@@ -33,6 +33,9 @@ public class BaseController {
 	@Value("#{configProperties['url.invite.root']}")
 	protected String urlInviteRoot;
 	
+	@Value("#{configProperties['boot.background.img.path']}")
+	protected String bootBackgroundImgPath;
+	
 	
 	private static Hashids INVITE_USEAPP_HASHID = new Hashids("codrim user", 6, Hashids.DEFAULT_ALPHABET_USER);
 	private static Hashids INVITE_JOINGROUP_HASHID = new Hashids("codrim group", 6, Hashids.DEFAULT_ALPHABET_GROUP);

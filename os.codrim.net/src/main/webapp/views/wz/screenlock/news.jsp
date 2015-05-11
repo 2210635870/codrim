@@ -106,6 +106,7 @@ function actionColumnFormatter(value, row, index) {
 	return actionStr;
 }
 
+
 </script>
 
 </head>
@@ -136,12 +137,12 @@ function actionColumnFormatter(value, row, index) {
 			
 			<div class="fitem">
 				<label>新闻标题：</label>
-				<input name="title"  type="text" id="news_title" required="required" />
+				<input name="title" type="text" class="easyui-validatebox" id="news_title" required="required" />
 			</div>
 			
 			<div class="fitem">
 				<label>新闻链接：</label>
-				<input name="newsUrl"  type="text" required="required" />
+				<input name="newsUrl" type="text" class="easyui-validatebox" required="required" validType="url" />
 			</div>
 			
 			<div style="text-align:center;padding:5px" id>
@@ -163,12 +164,12 @@ function actionColumnFormatter(value, row, index) {
 			
 			<div class="fitem">
 				<label>新闻标题：</label>
-				<input name="title"  type="text" required="required" />
+				<input name="title" type="text" class="easyui-validatebox" required />
 			</div>
 			
 			<div class="fitem">
 				<label>新闻链接：</label>
-				<input name="newsUrl"  type="text" required="required" />
+				<input name="newsUrl" type="text" class="easyui-validatebox" required validType="url" />
 			</div>
 			
 			<div style="text-align:center;padding:5px" id>

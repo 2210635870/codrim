@@ -1,7 +1,12 @@
 package com.codrim.controller;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -131,7 +136,7 @@ public class ScreenlockController extends BaseController {
 			result.put("msgPush", msgPushSetting);
 			
 			if( taskList.size() < DataConstant.TASK_LIST_SIZE ) {
-				params.put("size", Integer.parseInt(msgPushSetting.getValue()));
+				params.put("size", DataConstant.TASK_LIST_SIZE-taskList.size());
 				List<Map<String, Object>> newsList = newsService.selectForScreenlock(params);
 				for( Map<String, Object> news : newsList ) {
 					ScreenlockTask st = new ScreenlockTask();
@@ -269,6 +274,40 @@ public class ScreenlockController extends BaseController {
 			e.printStackTrace();
 			logger.error("打包壁纸出错  >>>>> " + e);
 		}
+		return null;
+	}
+	
+	@RequestMapping("/boot/getbootBackgroundImg.do")
+	@ResponseBody
+	public ModelAndView getbootBackgroundImg(HttpServletRequest request,HttpServletResponse response) throws IOException {
+
+		File bootImgPath = new File(imgUploadRoot + bootBackgroundImgPath);
+		
+		String bootImg = uploadRoot + bootBackgroundDefaultImg;
+		if(bootImgPath.exists()) {
+			File[] files = bootImgPath.listFiles();
+			if(files.length > 0) {
+				bootImg = imgUploadRoot+bootBackgroundImgPath+files[0].getName();
+			}
+		}
+		
+		
+		InputStream in = new BufferedInputStream(new FileInputStream(bootImg));
+		
+		response.setContentType("image/jpeg");
+		OutputStream outputStream = response.getOutputStream();
+		
+		int b;
+		while((b = in.read()) != -1) {
+			logger.info(b);
+			
+			outputStream.write(b);
+		}
+		
+		outputStream.flush();
+		outputStream.close();
+		in.close();
+		
 		return null;
 	}
 }

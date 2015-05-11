@@ -35,6 +35,7 @@ import common.codrim.service.WzImageUrlSettingService;
 import common.codrim.service.WzTaskNumLimitService;
 import common.codrim.util.JsonUtil;
 import common.codrim.util.MemcacheUtil;
+import common.codrim.util.StringUtil;
 import common.codrim.wz.constant.DataConstant;
 
 @Controller
@@ -266,5 +267,59 @@ public class SettingController extends BaseController {
 
 		return rjb;
 	}
+	
+	@RequestMapping("/wz/setting/initBootBackgroundImgSetting.do")
+	public ModelAndView initBootBackgroundImgSetting() {
+		ModelAndView mv = new ModelAndView("/wz/setting/appBootImgSetting");
+
+		File bootImgPath = new File(imgUploadRoot + bootBackgroundImgPath);
+		Map<String, Object> settingMap = new HashMap<String, Object>();
+		
+		String bootImg = "";
+		if(bootImgPath.exists()) {
+			File[] files = bootImgPath.listFiles();
+			if(files.length > 0) {
+				bootImg = urlRoot+imgRoot+bootBackgroundImgPath+files[0].getName();
+			}
+		}
+		
+		settingMap.put("bootImg", bootImg);
+		
+		mv.addObject("bootImgSetting", settingMap);
+
+		return mv;
+	}
+	
+	@RequestMapping("/wz/setting/updateBootBackgroundImg.do")
+	@ResponseBody
+	public Map<String, Object> updateBootBackgroundImg(@RequestParam("bootBackgroundImg")MultipartFile bootBackgroundImg) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		try {
+			
+			File bootImgPath = new File(imgUploadRoot + bootBackgroundImgPath);
+			if(!bootImgPath.exists()) {
+				bootImgPath.mkdir();
+			} else {
+				File[] files = bootImgPath.listFiles();
+				for(File f : files) {
+					if(f.exists()) {
+						f.delete();
+					}
+				}
+			}
+			
+			String fileName = StringUtil.getUniqueFilename(bootBackgroundImg.getOriginalFilename());
+			FileUtils.copyInputStreamToFile(bootBackgroundImg.getInputStream(), new File(imgUploadRoot + bootBackgroundImgPath + fileName));
+			
+			map.put("success", true);
+		} catch (Exception e) {
+			map.put("success", false);
+		}
+		
+		return map;
+	}
+
 
 }

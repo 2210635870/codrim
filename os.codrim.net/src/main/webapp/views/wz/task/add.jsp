@@ -218,7 +218,7 @@ var projectPath = '${pageContext.request.contextPath}';
 					<tr>
 						<td class="field-name">应用包下载地址:</td>
 						<td>
-						<form:input path="appUrl" maxlength="500" class="easyui-validatebox" id="appUrl" required="required" />
+						<form:input path="appUrl" class="easyui-validatebox" id="appUrl" required="required" />
 						<span style="color:red" id="appUrlTips"></span>
 						</td>
 					</tr>

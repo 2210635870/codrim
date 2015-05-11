@@ -169,5 +169,12 @@ $.extend($.fn.validatebox.defaults.rules, {
 					}
 				},
 				message : '请输入0到100之间的最多一位小数的数字'
+			}, 
+			url: {
+				validator : function(value) {
+					return /^((http|https|ftp):\/\/)([a-zA-Z0-9_-]+\.)*/.test(value);
+				},
+				message : '请输入有效Url路径信息'
 			}
+			
 });

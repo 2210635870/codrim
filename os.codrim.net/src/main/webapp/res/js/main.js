@@ -281,6 +281,12 @@ if(type==0){
 									"menuname": "版本管理",
 									"icon": "icon-set",
 									"url": projectPath + "/wz/setting/initAppUpgradeSetting.do"
+								},
+								{
+									"menuid": "945",
+									"menuname": "启动页图片管理",
+									"icon": "icon-set",
+									"url": projectPath + "/wz/setting/initBootBackgroundImgSetting.do"
 								}
 							]
 						},
