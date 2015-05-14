@@ -137,7 +137,7 @@ function actionColumnFormatter(value, row, index) {
 			
 			<div class="fitem">
 				<label>新闻标题：</label>
-				<input name="title" type="text" class="easyui-validatebox" id="news_title" required="required" />
+				<input name="title" type="text" class="easyui-validatebox" id="news_title" required="required" maxlength="10"/>
 			</div>
 			
 			<div class="fitem">

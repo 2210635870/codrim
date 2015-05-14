@@ -77,4 +77,6 @@ public interface TbWzTaskMapper {
 	int getTotalTaskByPutType(SelectResultByCodition codition);
 	
 	List<Map<String, Object>> selectScreenlockTasks(Map<String, Object> params);
+	
+	int updateSuspendTasks ();
 }

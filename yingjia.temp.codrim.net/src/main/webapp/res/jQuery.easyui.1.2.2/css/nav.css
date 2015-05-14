@@ -1,0 +1,11 @@
+#navDiv {
+	position: relative;
+	left: 20px;
+	top: 20px;
+	
+}
+
+#navDiv a {
+	font-size: 15px;
+}
+

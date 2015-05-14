@@ -264,5 +264,6 @@
     <module>codrim-pojo</module>
     <module>qianbengbeng.codrim.net</module>
     <module>kroffer.codrim.net</module>
+    <module>yingjia.temp.codrim.net</module>
   </modules>
 </project>

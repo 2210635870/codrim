@@ -37,6 +37,8 @@ public interface WzTaskService {
 	public List<TaskRecordInfo> searchTaskRecord(int startPage, int size, TaskRecordInfo param) throws DataAccessException;
 	public int getTaskRecordTotalAmount(TaskRecordInfo param) throws DataAccessException;
 	public boolean isTaskNameExist(String taskName) throws DataAccessException;
+	// 更新过期任务状态为暂停
+	public int updateSuspendTasks() throws DataAccessException;
 	
 
 	public long getTodayPoints(long userId,Date date)throws DataAccessException;
@@ -63,4 +65,5 @@ public interface WzTaskService {
 	public List<TaskReportInfo> pageTaskReportInfo(int startPage, int size, TaskReportInfo param);
 	public int countTaskReportInfo(TaskReportInfo param);
 	public List<StepReportInfo> getStepReportInfoListByTask(TaskReportInfo param);
+	
 }

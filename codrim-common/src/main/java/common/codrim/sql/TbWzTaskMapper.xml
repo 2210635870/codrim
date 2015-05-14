@@ -347,4 +347,9 @@
       app_screenlock_file = #{appScreenlockFile,jdbcType=VARCHAR}
     where task_id = #{taskId,jdbcType=BIGINT}
   </update>
+  
+  <update id="updateSuspendTasks">
+  	update tb_wz_task set task_status = 2 where CURDATE() NOT BETWEEN task_start_date AND task_end_date
+  </update>
+  
 </mapper>

@@ -299,8 +299,6 @@ public class ScreenlockController extends BaseController {
 		
 		int b;
 		while((b = in.read()) != -1) {
-			logger.info(b);
-			
 			outputStream.write(b);
 		}
 		

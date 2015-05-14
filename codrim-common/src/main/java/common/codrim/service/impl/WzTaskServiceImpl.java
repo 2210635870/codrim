@@ -391,7 +391,9 @@ public class WzTaskServiceImpl implements WzTaskService {
 		return taskRecordDao.getNowDayTaskNums(userId,date);
 	}
 
-
-
+	@Override
+	public int updateSuspendTasks() throws DataAccessException {
+		return taskDao.updateSuspendTasks();
+	}
 
 }

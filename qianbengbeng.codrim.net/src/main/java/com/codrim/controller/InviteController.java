@@ -126,7 +126,7 @@ public class InviteController extends BaseController {
 				id = getUserIdByInviteCode(code, DataConstant.INVITE_CODE_TYPE_JOINGROUP);
 				if(id==0){
 					return new JsonErrorResult(ErrorCode.RL108, "");
-					}
+				}
 				result.setResult(DataConstant.INVITE_CODE_TYPE_JOINGROUP+"");
 			}else{
 				int limitNum=getLimitNum(Contans.TASK_NUM_LIMIT_INVITE+"");
@@ -145,7 +145,7 @@ public class InviteController extends BaseController {
 					return new JsonErrorResult(ErrorCode.UN401, "userid is error.");
 				}
 				
-				TbWzCommonSetting setting = settingService.getCommonSetting();
+				/*TbWzCommonSetting setting = settingService.getCommonSetting();
 				
 				BigDecimal er = new BigDecimal(String.valueOf(setting.getExchangeRate()));
 				BigDecimal inviterReward = new BigDecimal(String.valueOf(setting.getUserInviterReward()));
@@ -160,7 +160,7 @@ public class InviteController extends BaseController {
         		TbWzPointsLog pointsLog_inviter=new TbWzPointsLog(inviter.getUserId(), DataConstant.INCOME_POINTS_TYPE_INVITE, code, inviterAdd, new Date());
         		TbWzPointsLog pointsLog_invitees=new TbWzPointsLog(invitees.getUserId(), DataConstant.INCOME_POINTS_TYPE_INVITE_BY, code, inviterAdd, new Date());
     			pointsLogService.savePintsLog(pointsLog_inviter);
-    			pointsLogService.savePintsLog(pointsLog_invitees);
+    			pointsLogService.savePintsLog(pointsLog_invitees);*/
 			} 
 			
 			result.setRtCode(DataConstant.SUCCESS);
@@ -170,6 +170,55 @@ public class InviteController extends BaseController {
 			return new JsonErrorResult(ErrorCode.UN000, "invitePage ERROR");
 		}
 		
+		return result;
+	}
+	
+	/**
+	 * 由手机端判定用户是否绑定是调用，用于增加邀请人与被邀请人金币
+	 */
+	@RequestMapping("/addInviteCodeReward.do")
+	@ResponseBody
+	public JsonBasicResult addInviteCodeReward(HttpServletRequest request) {
+		JsonBasicResult<String> result = new JsonBasicResult<String>();
+		String userId = request.getParameter("userId");
+		String code = request.getParameter("code");
+		
+		boolean sign_flag=checkSign(request.getParameter("sign"),request.getParameter("timeStamp")+userId+code);
+		if(!sign_flag){
+			return new JsonErrorResult(ErrorCode.UN400, "sign check failed!");
+		}
+		
+		long id = getUserIdByInviteCode(code, DataConstant.INVITE_CODE_TYPE_USEAPP);
+		if (id == 0) {
+			result.setRtCode(Integer.toString(DataConstant.INVITE_CODE_TYPE_JOINGROUP));
+			result.setResult("只有邀请类型为\"邀请使用APP才能加金币\"");
+			return result;
+		}
+		
+		TbWzUser inviter = userService.getUserById(id);
+		TbWzUser invitees = userService.getUserById(Long.valueOf(userId));
+		if(inviter==null||invitees==null){
+			return new JsonErrorResult(ErrorCode.UN401, "userid is error.");
+		}
+		
+		TbWzCommonSetting setting = settingService.getCommonSetting();
+		
+		BigDecimal er = new BigDecimal(String.valueOf(setting.getExchangeRate()));
+		BigDecimal inviterReward = new BigDecimal(String.valueOf(setting.getUserInviterReward()));
+		BigDecimal inviteesReward = new BigDecimal(String.valueOf(setting.getUserInviteesReward()));
+		long inviterAdd=inviterReward.multiply(er).longValue();
+		long inviteesAdd=inviteesReward.multiply(er).longValue();
+		inviter.setBalance(inviter.getBalance() + inviterAdd);
+		invitees.setBalance(invitees.getBalance() +inviteesAdd );
+		
+		userService.modifyInviterAndInvitees(inviter, invitees);
+		result.setResult(String.valueOf(DataConstant.INVITE_CODE_TYPE_USEAPP));
+		TbWzPointsLog pointsLog_inviter=new TbWzPointsLog(inviter.getUserId(), DataConstant.INCOME_POINTS_TYPE_INVITE, code, inviterAdd, new Date());
+		TbWzPointsLog pointsLog_invitees=new TbWzPointsLog(invitees.getUserId(), DataConstant.INCOME_POINTS_TYPE_INVITE_BY, code, inviterAdd, new Date());
+		pointsLogService.savePintsLog(pointsLog_inviter);
+		pointsLogService.savePintsLog(pointsLog_invitees);
+		
+		result.setRtCode(DataConstant.SUCCESS);
 		return result;
 	}
 	
@@ -184,6 +233,7 @@ public class InviteController extends BaseController {
 	public JsonBasicResult inviteReward(HttpServletRequest request) throws DataAccessException {
 
 		String type = request.getParameter("type");
+		
 		
 		ParametersDebugUtils.debugParameters(request, "Get Invite Reward", "type");
 		if (StringUtil.isEmpty(type)) {

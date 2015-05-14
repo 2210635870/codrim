@@ -199,7 +199,7 @@ public class TaskController extends BaseController {
 			taskDetail.setTaskName(td.getTaskName());
 			
 			if( !StringUtil.isEmpty(getFull) && "y".equalsIgnoreCase(getFull) ) {
-				Pattern pattern = Pattern.compile("^((http|https|ftp)://)([a-zA-Z0-9_-]+.)*");
+				Pattern pattern = Pattern.compile("^((http|https|ftp)://).*");
 				if( pattern.matcher(td.getAppUrl()).matches() ) {
 					taskDetail.setAppURL(td.getAppUrl());
 				} else {
